@@ -427,6 +427,9 @@
               </ul>
           </li>
           <li>
+            <a href="#one-click-checkout-investment-links" class="toc-h1 toc-link" data-title="One-click Checkout / Investment links">One-click Checkout / Investment links</a>
+          </li>
+          <li>
             <a href="#systematic-investment-plans" class="toc-h1 toc-link" data-title="Systematic Investment Plans">Systematic Investment Plans</a>
               <ul class="toc-list-h2">
                   <li>
@@ -519,27 +522,34 @@
 <p>We have language bindings in Shell only for now. We don&#39;t have readymade clients as of now, but they&#39;ll be coming soon! You can view shell (curl) code examples in the dark area to the right.</p>
 <h1 id='authentication'>Authentication</h1>
 <blockquote>
-<p>To authorize, you must pass a Base64 encoded combination of your access key and secret key. Use this code:</p>
+<p>To authorize, you must pass a Base64 encoded combination of your access key and password. Use this code:</p>
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-<span class="c"># encoded_key = Base64.encode("ACCESS_KEY:SECRET_KEY")</span>
+<span class="c"># encoded_key = Base64.encode("ACCESS_KEY:PASSWORD")</span>
+curl <span class="s2">"https://surface.thesavvyapp.in/secure/tokens"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Basic &lt;encoded_key&gt;"</span>
+</code></pre></div><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">Response:</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abcdeabcdeacbde"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="c"># Use above token as Bearer token for secure paths:</span>
 curl <span class="s2">"api_endpoint_here"</span> <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 </code></pre></div>
-<blockquote>
-<p>Make sure to replace <code>encoded_key</code> with your own combination.</p>
-</blockquote>
+<p>Savvy has 2 ways of authenticating, depending on how the API is being used:</p>
 
-<p>Savvy uses API keys to allow access to the API. You can register a new Savvy API key combination at our <a href="http://developers.savvyapp.in">developer portal</a> or send us an <a href="mailto:hello@savvyapp.in">email</a> at hello@savvyapp.in.</p>
+<ol>
+<li><p><strong>Secure paths using Basic auth + Bearer token:</strong> Using your API keys, you can request a new Bearer token that will give you access to partner level APIs (all investors under your partner account).
+You can register a new Savvy API key combination at our <a href="http://developers.savvyapp.in">developer portal</a> or send us an <a href="mailto:hello@savvyapp.in">email</a> at hello@savvyapp.in.</p></li>
+<li><p><strong>Individual paths using Bearer token:</strong> Using your secure token in the previous step, you can request a Bearer token that will access to investor specific APIs. Refer to the investors section for information on how to get a token for an individual investor.</p></li>
+</ol>
 
-<p>Savvy expects for the API key combination to be included in all API requests to the server in a header as follows:</p>
+<p>Savvy expects a Bearer token to be included in all API requests to the server in a header as follows:</p>
 
-<p><code>encoded_key = Base64.encode(ACCESS_KEY:SECRET_KEY)</code></p>
-
-<p><code>Authorization: encoded_key</code></p>
+<p><code>Authorization: Bearer &lt;token&gt;</code></p>
 
 <aside class="notice">
-You must replace <code>encoded_key</code> with your own API key combination.
+You must replace <code>token</code> with your own secure token or individual token.
 </aside>
 <h1 id='onboardings'>Onboardings</h1>
 <p>Most of our APIs require an onboarding to be done before communicating with them. An onboarding is essentially a KYC (Know Your Customer) workflow which authorizes a person to conduct a mutual fund transaction. The workflow is the following:</p>
@@ -579,12 +589,16 @@ If doing Full KYC, you should wait for verification confirmation via webhook bef
 <td><code>String</code> Customer PAN number. Note that the pan number is overwritten when parsed from the pan card.</td>
 </tr>
 <tr>
-<td>date_of_birth</td>
-<td><code>String</code> Format DD/MM/YYYY. Note that the dob is overwritten when parsed from the pan card.</td>
+<td>existing_investor</td>
+<td><code>Boolean</code> If this customer is an existing investor in the KRA databases. Use this field to determine if you to do a full KYC for the customer or not.</td>
 </tr>
 <tr>
 <td>name</td>
 <td><code>String</code> Customer&#39;s full name.</td>
+</tr>
+<tr>
+<td>date_of_birth</td>
+<td><code>String</code> Format DD/MM/YYYY. Note that the dob is overwritten when parsed from the pan card.</td>
 </tr>
 <tr>
 <td>email</td>
@@ -596,7 +610,7 @@ If doing Full KYC, you should wait for verification confirmation via webhook bef
 </tr>
 <tr>
 <td>kyc_status</td>
-<td>One of: <code>[&quot;success&quot;, &quot;failure&quot;, &quot;pending&quot;]</code> Result of KYC verification post submission</td>
+<td>One of: <code>[&quot;success&quot;, &quot;failure&quot;, &quot;pending&quot;]</code> Result of full KYC verification post submission</td>
 </tr>
 <tr>
 <td>pan_card_image_url</td>
@@ -662,18 +676,17 @@ If doing Full KYC, you should wait for verification confirmation via webhook bef
 <h2 id='create-onboarding'>Create onboarding</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> 
   </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"date_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/01/1990"</span><span class="w">
+    </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
 
 </code></pre></div>
 <blockquote>
-<p>The above command returns the onboarding JSON object</p>
+<p>The above command returns the onboarding JSON object with the name filled in if the customer is an existing investor.</p>
 </blockquote>
 <h3 id='http-request'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings</code></p>
@@ -694,11 +707,6 @@ Note the <code>onboarding</code>root key
 <td>true</td>
 <td><code>String</code> Customer PAN number</td>
 </tr>
-<tr>
-<td>date_of_birth</td>
-<td>true</td>
-<td><code>Date</code> Format DD/MM/YYYY</td>
-</tr>
 </tbody></table>
 <h2 id='create-onboarding-bank-account'>Create onboarding bank account</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> 
@@ -709,7 +717,7 @@ Note the <code>onboarding</code>root key
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/bank_account"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
 
 </code></pre></div>
@@ -751,7 +759,7 @@ Note the <code>onboarding</code>root key
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/full_kyc"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
 </code></pre></div>
 <blockquote>
@@ -805,7 +813,7 @@ Note the <code>onboarding</code>root key
 </tbody></table>
 <h2 id='get-all-amcs'>Get all AMCs</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/amcs"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 </code></pre></div>
 <blockquote>
 <p>The above command returns an array of AMC JSON objects.</p>
@@ -840,7 +848,7 @@ Note the <code>onboarding</code>root key
 </tbody></table>
 <h2 id='get-all-funds'>Get all funds</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/funds?amc_code=code"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 
 </code></pre></div>
 <blockquote>
@@ -906,7 +914,7 @@ Note the <code>onboarding</code>root key
 </tbody></table>
 <h2 id='show-account'>Show account</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/accounts/&lt;UUID&gt;"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 </code></pre></div>
 <blockquote>
 <p>The above command returns a account JSON object.</p>
@@ -1001,7 +1009,7 @@ Note the <code>onboarding</code>root key
 </tbody></table>
 <h2 id='get-deposits'>Get deposits</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/deposits?account_uuid=&lt;UUID&gt;"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 </code></pre></div>
 <blockquote>
 <p>The above command returns an array of deposit JSON objects.</p>
@@ -1024,7 +1032,7 @@ Note the <code>onboarding</code>root key
 </tbody></table>
 <h2 id='show-deposit'>Show deposit</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/deposits/&lt;UUID&gt;"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 </code></pre></div>
 <blockquote>
 <p>The above command returns a deposit JSON object.</p>
@@ -1042,7 +1050,7 @@ Note the <code>onboarding</code>root key
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/deposits"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
 
 </code></pre></div>
@@ -1158,7 +1166,7 @@ Note the <code>deposit</code>root key
 </tbody></table>
 <h2 id='get-withdrawals'>Get withdrawals</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/withdrawals?account_uuid=&lt;UUID&gt;"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 </code></pre></div>
 <blockquote>
 <p>The above command returns an array of withdrawal JSON objects.</p>
@@ -1181,7 +1189,7 @@ Note the <code>deposit</code>root key
 </tbody></table>
 <h2 id='show-withdrawal'>Show withdrawal</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/withdrawals/&lt;UUID&gt;"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 </code></pre></div>
 <blockquote>
 <p>The above command returns a withdrawal JSON object.</p>
@@ -1199,7 +1207,7 @@ Note the <code>deposit</code>root key
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/withdrawals"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
 
 </code></pre></div>
@@ -1251,7 +1259,7 @@ Note the <code>withdrawal</code>root key
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/withdrawals/&lt;UUID&gt;/verify_otp"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
 
 </code></pre></div>
@@ -1280,6 +1288,8 @@ Note the <code>withdrawal</code>root key
 <td><code>String</code> The user inputted OTP</td>
 </tr>
 </tbody></table>
+<h1 id='one-click-checkout-investment-links'>One-click Checkout / Investment links</h1>
+<p>This API describes how to create instant investment links. This API can handle any scenario (existing folio, existing investor but no folio, and non-existing investor). This comes as a hosted solution under your logo, and no extra needs to be done from your end to enable this (other than listen for webhooks if you&#39;d like).</p>
 <h1 id='systematic-investment-plans'>Systematic Investment Plans</h1>
 <p>This API describes how to create a SIP transaction. This API can only be accessed post the onboarding flow. The workflow for creating and registering an SIP is:</p>
 
@@ -1354,7 +1364,7 @@ Note the <code>withdrawal</code>root key
 </tbody></table>
 <h2 id='get-sips'>Get sips</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/sips?account_uuid=&lt;UUID&gt;"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 </code></pre></div>
 <blockquote>
 <p>The above command returns an array of sip JSON objects.</p>
@@ -1377,7 +1387,7 @@ Note the <code>withdrawal</code>root key
 </tbody></table>
 <h2 id='show-sip'>Show sip</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/sips/&lt;UUID&gt;"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 </code></pre></div>
 <blockquote>
 <p>The above command returns a sip JSON object.</p>
@@ -1399,7 +1409,7 @@ Note the <code>withdrawal</code>root key
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/sips"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: encoded_key"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
 
 </code></pre></div>
