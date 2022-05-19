@@ -563,9 +563,215 @@ Parameter | Required | Description
 --------- | ------- | -----------
 otp | true | `String` The user inputted OTP
 
-# One-click Checkout / Investment links
+# One-click Checkout (OCC) / Investment links
 
-This API describes how to create instant investment links. This API can handle any scenario (existing folio, existing investor but no folio, and non-existing investor). This comes as a hosted solution under your logo, and no extra needs to be done from your end to enable this (other than listen for webhooks if you'd like).
+This API describes how to create instant investment links. This API can handle any scenario (existing folio, existing investor but no folio, and non-existing investor). This comes as a hosted solution under your logo.
+
+## OCC object
+
+Parameter | Description
+--------- | ----------- 
+account_uuid | `String` Account associated with the investment.
+masked_folio_number | `String` Masked folio number, last 3 digits only.
+fund_name | `String` Name of the fund invested in.
+amc_name | `String` Name of AMC for the fund invested in.
+checkout_type | `Enum: one_time, ongoing` Whether the checkout type is a lumpsum or a SIP.
+start_date | `Date` Start date of the SIP.
+end_date | `Date` End date of the SIP.
+frequency | `Enum: monthly, weekly, daily, ad-hoc` Frequency of debits
+amount | `Integer` Amount of lumpsum or monthly instalment of SIP
+deposit_request_id | `String` Payment request ID of the investment.
+deposit_status | `Enum: created, payment_made, submitted_to_rta, completed, error` Status of the investment.
+partner | `Object` Partner details. See next table.
+sip_request_id | `String` Payment returnsuest ID of the SIP.
+sip_mandate_status | `Enum: pending, accepted_by_user, completed, error, cancelled` Status of the SIP auto-debit.
+short_link | `URL string` This URL can be shared with the user to go to for transaction completion.
+
+## Create OCC (Lumpsum)
+
+```json
+// body
+{ "one_click_checkout": 
+  {
+    "onboarding": {
+      "name": "James Bond",
+      "phone_number": "9800011111",
+      "email": "email@example.com",
+      "pan_number": "ABCDE1234C"
+    },
+    "account": {
+      "folio_number": "12345678",
+      "amc_code": "MOS",
+      "type": "SI"
+    },
+    "bank_account": {
+      "account_number": "000111199999",
+      "ifsc_code": "HDFC0000001",
+      "bank_name": "HDFC BANK LTD"
+    },
+    "deposit": {
+      "amount": 1000,
+      "mutual_fund_id": 10
+    },
+  }
+}
+```
+
+```shell
+curl "https://surface.thesavvyapp.in/secure/one_click_checkouts" \
+  -X POST \
+  -d body
+  -H "Authorization: Bearer <token>"
+```
+> The above command returns a OCC JSON object.
+
+### HTTP Request
+
+`POST https://surface.thesavvyapp.in/secure/one_click_checkouts`
+
+### Parameters
+
+<aside class="notice">
+Note the <code>one_click_checkout</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ------- | -----------
+onboarding | false | `Object` Investor details
+account | false | `Object` Account details
+bank_account | false | `Object` Bank account details
+deposit | true | `Object` Transaction details
+
+
+Onboarding
+
+Parameter | Required | Description
+--------- | ------- | -----------
+name | true | `String` Name of investor
+phone_number | true | `String` Phone number of investor
+email | true | `String` Email of investor
+pan_number | true | `String` PAN of investor
+
+
+Account
+
+Parameter | Required | Description
+--------- | ------- | -----------
+folio_number | true | `String` Folio number of investor
+amc_code | true | `String` AMC code of the folio
+type | true | `String` Holding pattern of folio
+
+
+Bank Account
+
+Parameter | Required | Description
+--------- | ------- | -----------
+account_number | true | `String` Bank account number
+ifsc_code | true | `String` IFSC code
+bank_name | true | `String` Name of bank
+
+
+Deposit
+
+Parameter | Required | Description
+--------- | ------- | -----------
+amount | true | `Integer` Amount of the investment
+mutual_fund_id | true | `String` Fund ID
+
+## Create OCC (SIP)
+
+```json
+// body
+{ "one_click_checkout": 
+  {
+    "onboarding": {
+      "name": "James Bond",
+      "phone_number": "9800011111",
+      "email": "email@example.com",
+      "pan_number": "ABCDE1234C"
+    },
+    "account": {
+      "folio_number": "12345678",
+      "amc_code": "MOS",
+      "type": "SI"
+    },
+    "bank_account": {
+      "account_number": "000111199999",
+      "ifsc_code": "HDFC0000001",
+      "bank_name": "HDFC BANK LTD"
+    },
+    "sip": {
+      "amount": 1000,
+      "mutual_fund_id": 10,
+      "sip_day": 1,
+      "number_of_installments": 12
+    },
+  }
+}
+```
+
+```shell
+curl "https://surface.thesavvyapp.in/secure/one_click_checkouts/create_sip" \
+  -X POST \
+  -d body \
+  -H "Authorization: Bearer <token>"
+```
+> The above command returns a OCC JSON object.
+
+### HTTP Request
+
+`POST https://surface.thesavvyapp.in/secure/one_click_checkouts/create_sip`
+
+### Parameters
+
+<aside class="notice">
+Note the <code>one_click_checkout</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ------- | -----------
+onboarding | false | `Object` Investor details
+account | false | `Object` Account details
+bank_account | false | `Object` Bank account details
+sip | true if deposit is null | `Object` Transaction details
+
+
+Onboarding
+
+Parameter | Required | Description
+--------- | ------- | -----------
+name | true | `String` Name of investor
+phone_number | true | `String` Phone number of investor
+email | true | `String` Email of investor
+pan_number | true | `String` PAN of investor
+
+
+Account
+
+Parameter | Required | Description
+--------- | ------- | -----------
+folio_number | true | `String` Folio number of investor
+amc_code | true | `String` AMC code of the folio
+type | true | `String` Holding pattern of folio
+
+
+Bank Account
+
+Parameter | Required | Description
+--------- | ------- | -----------
+account_number | true | `String` Bank account number
+ifsc_code | true | `String` IFSC code
+bank_name | true | `String` Name of bank
+
+
+SIP
+
+Parameter | Required | Description
+--------- | ------- | -----------
+amount | true | `Integer` 
+mutual_fund_id | true | `String` Fund ID
+sip_day | false | `Integer` Day of the month that the SIP should be triggered
+number_of_installments | false | `Integer` Number of instalments
 
 # Systematic Investment Plans
 
@@ -592,7 +798,7 @@ fund_name | `String` Name of the fund invested in.
 start_date | `Date` Start date of the SIP.
 end_date | `Date` End date of the SIP.
 frequency | `Enum: monthly, weekly, daily, ad-hoc` Frequency of debits
-amount | `Integer` Amount to be withdrawn at each installment.
+amount | `Integer` Amount to be deposited at each installment.
 payment_link | `String` **Only applicable for create API** URL to which to take the user for mandate checkout.
 redirect_url | `String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
 active | `Boolean` Whether the SIP is actively debiting.
