@@ -427,7 +427,18 @@
               </ul>
           </li>
           <li>
-            <a href="#one-click-checkout-investment-links" class="toc-h1 toc-link" data-title="One-click Checkout / Investment links">One-click Checkout / Investment links</a>
+            <a href="#one-click-checkout-occ-investment-links" class="toc-h1 toc-link" data-title="One-click Checkout (OCC) / Investment links">One-click Checkout (OCC) / Investment links</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#occ-object" class="toc-h2 toc-link" data-title="OCC object">OCC object</a>
+                  </li>
+                  <li>
+                    <a href="#create-occ-lumpsum" class="toc-h2 toc-link" data-title="Create OCC (Lumpsum)">Create OCC (Lumpsum)</a>
+                  </li>
+                  <li>
+                    <a href="#create-occ-sip" class="toc-h2 toc-link" data-title="Create OCC (SIP)">Create OCC (SIP)</a>
+                  </li>
+              </ul>
           </li>
           <li>
             <a href="#systematic-investment-plans" class="toc-h1 toc-link" data-title="Systematic Investment Plans">Systematic Investment Plans</a>
@@ -1288,8 +1299,432 @@ Note the <code>withdrawal</code>root key
 <td><code>String</code> The user inputted OTP</td>
 </tr>
 </tbody></table>
-<h1 id='one-click-checkout-investment-links'>One-click Checkout / Investment links</h1>
-<p>This API describes how to create instant investment links. This API can handle any scenario (existing folio, existing investor but no folio, and non-existing investor). This comes as a hosted solution under your logo, and no extra needs to be done from your end to enable this (other than listen for webhooks if you&#39;d like).</p>
+<h1 id='one-click-checkout-occ-investment-links'>One-click Checkout (OCC) / Investment links</h1>
+<p>This API describes how to create instant investment links. This API can handle any scenario (existing folio, existing investor but no folio, and non-existing investor). This comes as a hosted solution under your logo.</p>
+<h2 id='occ-object'>OCC object</h2>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>account_uuid</td>
+<td><code>String</code> Account associated with the investment.</td>
+</tr>
+<tr>
+<td>masked_folio_number</td>
+<td><code>String</code> Masked folio number, last 3 digits only.</td>
+</tr>
+<tr>
+<td>fund_name</td>
+<td><code>String</code> Name of the fund invested in.</td>
+</tr>
+<tr>
+<td>amc_name</td>
+<td><code>String</code> Name of AMC for the fund invested in.</td>
+</tr>
+<tr>
+<td>checkout_type</td>
+<td><code>Enum: one_time, ongoing</code> Whether the checkout type is a lumpsum or a SIP.</td>
+</tr>
+<tr>
+<td>start_date</td>
+<td><code>Date</code> Start date of the SIP.</td>
+</tr>
+<tr>
+<td>end_date</td>
+<td><code>Date</code> End date of the SIP.</td>
+</tr>
+<tr>
+<td>frequency</td>
+<td><code>Enum: monthly, weekly, daily, ad-hoc</code> Frequency of debits</td>
+</tr>
+<tr>
+<td>amount</td>
+<td><code>Integer</code> Amount of lumpsum or monthly instalment of SIP</td>
+</tr>
+<tr>
+<td>deposit_request_id</td>
+<td><code>String</code> Payment request ID of the investment.</td>
+</tr>
+<tr>
+<td>deposit_status</td>
+<td><code>Enum: created, payment_made, submitted_to_rta, completed, error</code> Status of the investment.</td>
+</tr>
+<tr>
+<td>partner</td>
+<td><code>Object</code> Partner details. See next table.</td>
+</tr>
+<tr>
+<td>sip_request_id</td>
+<td><code>String</code> Payment returnsuest ID of the SIP.</td>
+</tr>
+<tr>
+<td>sip_mandate_status</td>
+<td><code>Enum: pending, accepted_by_user, completed, error, cancelled</code> Status of the SIP auto-debit.</td>
+</tr>
+<tr>
+<td>short_link</td>
+<td><code>URL string</code> This URL can be shared with the user to go to for transaction completion.</td>
+</tr>
+</tbody></table>
+<h2 id='create-occ-lumpsum'>Create OCC (Lumpsum)</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w"> </span><span class="nl">"one_click_checkout"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"James Bond"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9800011111"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email@example.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"folio_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MOS"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SI"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"bank_account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"account_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"000111199999"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"ifsc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HDFC0000001"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"bank_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HDFC BANK LTD"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"deposit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"mutual_fund_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://surface.thesavvyapp.in/secure/one_click_checkouts"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-d</span> body
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
+</code></pre></div>
+<blockquote>
+<p>The above command returns a OCC JSON object.</p>
+</blockquote>
+<h3 id='http-request-14'>HTTP Request</h3>
+<p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts</code></p>
+<h3 id='parameters-5'>Parameters</h3>
+<aside class="notice">
+Note the <code>one_click_checkout</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>onboarding</td>
+<td>false</td>
+<td><code>Object</code> Investor details</td>
+</tr>
+<tr>
+<td>account</td>
+<td>false</td>
+<td><code>Object</code> Account details</td>
+</tr>
+<tr>
+<td>bank_account</td>
+<td>false</td>
+<td><code>Object</code> Bank account details</td>
+</tr>
+<tr>
+<td>deposit</td>
+<td>true</td>
+<td><code>Object</code> Transaction details</td>
+</tr>
+</tbody></table>
+
+<p>Onboarding</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>true</td>
+<td><code>String</code> Name of investor</td>
+</tr>
+<tr>
+<td>phone_number</td>
+<td>true</td>
+<td><code>String</code> Phone number of investor</td>
+</tr>
+<tr>
+<td>email</td>
+<td>true</td>
+<td><code>String</code> Email of investor</td>
+</tr>
+<tr>
+<td>pan_number</td>
+<td>true</td>
+<td><code>String</code> PAN of investor</td>
+</tr>
+</tbody></table>
+
+<p>Account</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>folio_number</td>
+<td>true</td>
+<td><code>String</code> Folio number of investor</td>
+</tr>
+<tr>
+<td>amc_code</td>
+<td>true</td>
+<td><code>String</code> AMC code of the folio</td>
+</tr>
+<tr>
+<td>type</td>
+<td>true</td>
+<td><code>String</code> Holding pattern of folio</td>
+</tr>
+</tbody></table>
+
+<p>Bank Account</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>account_number</td>
+<td>true</td>
+<td><code>String</code> Bank account number</td>
+</tr>
+<tr>
+<td>ifsc_code</td>
+<td>true</td>
+<td><code>String</code> IFSC code</td>
+</tr>
+<tr>
+<td>bank_name</td>
+<td>true</td>
+<td><code>String</code> Name of bank</td>
+</tr>
+</tbody></table>
+
+<p>Deposit</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>amount</td>
+<td>true</td>
+<td><code>Integer</code> Amount of the investment</td>
+</tr>
+<tr>
+<td>mutual_fund_id</td>
+<td>true</td>
+<td><code>String</code> Fund ID</td>
+</tr>
+</tbody></table>
+<h2 id='create-occ-sip'>Create OCC (SIP)</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w"> </span><span class="nl">"one_click_checkout"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"James Bond"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9800011111"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email@example.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"folio_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MOS"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SI"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"bank_account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"account_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"000111199999"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"ifsc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HDFC0000001"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"bank_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HDFC BANK LTD"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"sip"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"mutual_fund_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"sip_day"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"number_of_installments"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://surface.thesavvyapp.in/secure/one_click_checkouts/create_sip"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-d</span> body <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
+</code></pre></div>
+<blockquote>
+<p>The above command returns a OCC JSON object.</p>
+</blockquote>
+<h3 id='http-request-15'>HTTP Request</h3>
+<p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts/create_sip</code></p>
+<h3 id='parameters-6'>Parameters</h3>
+<aside class="notice">
+Note the <code>one_click_checkout</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>onboarding</td>
+<td>false</td>
+<td><code>Object</code> Investor details</td>
+</tr>
+<tr>
+<td>account</td>
+<td>false</td>
+<td><code>Object</code> Account details</td>
+</tr>
+<tr>
+<td>bank_account</td>
+<td>false</td>
+<td><code>Object</code> Bank account details</td>
+</tr>
+<tr>
+<td>sip</td>
+<td>true if deposit is null</td>
+<td><code>Object</code> Transaction details</td>
+</tr>
+</tbody></table>
+
+<p>Onboarding</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>true</td>
+<td><code>String</code> Name of investor</td>
+</tr>
+<tr>
+<td>phone_number</td>
+<td>true</td>
+<td><code>String</code> Phone number of investor</td>
+</tr>
+<tr>
+<td>email</td>
+<td>true</td>
+<td><code>String</code> Email of investor</td>
+</tr>
+<tr>
+<td>pan_number</td>
+<td>true</td>
+<td><code>String</code> PAN of investor</td>
+</tr>
+</tbody></table>
+
+<p>Account</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>folio_number</td>
+<td>true</td>
+<td><code>String</code> Folio number of investor</td>
+</tr>
+<tr>
+<td>amc_code</td>
+<td>true</td>
+<td><code>String</code> AMC code of the folio</td>
+</tr>
+<tr>
+<td>type</td>
+<td>true</td>
+<td><code>String</code> Holding pattern of folio</td>
+</tr>
+</tbody></table>
+
+<p>Bank Account</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>account_number</td>
+<td>true</td>
+<td><code>String</code> Bank account number</td>
+</tr>
+<tr>
+<td>ifsc_code</td>
+<td>true</td>
+<td><code>String</code> IFSC code</td>
+</tr>
+<tr>
+<td>bank_name</td>
+<td>true</td>
+<td><code>String</code> Name of bank</td>
+</tr>
+</tbody></table>
+
+<p>SIP</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>amount</td>
+<td>true</td>
+<td><code>Integer</code></td>
+</tr>
+<tr>
+<td>mutual_fund_id</td>
+<td>true</td>
+<td><code>String</code> Fund ID</td>
+</tr>
+<tr>
+<td>sip_day</td>
+<td>false</td>
+<td><code>Integer</code> Day of the month that the SIP should be triggered</td>
+</tr>
+<tr>
+<td>number_of_installments</td>
+<td>false</td>
+<td><code>Integer</code> Number of instalments</td>
+</tr>
+</tbody></table>
 <h1 id='systematic-investment-plans'>Systematic Investment Plans</h1>
 <p>This API describes how to create a SIP transaction. This API can only be accessed post the onboarding flow. The workflow for creating and registering an SIP is:</p>
 
@@ -1339,7 +1774,7 @@ Note the <code>withdrawal</code>root key
 </tr>
 <tr>
 <td>amount</td>
-<td><code>Integer</code> Amount to be withdrawn at each installment.</td>
+<td><code>Integer</code> Amount to be deposited at each installment.</td>
 </tr>
 <tr>
 <td>payment_link</td>
@@ -1369,7 +1804,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns an array of sip JSON objects.</p>
 </blockquote>
-<h3 id='http-request-14'>HTTP Request</h3>
+<h3 id='http-request-16'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/sips?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-4'>URL Parameters</h3>
 <table><thead>
@@ -1392,7 +1827,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns a sip JSON object.</p>
 </blockquote>
-<h3 id='http-request-15'>HTTP Request</h3>
+<h3 id='http-request-17'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/sips/&lt;UUID&gt;</code></p>
 <h2 id='create-sip'>Create sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"sip"</span><span class="p">:</span><span class="w"> 
@@ -1416,11 +1851,11 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns the sip JSON object</p>
 </blockquote>
-<h3 id='http-request-16'>HTTP Request</h3>
+<h3 id='http-request-18'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/sips</code></p>
 
 <p>On success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate required for periodic auto-debits. If for some reason, the mandate fails to get signed, you can retry the mandate signing for a period of 24 hours, post which a new mandate must be created.</p>
-<h3 id='parameters-5'>Parameters</h3>
+<h3 id='parameters-7'>Parameters</h3>
 <aside class="notice">
 Note the <code>sip</code>root key
 </aside>
