@@ -31,27 +31,40 @@ We have language bindings in Shell only for now. We don't have readymade clients
 
 # Authentication
 
-> To authorize, you must pass a Base64 encoded combination of your access key and secret key. Use this code:
+> To authorize, you must pass a Base64 encoded combination of your access key and password. Use this code:
 
 ```shell
 # With shell, you can just pass the correct header with each request
-# encoded_key = Base64.encode("ACCESS_KEY:SECRET_KEY")
-curl "api_endpoint_here" \
-  -H "Authorization: encoded_key"
+# encoded_key = Base64.encode("ACCESS_KEY:PASSWORD")
+curl "https://surface.thesavvyapp.in/secure/tokens" \
+  -H "Authorization: Basic <encoded_key>"
+```
+```json
+Response:
+{
+  "token": "abcdeabcdeacbde"
+}
 ```
 
-> Make sure to replace `encoded_key` with your own combination.
+```shell
+# Use above token as Bearer token for secure paths:
+curl "api_endpoint_here" \
+  -H "Authorization: Bearer <token>"
+```
 
-Savvy uses API keys to allow access to the API. You can register a new Savvy API key combination at our [developer portal](http://developers.savvyapp.in) or send us an [email](mailto:hello@savvyapp.in) at hello@savvyapp.in.
+Savvy has 2 ways of authenticating, depending on how the API is being used:
 
-Savvy expects for the API key combination to be included in all API requests to the server in a header as follows:
+1. **Secure paths using Basic auth + Bearer token:** Using your API keys, you can request a new Bearer token that will give you access to partner level APIs (all investors under your partner account).
+You can register a new Savvy API key combination at our [developer portal](http://developers.savvyapp.in) or send us an [email](mailto:hello@savvyapp.in) at hello@savvyapp.in.
 
-`encoded_key = Base64.encode(ACCESS_KEY:SECRET_KEY)`
+2. **Individual paths using Bearer token:** Using your secure token in the previous step, you can request a Bearer token that will access to investor specific APIs. Refer to the investors section for information on how to get a token for an individual investor.
 
-`Authorization: encoded_key`
+Savvy expects a Bearer token to be included in all API requests to the server in a header as follows:
+
+`Authorization: Bearer <token>`
 
 <aside class="notice">
-You must replace <code>encoded_key</code> with your own API key combination.
+You must replace <code>token</code> with your own secure token or individual token.
 </aside>
 
 # Onboardings
@@ -84,11 +97,12 @@ Parameter | Description
 --------- | ----------- 
 uuid | `String` Unique identifier of the onboarding object
 pan_number | `String` Customer PAN number. Note that the pan number is overwritten when parsed from the pan card.
-date_of_birth | `String` Format DD/MM/YYYY. Note that the dob is overwritten when parsed from the pan card.
+existing_investor | `Boolean` If this customer is an existing investor in the KRA databases. Use this field to determine if you to do a full KYC for the customer or not.
 name | `String` Customer's full name.
+date_of_birth | `String` Format DD/MM/YYYY. Note that the dob is overwritten when parsed from the pan card.
 email | `String` Customer's email address.
 phone_number | `String` Customer's phone number with +91 prefix.
-kyc_status | One of: `["success", "failure", "pending"]` Result of KYC verification post submission
+kyc_status | One of: `["success", "failure", "pending"]` Result of full KYC verification post submission
 pan_card_image_url | `URL String` The pan card image submitted
 fathers_name | `String` Father's name from the pan card
 address_proof_image_url | `URL String` The address proof image submittted
@@ -111,8 +125,7 @@ marital_status | `String` Marital status code (refer to enum list)
 // body
 { "onboarding": 
   {
-    "pan_number": "ABCDE1234C",
-    "date_of_birth": "30/01/1990"
+    "pan_number": "ABCDE1234C"
   }
 }
 ```
@@ -120,11 +133,11 @@ marital_status | `String` Marital status code (refer to enum list)
 ```shell
 curl "http://surface.thesavvyapp.in/onboardings" \
   -X POST \
-  -H "Authorization: encoded_key" \
+  -H "Authorization: Bearer <token>" \
   -d body
 
 ```
-> The above command returns the onboarding JSON object
+> The above command returns the onboarding JSON object with the name filled in if the customer is an existing investor.
 
 ### HTTP Request
 
@@ -139,7 +152,6 @@ Note the <code>onboarding</code>root key
 Parameter | Required | Description
 --------- | ------- | -----------
 pan_number | true | `String` Customer PAN number
-date_of_birth | true | `Date` Format DD/MM/YYYY
 
 ## Create onboarding bank account
 
@@ -156,7 +168,7 @@ date_of_birth | true | `Date` Format DD/MM/YYYY
 ```shell
 curl "http://surface.thesavvyapp.in/onboardings/<UUID>/bank_account" \
   -X POST \
-  -H "Authorization: encoded_key" \
+  -H "Authorization: Bearer <token>" \
   -d body
 
 ```
@@ -193,7 +205,7 @@ ifsc_code | true | `String` A valid IFSC code
 ```shell
 curl "http://surface.thesavvyapp.in/onboardings/<UUID>/full_kyc" \
   -X POST \
-  -H "Authorization: encoded_key" \
+  -H "Authorization: Bearer <token>" \
   -d body
 ```
 
@@ -233,7 +245,7 @@ code | `String` Operational code of the AMC. This code must be submitted in API 
 ```shell
 curl "http://surface.thesavvyapp.in/amcs" \
   -X GET \
-  -H "Authorization: encoded_key"
+  -H "Authorization: Bearer <token>"
 ```
 > The above command returns an array of AMC JSON objects.
 
@@ -259,7 +271,7 @@ code | `String` Global unique identifier of this fund. This code must be submitt
 ```shell
 curl "http://surface.thesavvyapp.in/funds?amc_code=code" \
   -X GET \
-  -H "Authorization: encoded_key"
+  -H "Authorization: Bearer <token>"
 
 ```
 > The above command returns an array of Fund JSON objects.
@@ -296,7 +308,7 @@ holding_mode | `Enum: ["SI"]` Only Single mode is supported as of now.
 ```shell
 curl "http://surface.thesavvyapp.in/accounts/<UUID>" \
   -X GET \
-  -H "Authorization: encoded_key"
+  -H "Authorization: Bearer <token>"
 ```
 > The above command returns a account JSON object.
 
@@ -343,7 +355,7 @@ stp_uuid | `String` Identifier of the STP that the deposit is part of
 ```shell
 curl "http://surface.thesavvyapp.in/deposits?account_uuid=<UUID>" \
   -X GET \
-  -H "Authorization: encoded_key"
+  -H "Authorization: Bearer <token>"
 ```
 > The above command returns an array of deposit JSON objects.
 
@@ -362,7 +374,7 @@ account_uuid | true | `String` All deposits associated with a account
 ```shell
 curl "http://surface.thesavvyapp.in/deposits/<UUID>" \
   -X GET \
-  -H "Authorization: encoded_key"
+  -H "Authorization: Bearer <token>"
 ```
 > The above command returns a deposit JSON object.
 
@@ -387,7 +399,7 @@ curl "http://surface.thesavvyapp.in/deposits/<UUID>" \
 ```shell
 curl "http://surface.thesavvyapp.in/deposits" \
   -X POST \
-  -H "Authorization: encoded_key" \
+  -H "Authorization: Bearer <token>" \
   -d body
 
 ```
@@ -446,7 +458,7 @@ stp_uuid | `String` Identifier of the STP that the withdrawal is part of
 ```shell
 curl "http://surface.thesavvyapp.in/withdrawals?account_uuid=<UUID>" \
   -X GET \
-  -H "Authorization: encoded_key"
+  -H "Authorization: Bearer <token>"
 ```
 > The above command returns an array of withdrawal JSON objects.
 
@@ -465,7 +477,7 @@ account_uuid | true | `String` All withdrawals associated with a account
 ```shell
 curl "http://surface.thesavvyapp.in/withdrawals/<UUID>" \
   -X GET \
-  -H "Authorization: encoded_key"
+  -H "Authorization: Bearer <token>"
 ```
 > The above command returns a withdrawal JSON object.
 
@@ -490,7 +502,7 @@ curl "http://surface.thesavvyapp.in/withdrawals/<UUID>" \
 ```shell
 curl "http://surface.thesavvyapp.in/withdrawals" \
   -X POST \
-  -H "Authorization: encoded_key" \
+  -H "Authorization: Bearer <token>" \
   -d body
 
 ```
@@ -529,7 +541,7 @@ partner_transaction_id | false | `String` Your custom ID to identify this transa
 ```shell
 curl "http://surface.thesavvyapp.in/withdrawals/<UUID>/verify_otp" \
   -X POST \
-  -H "Authorization: encoded_key" \
+  -H "Authorization: Bearer <token>" \
   -d body
 
 ```
@@ -550,6 +562,10 @@ Note the <code>withdrawal</code>root key
 Parameter | Required | Description
 --------- | ------- | -----------
 otp | true | `String` The user inputted OTP
+
+# One-click Checkout / Investment links
+
+This API describes how to create instant investment links. This API can handle any scenario (existing folio, existing investor but no folio, and non-existing investor). This comes as a hosted solution under your logo, and no extra needs to be done from your end to enable this (other than listen for webhooks if you'd like).
 
 # Systematic Investment Plans
 
@@ -588,7 +604,7 @@ created_at | `Datetime` Time at which the SIP was created.
 ```shell
 curl "http://surface.thesavvyapp.in/sips?account_uuid=<UUID>" \
   -X GET \
-  -H "Authorization: encoded_key"
+  -H "Authorization: Bearer <token>"
 ```
 > The above command returns an array of sip JSON objects.
 
@@ -607,7 +623,7 @@ account_uuid | true | `String` All sips associated with a account
 ```shell
 curl "http://surface.thesavvyapp.in/sips/<UUID>" \
   -X GET \
-  -H "Authorization: encoded_key"
+  -H "Authorization: Bearer <token>"
 ```
 > The above command returns a sip JSON object.
 
@@ -636,7 +652,7 @@ curl "http://surface.thesavvyapp.in/sips/<UUID>" \
 ```shell
 curl "http://surface.thesavvyapp.in/sips" \
   -X POST \
-  -H "Authorization: encoded_key" \
+  -H "Authorization: Bearer <token>" \
   -d body
 
 ```
