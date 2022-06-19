@@ -75,8 +75,8 @@ Most of our APIs require an onboarding to be done before communicating with them
   graph TD;
   create_onboarding(Create onboarding with pan number and date of birth)-- Existing investor -->submit_bank_details(Submit bank details)
   create_onboarding-- Not an existing investor -->full_kyc(Full KYC);
-  submit_bank_details-->submit_fatca(Submit FATCA info if required);
-  submit_fatca-->create_transaction(Move ahead to create a transaction);
+  submit_bank_details-->update_onboarding(Submit user details and other FATCA details);
+  update_onboarding-->create_transaction(Move ahead to create a transaction);
   full_kyc-->submit_pan(Submit picture of PAN card);
   submit_pan-->submit_address(Submit picture of an address proof);
   submit_address-->submit_signature(Submit picture of signature);
@@ -125,7 +125,8 @@ marital_status | `String` Marital status code (refer to enum list)
 // body
 { "onboarding": 
   {
-    "pan_number": "ABCDE1234C"
+    "pan_number": "ABCDE1234C",
+    "amc_code": "MOF"
   }
 }
 ```
@@ -152,6 +153,7 @@ Note the <code>onboarding</code>root key
 Parameter | Required | Description
 --------- | ------- | -----------
 pan_number | true | `String` Customer PAN number
+amc_code | true | `String` AMC code for which this onboarding is being done
 
 ## Create onboarding bank account
 
@@ -189,6 +191,48 @@ Parameter | Required | Description
 account_number | true | `String` A Valid bank account number
 ifsc_code | true | `String` A valid IFSC code
 
+## Update onboarding
+
+```json
+// body
+{ "onboarding": 
+  {
+    "address": "67 Baker Street",
+    "city": "Mumbai",
+    "pincode": "900900",
+    "date_of_birth": "27/06/1981",
+    "occupation_code": "05"
+  }
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>" \
+  -X PUT \
+  -H "Authorization: Bearer <token>" \
+  -d body
+
+```
+> The above command returns the onboarding JSON object
+
+### HTTP Request
+
+`PUT http://surface.thesavvyapp.in/onboardings/<UUID>`
+
+### JSON Parameters
+
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ------- | -----------
+address | true | `String` Street address
+city | true | `String` Residential city of the investor
+pincode | true | `String` Residential pincode of the investor
+date_of_birth | true | `Date` Date of birth of the investor
+occupation_code | true | `Enum String` Occupation of the investor
+
 ## Start Full KYC
 
 ```json
@@ -197,7 +241,8 @@ ifsc_code | true | `String` A valid IFSC code
   {
     "email": "batman@gmail.com",
     "name": "Bruce Wayne",
-    "phone_number": "+919009012345"
+    "phone_number": "+919009012345",
+    "full_kyc_redirect_url": "https://example.com/redirect"
   }
 }
 ```
@@ -223,11 +268,516 @@ This endpoint prepares the onboarding object for a full KYC
 Note the <code>onboarding</code>root key
 </aside>
 
-Parameter | Description
---------- | -----------
-name | `String` Customer's name
-email | `String` Customer's email
-phone_number | `String` Customer's phone number
+Parameter | Required | Description
+--------- | ----------- | -----------
+name | true | `String` Customer's name
+email | true | `String` Customer's email
+phone_number | true | `String` Customer's phone number
+full_kyc_redirect_url | true | `URL` Where to redirect the user once the KYC is submitted to the AMC.
+
+## Upload file
+
+```json
+// body
+{
+  "upload": "<file to upload>"
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>/upload_file" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+```
+
+> Notice that to upload files, you must make a multi-part request. This will *not* work without appropriate multi-part headers. 
+
+This endpoint uploads files to our server for further processing and analysis.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/onboardings/<UUID>/upload_file`
+
+### JSON Parameters
+
+<aside class="notice">
+Note the absence of <code>onboarding</code>root key!
+</aside>
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+upload | true | `File` The file you want to upload
+
+### JSON response
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+file | true | `String` URL of the uploaded file
+
+## Read pan card
+
+```json
+// body
+{
+  "onboarding": {
+    "image_urls": ["https://s3.images.com/123"]
+  }
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>/read_pan_card" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+```
+
+> This API returns extra params along with the onboarding object. Please make sure you're reading the response correctly.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/onboardings/<UUID>/read_pan_card`
+
+### JSON Parameters
+
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+image_urls | true | `Array` List of images to process. In the case of PAN card, we only need the front of the card.
+
+### JSON response
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+onboarding | true | `Object` The normal onboarding object
+name | true | `String` Name on the pan card
+fathers_name | true | `String` Fathers name on the pan card
+date_of_birth | true | `String` Date of birth on the pan card
+pan_number | true | `String` Pan number on the pan card
+
+**Note that the scanned details are not guaranteed to match the PAN card exactly. They're on a best effort basis.**
+
+## Submit pan card
+
+```json
+// body
+{
+  "onboarding": {
+    "name": "John Smith",
+    "fathers_name": "Mark Smith",
+    "date_of_birth": "01/01/1991",
+    "pan_number": "ABCD1234C"
+  }
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>/pan_card" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+```
+
+> This API returns the onboarding object.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/onboardings/<UUID>/pan_card`
+
+### JSON Parameters
+
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+name | true | `String` Name on the pan card
+fathers_name | true | `String` Fathers name on the pan card
+date_of_birth | true | `String` Date of birth on the pan card
+pan_number | true | `String` Pan number on the pan card
+
+**The details submitted and the actual details on the PAN card must match. If they don't, the KYC will be rejected.**
+
+## Read address proof
+
+```json
+// body
+{
+  "onboarding": {
+    "address_proof_type": "aadhaar",
+    "image_urls": ["https://s3.images.com/123", "https://s3.images.com/456"]
+  }
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>/read_address_proof" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+```
+
+> This API returns extra params along with the onboarding object, depending on the type of address proof. Please make sure you're reading the response correctly.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/onboardings/<UUID>/read_address_proof`
+
+### JSON Parameters
+
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+address_proof_type | true | `Enum` One of `[aadhaar, voter_id, passport, license]`
+image_urls | true | `Array` List of images to process. In the case of address proof, we need both back and front of the document.
+
+### JSON response
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+onboarding | true | `Object` The normal onboarding object.
+aadhaar_uid | false | `String` Masked aadhaar UID.
+license_number | false | `String` License number.
+passport_number | false | `String` Passport number.
+voter_id_number | false | `String` Voter ID number.
+name | true | true | `String` Name on the proof.
+date_of_birth | true | `Date` Date of birth on the proof.
+pincode | true | `String` Pincode on the proof.
+address | true | `String` Street address on the proof.
+district | true | `String` District on the proof.
+city | true | `String` City on the proof.
+state | true | `String` State on the proof.
+issue_date | false | `Date` Only present in license and passport.
+expiry_date | false | `Date` Only present in license and passport.
+fathers_name | false | `String` Only present in license, passport and voter id.
+
+
+**Note that the scanned details are not guaranteed to be correct. They're on a best effort basis.**
+
+## Submit address proof
+
+```json
+// body
+{
+  "onboarding": {
+    "address_proof_type": "aadhaar",
+     "name": "John Smith",
+     "expiry_date": "01/01/2029",
+     "date_of_birth": "01/01/1991",
+     "issue_date": "01/01/2000",
+     "address":"23 Baker Street",
+     "city": "Mumbai",
+     "state": "Maharashtra",
+     "district": "Malad",
+     "pincode": "400051",
+     "license_number": "12345678",
+     "aadhaar_uid": "",
+     "passport_number": "",
+     "voter_id_number": ""
+   }
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>/address_proof" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+```
+
+> This API returns the onboarding object.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/onboardings/<UUID>/address_proof`
+
+### JSON Parameters
+
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+address_proof_type | true | `String` type of address proof being processed.
+name | true | `String` Name on proof.
+expiry_date | maybe (refer above) | `String` Expiry date of proof.
+date_of_birth | maybe (refer above) | `String` Date of birth on proof.
+issue_date | maybe (refer above) | `String` Issue date of proof.
+address | true | `String` Street address on proof.
+city | true | `String`  City on proof.
+state | true | `String` State on proof.
+district | true | `String` District on proof.
+pincode | true | `String` Pincode on proof.
+license_number | maybe (refer above) | `String` License number in case of license.
+aadhaar_uid | maybe (refer above) | `String` Aadhaar UID in case of aadhaar
+passport_number | maybe (refer above) | `String` Passport number in case of passort
+voter_id_number | maybe (refer above) | `String` Voter ID number in case of voter ID
+
+**The details submitted and the actual details on the address proof must match. If they don't, the KYC will be rejected.**
+
+## Submit Investor Details
+
+```json
+// body
+{
+  "onboarding": {
+    "gender": "M",
+    "marital_status": "UNMARRIED",
+    "occupation_description": "Professional",
+    "occupation_code": "04",
+    "citizenship_code": "101",
+    "citizenship_country": "India",
+    "application_status_code": "01",
+    "application_status_description": "New",
+    "annual_income": "31"
+   }
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>/form" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+```
+
+> This API returns the onboarding object.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/onboardings/<UUID>/form`
+
+### JSON Parameters
+
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+gender | true | `Enum` Refer to Enum tables at the bottom
+marital_status | true | `Enum` Refer to Enum tables at the bottom
+occupation_description | true | `Enum` Refer to Enum tables at the bottom
+occupation_code | true | `Enum` Refer to Enum tables at the bottom
+citizenship_code | true | `Enum` Refer to Enum tables at the bottom
+citizenship_country | true | `Enum` Refer to Enum tables at the bottom
+application_status_code | true | `Enum` Refer to Enum tables at the bottom
+application_status_description | true | `Enum` Refer to Enum tables at the bottom
+annual_income | true | `Enum` Refer to Enum tables at the bottom
+
+## Upload signature
+
+```json
+// body
+{
+  "onboarding": {
+    "image_urls": ["https://s3.images.com/123"]
+  }
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>/signature" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+```
+
+> This API returns the onboarding object.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/onboardings/<UUID>/signature`
+
+### JSON Parameters
+
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+image_urls | true | `Array` List of images to process. In the case of signature, we need just one image.
+
+**Note that the signature must be against a white background. This can be either a physical signature on a white background, or a digital signature on a white background. The form factor is up to you**
+
+## Upload selfie
+
+```json
+// body
+{
+  "onboarding": {
+    "image_urls": ["https://s3.images.com/123"]
+  }
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>/selfie" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+```
+
+> This API returns the onboarding object.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/onboardings/<UUID>/selfie`
+
+### JSON Parameters
+
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+image_urls | true | `Array` List of images to process. In the case of selfie, we need just one image.
+
+## Start Video Verification
+
+```json
+// body
+{}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>/start_video_verification" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+```
+
+> This API returns extra params along with the onboarding object. Please make sure you're reading the response correctly.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/onboardings/<UUID>/start_video_verification`
+
+### **Important Info about this API**
+
+The API will return a random 6 digit number. The user must say this number on video. This allows to do a "liveness check" (make sure it's not a pre-recorded video).
+
+### JSON Response
+
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+onboarding | true | Regular onboarding object
+transaction_id | true | ID uniquely identifying this video verification
+random_number | true | Random number to say on video
+
+## Submit Video Verification
+
+```json
+// body
+{
+  "onboarding": {
+    "video_url": "https://s3.videos/123",
+    "transaction_id": "12345"
+   }
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>/video_verification" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+```
+
+> This API returns the onboarding object.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/onboardings/<UUID>/video_verification`
+
+### JSON Parameters
+
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+video_url | true | `URL` URL of the uploaded video via the upload file API.
+transaction_id | true | `String` ID returned by the start video verification API.
+
+## Generate KYC Contract
+
+```json
+// body
+{}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>/generate_contract" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+```
+
+> This API returns extra params along with the onboarding object. Please make sure you're reading the response correctly.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/onboardings/<UUID>/generate_contract`
+
+### **Important Info about this API**
+
+The API will return a url which you must redirect the user to. The webpage will show all the information submitted so far, and the user must sign the contract displayed with their aadhaar e-signature. The page has been known to not play well with app-embedded browsers. So it's recommended that your redirect the user to the actual browser on the phone.
+
+### JSON Response
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+onboarding | true | Regular onboarding object.
+url | true | Aadhaar e-sign contract URL.
+random_number | true | Random number to say on video
+
+## Execute Verification
+
+```json
+// body
+{}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/onboardings/<UUID>/execute_verification" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+```
+
+> This API returns the onboarding object.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/onboardings/<UUID>/execute_verification`
+
+### **Important Info about this API**
+
+On success response of this API, the investors' details are pushed to the KRA/AMC for verification. Wait for the webhook to be informed of success/failure and the reasons for failure, if any.
+In case there is a failure, you can use the API to update the same onboarding. You will, however, have to generate a new contract, get a new aadhaar e-sign and execute verification again.
+
+### JSON Response
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+onboarding | true | Regular onboarding object.
 
 # AMCs
 
@@ -969,9 +1519,294 @@ Make sure to verify this signature before using the payload.
 
 ## Annual Income Codes
 
+Code | Description
+--------- | ----------- 
+31 | Below 1 Lac
+32 | 1-5 Lacs
+33 | 5-10 Lacs
+34 | 10-25 Lacs
+35 | 25 Lacs-1 crore
+36 | 1 crore
+
 ## Gender Codes
+
+Code | Description
+--------- | ----------- 
+M | Male
+F | Female
+T | Transgender
 
 ## Occupation Codes
 
+Code | Description
+--------- | ----------- 
+01 | Private Sector
+02 | Public Sector
+03 | Business
+04 | Professional
+06 | Retired
+07 | Housewife
+08 | Student
+10 | Government Sector
+99 | Others
+11 | Self Employed
+12 | Not Categorized
+
 ## Marital Status Codes
 
+Code | Description
+--------- | -----------
+MARRIED | Married
+UNMARRIED | Unmarried
+OTHERS | Others
+
+## Country Codes
+
+Code | Description
+--------- | -----------
+India| 101
+Albania| 003
+Aland Islands| 002
+Afghanistan| 001
+Algeria| 004
+American Samoa | 005
+Andorra| 006
+Angola | 007
+Anguilla | 008
+Antarctica | 009
+Antigua And Barbuda| 010
+Argentina| 011
+Armenia| 012
+Aruba| 013
+Australia| 014
+Austria| 015
+Azerbaijan | 016
+Bahamas| 017
+Bahrain| 018
+Bangladesh | 019
+Barbados | 020
+Belarus| 021
+Belgium| 022
+Belize | 023
+Benin| 024
+Bermuda| 025
+Bhutan | 026
+Bolivia| 027
+Bosnia And Herzegovina | 028
+Botswana | 029
+Bouvet Island| 030
+Brazil | 031
+British Indian Ocean Territory | 032
+Brunei Darussalam| 033
+Bulgaria | 034
+Burkina Faso | 035
+Burundi| 036
+Cambodia | 037
+Cameroon | 038
+Canada | 039
+Cape Verde | 040
+Cayman Islands | 041
+Central African Republic | 042
+Chad | 043
+Chile| 044
+China| 045
+Christmas Island | 046
+Cocos (Keeling) Islands| 047
+Colombia | 048
+Comoros| 049
+Congo| 050
+Congo, The Democratic Republic Of The| 051
+Cook Islands | 052
+Costa Rica | 053
+Cote D'Ivoire| 054
+Croatia| 055
+Cuba | 056
+Cyprus | 057
+Czech Republic | 058
+Denmark| 059
+Djibouti | 060
+Dominica | 061
+Dominican Republic | 062
+Ecuador| 063
+Egypt| 064
+El Salvador| 065
+Equatorial Guinea| 066
+Eritrea| 067
+Estonia| 068
+Ethiopia | 069
+Falkland Islands (Malvinas)| 070
+Faroe Islands| 071
+Fiji | 072
+Finland| 073
+France | 074
+French Guiana| 075
+French Polynesia | 076
+French Southern Territories| 077
+Gabon| 078
+Gambia | 079
+Georgia| 080
+Germany| 081
+Ghana| 082
+Gibraltar| 083
+Greece | 084
+Greenland| 085
+Grenada| 086
+Guadeloupe | 087
+Guam | 088
+Guatemala| 089
+Guernsey | 090
+Guinea | 091
+Guinea-Bissau| 092
+Guyana | 093
+Haiti| 094
+Heard Island And Mcdonald Islands| 095
+Holy See (Vatican City State)| 096
+Honduras | 097
+Hong Kong| 098
+Hungary| 099
+Iceland| 100
+Indonesia| 102
+Iran, Islamic Republic Of| 103
+Iraq | 104
+Ireland| 105
+Isle Of Man| 106
+Israel | 107
+Italy| 108
+Jamaica| 109
+Japan| 110
+Jersey | 111
+Jordan | 112
+Kazakhstan | 113
+Kenya| 114
+Kiribati | 115
+Korea, Democratic People’s Republic Of | 116
+Korea, Republic Of | 117
+Kuwait | 118
+Kyrgyzstan | 119
+Lao People’s Democratic Republic | 120
+Latvia | 121
+Lebanon| 122
+Lesotho| 123
+Liberia| 124
+Libyan Arab Jamahiriya | 125
+Liechtenstein| 126
+Lithuania| 127
+Luxembourg | 128
+Macao| 129
+Macedonia, The Former Yugoslav Republic Of | 130
+Madagascar | 131
+Malawi | 132
+Malaysia | 133
+Maldives | 134
+Mali | 135
+Malta| 136
+Marshall Islands | 137
+Martinique | 138
+Mauritania | 139
+Mauritius| 140
+Mayotte| 141
+Mexico | 142
+Micronesia, Federated States Of| 143
+Moldova, Republic Of | 144
+Monaco | 145
+Mongolia | 146
+Montserrat | 147
+Morocco| 148
+Mozambique | 149
+Myanmar| 150
+Namibia| 151
+Nauru| 152
+Nepal| 153
+Netherlands| 154
+Netherlands Antilles | 155
+New Caledonia| 156
+New Zealand| 157
+Nicaragua| 158
+Niger| 159
+Nigeria| 160
+Niue | 161
+Norfolk Island | 162
+Northern Mariana Islands | 163
+Norway | 164
+Oman | 165
+Pakistan | 166
+Palau| 167
+Palestinian Territory, Occupied| 168
+Panama | 169
+Papua New Guinea | 170
+Paraguay | 171
+Peru | 172
+Philippines| 173
+Pitcairn | 174
+Poland | 175
+Portugal | 176
+Puerto Rico| 177
+Qatar| 178
+Reunion| 179
+Romania| 180
+Russian Federation | 181
+Rwanda | 182
+Saint Helena | 183
+Saint Kitts And Nevis| 184
+Saint Lucia| 185
+Saint Pierre And Miquelon| 186
+Saint Vincent And The Grenadines | 187
+Samoa| 188
+San Marino | 189
+Sao Tome And Principe| 190
+Saudi Arabia | 191
+Senegal| 192
+Serbia And Montenegro| 193
+Seychelles | 194
+Sierra Leone | 195
+Singapore| 196
+Slovakia | 197
+Slovenia | 198
+Solomon Islands| 199
+Somalia| 200
+South Africa | 201
+South Georgia And The South Sandwich Islands | 202
+Spain| 203
+Sri Lanka| 204
+Sudan| 205
+Suriname | 206
+Svalbard And Jan Mayen | 207
+Swaziland| 208
+Sweden | 209
+Switzerland| 210
+Syrian Arab Republic | 211
+Taiwan, Province Of China| 212
+Tajikistan | 213
+Tanzania, United Republic Of | 214
+Thailand | 215
+Timor-Leste| 216
+Togo | 217
+Tokelau | 218
+Tonga | 219
+Trinidad And Tobago | 220
+Tunisia | 221
+Turkey | 222
+Turkmenistan | 223
+Turks And Caicos Islands | 224
+Tuvalu | 225
+Uganda | 226
+Ukraine| 227
+United Arab Emirates | 228
+United Kingdom | 229
+United States| 230
+United States Minor Outlying Islands | 231
+Uruguay| 232
+Uzbekistan | 233
+Vanuatu| 234
+Venezuela| 235
+Viet Nam | 236
+Virgin Islands, British | 237
+Virgin Islands, U.S. | 238
+Wallis And Futuna | 239
+Western Sahara | 240
+Yemen | 241
+Zambia | 242
+Zimbabwe | 243
+Côte D'ivoire | CI
+Korea,Democratic People'sRepublicOf | KP
+Lao People’s Democratic Republic | 12|0
