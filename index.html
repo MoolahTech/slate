@@ -352,7 +352,46 @@
                     <a href="#create-onboarding-bank-account" class="toc-h2 toc-link" data-title="Create onboarding bank account">Create onboarding bank account</a>
                   </li>
                   <li>
+                    <a href="#update-onboarding" class="toc-h2 toc-link" data-title="Update onboarding">Update onboarding</a>
+                  </li>
+                  <li>
                     <a href="#start-full-kyc" class="toc-h2 toc-link" data-title="Start Full KYC">Start Full KYC</a>
+                  </li>
+                  <li>
+                    <a href="#upload-file" class="toc-h2 toc-link" data-title="Upload file">Upload file</a>
+                  </li>
+                  <li>
+                    <a href="#read-pan-card" class="toc-h2 toc-link" data-title="Read pan card">Read pan card</a>
+                  </li>
+                  <li>
+                    <a href="#submit-pan-card" class="toc-h2 toc-link" data-title="Submit pan card">Submit pan card</a>
+                  </li>
+                  <li>
+                    <a href="#read-address-proof" class="toc-h2 toc-link" data-title="Read address proof">Read address proof</a>
+                  </li>
+                  <li>
+                    <a href="#submit-address-proof" class="toc-h2 toc-link" data-title="Submit address proof">Submit address proof</a>
+                  </li>
+                  <li>
+                    <a href="#submit-investor-details" class="toc-h2 toc-link" data-title="Submit Investor Details">Submit Investor Details</a>
+                  </li>
+                  <li>
+                    <a href="#upload-signature" class="toc-h2 toc-link" data-title="Upload signature">Upload signature</a>
+                  </li>
+                  <li>
+                    <a href="#upload-selfie" class="toc-h2 toc-link" data-title="Upload selfie">Upload selfie</a>
+                  </li>
+                  <li>
+                    <a href="#start-video-verification" class="toc-h2 toc-link" data-title="Start Video Verification">Start Video Verification</a>
+                  </li>
+                  <li>
+                    <a href="#submit-video-verification" class="toc-h2 toc-link" data-title="Submit Video Verification">Submit Video Verification</a>
+                  </li>
+                  <li>
+                    <a href="#generate-kyc-contract" class="toc-h2 toc-link" data-title="Generate KYC Contract">Generate KYC Contract</a>
+                  </li>
+                  <li>
+                    <a href="#execute-verification" class="toc-h2 toc-link" data-title="Execute Verification">Execute Verification</a>
                   </li>
               </ul>
           </li>
@@ -511,6 +550,9 @@
                   <li>
                     <a href="#marital-status-codes" class="toc-h2 toc-link" data-title="Marital Status Codes">Marital Status Codes</a>
                   </li>
+                  <li>
+                    <a href="#country-codes" class="toc-h2 toc-link" data-title="Country Codes">Country Codes</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -569,8 +611,8 @@ You must replace <code>token</code> with your own secure token or individual tok
   graph TD;
   create_onboarding(Create onboarding with pan number and date of birth)-- Existing investor -->submit_bank_details(Submit bank details)
   create_onboarding-- Not an existing investor -->full_kyc(Full KYC);
-  submit_bank_details-->submit_fatca(Submit FATCA info if required);
-  submit_fatca-->create_transaction(Move ahead to create a transaction);
+  submit_bank_details-->update_onboarding(Submit user details and other FATCA details);
+  update_onboarding-->create_transaction(Move ahead to create a transaction);
   full_kyc-->submit_pan(Submit picture of PAN card);
   submit_pan-->submit_address(Submit picture of an address proof);
   submit_address-->submit_signature(Submit picture of signature);
@@ -687,7 +729,8 @@ If doing Full KYC, you should wait for verification confirmation via webhook bef
 <h2 id='create-onboarding'>Create onboarding</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> 
   </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="w">
+    </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MOF"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings"</span> <span class="se">\</span>
@@ -717,6 +760,11 @@ Note the <code>onboarding</code>root key
 <td>pan_number</td>
 <td>true</td>
 <td><code>String</code> Customer PAN number</td>
+</tr>
+<tr>
+<td>amc_code</td>
+<td>true</td>
+<td><code>String</code> AMC code for which this onboarding is being done</td>
 </tr>
 </tbody></table>
 <h2 id='create-onboarding-bank-account'>Create onboarding bank account</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
@@ -760,12 +808,72 @@ Note the <code>onboarding</code>root key
 <td><code>String</code> A valid IFSC code</td>
 </tr>
 </tbody></table>
+<h2 id='update-onboarding'>Update onboarding</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w"> </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"67 Baker Street"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mumbai"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"pincode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"900900"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="s2">"27/06/1981"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"occupation_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"05"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;"</span> <span class="se">\</span>
+  <span class="nt">-X</span> PUT <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+
+</code></pre></div>
+<blockquote>
+<p>The above command returns the onboarding JSON object</p>
+</blockquote>
+<h3 id='http-request-3'>HTTP Request</h3>
+<p><code>PUT http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;</code></p>
+<h3 id='json-parameters-2'>JSON Parameters</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>address</td>
+<td>true</td>
+<td><code>String</code> Street address</td>
+</tr>
+<tr>
+<td>city</td>
+<td>true</td>
+<td><code>String</code> Residential city of the investor</td>
+</tr>
+<tr>
+<td>pincode</td>
+<td>true</td>
+<td><code>String</code> Residential pincode of the investor</td>
+</tr>
+<tr>
+<td>date_of_birth</td>
+<td>true</td>
+<td><code>Date</code> Date of birth of the investor</td>
+</tr>
+<tr>
+<td>occupation_code</td>
+<td>true</td>
+<td><code>Enum String</code> Occupation of the investor</td>
+</tr>
+</tbody></table>
 <h2 id='start-full-kyc'>Start Full KYC</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w">
   </span><span class="p">{</span><span class="w">
     </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"batman@gmail.com"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bruce Wayne"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+919009012345"</span><span class="w">
+    </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+919009012345"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"full_kyc_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/redirect"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/full_kyc"</span> <span class="se">\</span>
@@ -778,9 +886,9 @@ Note the <code>onboarding</code>root key
 </blockquote>
 
 <p>This endpoint prepares the onboarding object for a full KYC</p>
-<h3 id='http-request-3'>HTTP Request</h3>
+<h3 id='http-request-4'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/full_kyc</code></p>
-<h3 id='json-parameters-2'>JSON Parameters</h3>
+<h3 id='json-parameters-3'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -788,20 +896,742 @@ Note the <code>onboarding</code>root key
 <table><thead>
 <tr>
 <th>Parameter</th>
+<th>Required</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>name</td>
+<td>true</td>
 <td><code>String</code> Customer&#39;s name</td>
 </tr>
 <tr>
 <td>email</td>
+<td>true</td>
 <td><code>String</code> Customer&#39;s email</td>
 </tr>
 <tr>
 <td>phone_number</td>
+<td>true</td>
 <td><code>String</code> Customer&#39;s phone number</td>
+</tr>
+<tr>
+<td>full_kyc_redirect_url</td>
+<td>true</td>
+<td><code>URL</code> Where to redirect the user once the KYC is submitted to the AMC.</td>
+</tr>
+</tbody></table>
+<h2 id='upload-file'>Upload file</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"upload"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;file to upload&gt;"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/upload_file"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>Notice that to upload files, you must make a multi-part request. This will <em>not</em> work without appropriate multi-part headers. </p>
+</blockquote>
+
+<p>This endpoint uploads files to our server for further processing and analysis.</p>
+<h3 id='http-request-5'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/upload_file</code></p>
+<h3 id='json-parameters-4'>JSON Parameters</h3>
+<aside class="notice">
+Note the absence of <code>onboarding</code>root key!
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>upload</td>
+<td>true</td>
+<td><code>File</code> The file you want to upload</td>
+</tr>
+</tbody></table>
+<h3 id='json-response'>JSON response</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>file</td>
+<td>true</td>
+<td><code>String</code> URL of the uploaded file</td>
+</tr>
+</tbody></table>
+<h2 id='read-pan-card'>Read pan card</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"image_urls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://s3.images.com/123"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/read_pan_card"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
+</blockquote>
+<h3 id='http-request-6'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/read_pan_card</code></p>
+<h3 id='json-parameters-5'>JSON Parameters</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>image_urls</td>
+<td>true</td>
+<td><code>Array</code> List of images to process. In the case of PAN card, we only need the front of the card.</td>
+</tr>
+</tbody></table>
+<h3 id='json-response-2'>JSON response</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>onboarding</td>
+<td>true</td>
+<td><code>Object</code> The normal onboarding object</td>
+</tr>
+<tr>
+<td>name</td>
+<td>true</td>
+<td><code>String</code> Name on the pan card</td>
+</tr>
+<tr>
+<td>fathers_name</td>
+<td>true</td>
+<td><code>String</code> Fathers name on the pan card</td>
+</tr>
+<tr>
+<td>date_of_birth</td>
+<td>true</td>
+<td><code>String</code> Date of birth on the pan card</td>
+</tr>
+<tr>
+<td>pan_number</td>
+<td>true</td>
+<td><code>String</code> Pan number on the pan card</td>
+</tr>
+</tbody></table>
+
+<p><strong>Note that the scanned details are not guaranteed to match the PAN card exactly. They&#39;re on a best effort basis.</strong></p>
+<h2 id='submit-pan-card'>Submit pan card</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"fathers_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mark Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/1991"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCD1234C"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/pan_card"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns the onboarding object.</p>
+</blockquote>
+<h3 id='http-request-7'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/pan_card</code></p>
+<h3 id='json-parameters-6'>JSON Parameters</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>true</td>
+<td><code>String</code> Name on the pan card</td>
+</tr>
+<tr>
+<td>fathers_name</td>
+<td>true</td>
+<td><code>String</code> Fathers name on the pan card</td>
+</tr>
+<tr>
+<td>date_of_birth</td>
+<td>true</td>
+<td><code>String</code> Date of birth on the pan card</td>
+</tr>
+<tr>
+<td>pan_number</td>
+<td>true</td>
+<td><code>String</code> Pan number on the pan card</td>
+</tr>
+</tbody></table>
+
+<p><strong>The details submitted and the actual details on the PAN card must match. If they don&#39;t, the KYC will be rejected.</strong></p>
+<h2 id='read-address-proof'>Read address proof</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"address_proof_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aadhaar"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"image_urls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://s3.images.com/123"</span><span class="p">,</span><span class="w"> </span><span class="s2">"https://s3.images.com/456"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/read_address_proof"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns extra params along with the onboarding object, depending on the type of address proof. Please make sure you&#39;re reading the response correctly.</p>
+</blockquote>
+<h3 id='http-request-8'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/read_address_proof</code></p>
+<h3 id='json-parameters-7'>JSON Parameters</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>address_proof_type</td>
+<td>true</td>
+<td><code>Enum</code> One of <code>[aadhaar, voter_id, passport, license]</code></td>
+</tr>
+<tr>
+<td>image_urls</td>
+<td>true</td>
+<td><code>Array</code> List of images to process. In the case of address proof, we need both back and front of the document.</td>
+</tr>
+</tbody></table>
+<h3 id='json-response-3'>JSON response</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>onboarding</td>
+<td>true</td>
+<td><code>Object</code> The normal onboarding object.</td>
+</tr>
+<tr>
+<td>aadhaar_uid</td>
+<td>false</td>
+<td><code>String</code> Masked aadhaar UID.</td>
+</tr>
+<tr>
+<td>license_number</td>
+<td>false</td>
+<td><code>String</code> License number.</td>
+</tr>
+<tr>
+<td>passport_number</td>
+<td>false</td>
+<td><code>String</code> Passport number.</td>
+</tr>
+<tr>
+<td>voter_id_number</td>
+<td>false</td>
+<td><code>String</code> Voter ID number.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>true</td>
+<td>true</td>
+</tr>
+<tr>
+<td>date_of_birth</td>
+<td>true</td>
+<td><code>Date</code> Date of birth on the proof.</td>
+</tr>
+<tr>
+<td>pincode</td>
+<td>true</td>
+<td><code>String</code> Pincode on the proof.</td>
+</tr>
+<tr>
+<td>address</td>
+<td>true</td>
+<td><code>String</code> Street address on the proof.</td>
+</tr>
+<tr>
+<td>district</td>
+<td>true</td>
+<td><code>String</code> District on the proof.</td>
+</tr>
+<tr>
+<td>city</td>
+<td>true</td>
+<td><code>String</code> City on the proof.</td>
+</tr>
+<tr>
+<td>state</td>
+<td>true</td>
+<td><code>String</code> State on the proof.</td>
+</tr>
+<tr>
+<td>issue_date</td>
+<td>false</td>
+<td><code>Date</code> Only present in license and passport.</td>
+</tr>
+<tr>
+<td>expiry_date</td>
+<td>false</td>
+<td><code>Date</code> Only present in license and passport.</td>
+</tr>
+<tr>
+<td>fathers_name</td>
+<td>false</td>
+<td><code>String</code> Only present in license, passport and voter id.</td>
+</tr>
+</tbody></table>
+
+<p><strong>Note that the scanned details are not guaranteed to be correct. They&#39;re on a best effort basis.</strong></p>
+<h2 id='submit-address-proof'>Submit address proof</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"address_proof_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aadhaar"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"expiry_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/2029"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"date_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/1991"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"issue_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/2000"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"address"</span><span class="p">:</span><span class="s2">"23 Baker Street"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mumbai"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Maharashtra"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"district"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Malad"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"pincode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"400051"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"license_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"aadhaar_uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"passport_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"voter_id_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/address_proof"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns the onboarding object.</p>
+</blockquote>
+<h3 id='http-request-9'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/address_proof</code></p>
+<h3 id='json-parameters-8'>JSON Parameters</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>address_proof_type</td>
+<td>true</td>
+<td><code>String</code> type of address proof being processed.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>true</td>
+<td><code>String</code> Name on proof.</td>
+</tr>
+<tr>
+<td>expiry_date</td>
+<td>maybe (refer above)</td>
+<td><code>String</code> Expiry date of proof.</td>
+</tr>
+<tr>
+<td>date_of_birth</td>
+<td>maybe (refer above)</td>
+<td><code>String</code> Date of birth on proof.</td>
+</tr>
+<tr>
+<td>issue_date</td>
+<td>maybe (refer above)</td>
+<td><code>String</code> Issue date of proof.</td>
+</tr>
+<tr>
+<td>address</td>
+<td>true</td>
+<td><code>String</code> Street address on proof.</td>
+</tr>
+<tr>
+<td>city</td>
+<td>true</td>
+<td><code>String</code>  City on proof.</td>
+</tr>
+<tr>
+<td>state</td>
+<td>true</td>
+<td><code>String</code> State on proof.</td>
+</tr>
+<tr>
+<td>district</td>
+<td>true</td>
+<td><code>String</code> District on proof.</td>
+</tr>
+<tr>
+<td>pincode</td>
+<td>true</td>
+<td><code>String</code> Pincode on proof.</td>
+</tr>
+<tr>
+<td>license_number</td>
+<td>maybe (refer above)</td>
+<td><code>String</code> License number in case of license.</td>
+</tr>
+<tr>
+<td>aadhaar_uid</td>
+<td>maybe (refer above)</td>
+<td><code>String</code> Aadhaar UID in case of aadhaar</td>
+</tr>
+<tr>
+<td>passport_number</td>
+<td>maybe (refer above)</td>
+<td><code>String</code> Passport number in case of passort</td>
+</tr>
+<tr>
+<td>voter_id_number</td>
+<td>maybe (refer above)</td>
+<td><code>String</code> Voter ID number in case of voter ID</td>
+</tr>
+</tbody></table>
+
+<p><strong>The details submitted and the actual details on the address proof must match. If they don&#39;t, the KYC will be rejected.</strong></p>
+<h2 id='submit-investor-details'>Submit Investor Details</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"M"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"marital_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UNMARRIED"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"occupation_description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Professional"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"occupation_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"04"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"citizenship_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"101"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"citizenship_country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"India"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"application_status_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"application_status_description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"annual_income"</span><span class="p">:</span><span class="w"> </span><span class="s2">"31"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/form"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns the onboarding object.</p>
+</blockquote>
+<h3 id='http-request-10'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/form</code></p>
+<h3 id='json-parameters-9'>JSON Parameters</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>gender</td>
+<td>true</td>
+<td><code>Enum</code> Refer to Enum tables at the bottom</td>
+</tr>
+<tr>
+<td>marital_status</td>
+<td>true</td>
+<td><code>Enum</code> Refer to Enum tables at the bottom</td>
+</tr>
+<tr>
+<td>occupation_description</td>
+<td>true</td>
+<td><code>Enum</code> Refer to Enum tables at the bottom</td>
+</tr>
+<tr>
+<td>occupation_code</td>
+<td>true</td>
+<td><code>Enum</code> Refer to Enum tables at the bottom</td>
+</tr>
+<tr>
+<td>citizenship_code</td>
+<td>true</td>
+<td><code>Enum</code> Refer to Enum tables at the bottom</td>
+</tr>
+<tr>
+<td>citizenship_country</td>
+<td>true</td>
+<td><code>Enum</code> Refer to Enum tables at the bottom</td>
+</tr>
+<tr>
+<td>application_status_code</td>
+<td>true</td>
+<td><code>Enum</code> Refer to Enum tables at the bottom</td>
+</tr>
+<tr>
+<td>application_status_description</td>
+<td>true</td>
+<td><code>Enum</code> Refer to Enum tables at the bottom</td>
+</tr>
+<tr>
+<td>annual_income</td>
+<td>true</td>
+<td><code>Enum</code> Refer to Enum tables at the bottom</td>
+</tr>
+</tbody></table>
+<h2 id='upload-signature'>Upload signature</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"image_urls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://s3.images.com/123"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/signature"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns the onboarding object.</p>
+</blockquote>
+<h3 id='http-request-11'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/signature</code></p>
+<h3 id='json-parameters-10'>JSON Parameters</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>image_urls</td>
+<td>true</td>
+<td><code>Array</code> List of images to process. In the case of signature, we need just one image.</td>
+</tr>
+</tbody></table>
+
+<p><strong>Note that the signature must be against a white background. This can be either a physical signature on a white background, or a digital signature on a white background. The form factor is up to you</strong></p>
+<h2 id='upload-selfie'>Upload selfie</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"image_urls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://s3.images.com/123"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/selfie"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns the onboarding object.</p>
+</blockquote>
+<h3 id='http-request-12'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/selfie</code></p>
+<h3 id='json-parameters-11'>JSON Parameters</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>image_urls</td>
+<td>true</td>
+<td><code>Array</code> List of images to process. In the case of selfie, we need just one image.</td>
+</tr>
+</tbody></table>
+<h2 id='start-video-verification'>Start Video Verification</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/start_video_verification"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
+</blockquote>
+<h3 id='http-request-13'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/start_video_verification</code></p>
+<h3 id='important-info-about-this-api'><strong>Important Info about this API</strong></h3>
+<p>The API will return a random 6 digit number. The user must say this number on video. This allows to do a &quot;liveness check&quot; (make sure it&#39;s not a pre-recorded video).</p>
+<h3 id='json-response-4'>JSON Response</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>onboarding</td>
+<td>true</td>
+<td>Regular onboarding object</td>
+</tr>
+<tr>
+<td>transaction_id</td>
+<td>true</td>
+<td>ID uniquely identifying this video verification</td>
+</tr>
+<tr>
+<td>random_number</td>
+<td>true</td>
+<td>Random number to say on video</td>
+</tr>
+</tbody></table>
+<h2 id='submit-video-verification'>Submit Video Verification</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"video_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.videos/123"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/video_verification"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns the onboarding object.</p>
+</blockquote>
+<h3 id='http-request-14'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/video_verification</code></p>
+<h3 id='json-parameters-12'>JSON Parameters</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>video_url</td>
+<td>true</td>
+<td><code>URL</code> URL of the uploaded video via the upload file API.</td>
+</tr>
+<tr>
+<td>transaction_id</td>
+<td>true</td>
+<td><code>String</code> ID returned by the start video verification API.</td>
+</tr>
+</tbody></table>
+<h2 id='generate-kyc-contract'>Generate KYC Contract</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/generate_contract"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
+</blockquote>
+<h3 id='http-request-15'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/generate_contract</code></p>
+<h3 id='important-info-about-this-api-2'><strong>Important Info about this API</strong></h3>
+<p>The API will return a url which you must redirect the user to. The webpage will show all the information submitted so far, and the user must sign the contract displayed with their aadhaar e-signature. The page has been known to not play well with app-embedded browsers. So it&#39;s recommended that your redirect the user to the actual browser on the phone.</p>
+<h3 id='json-response-5'>JSON Response</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>onboarding</td>
+<td>true</td>
+<td>Regular onboarding object.</td>
+</tr>
+<tr>
+<td>url</td>
+<td>true</td>
+<td>Aadhaar e-sign contract URL.</td>
+</tr>
+<tr>
+<td>random_number</td>
+<td>true</td>
+<td>Random number to say on video</td>
+</tr>
+</tbody></table>
+<h2 id='execute-verification'>Execute Verification</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/execute_verification"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns the onboarding object.</p>
+</blockquote>
+<h3 id='http-request-16'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/execute_verification</code></p>
+<h3 id='important-info-about-this-api-3'><strong>Important Info about this API</strong></h3>
+<p>On success response of this API, the investors&#39; details are pushed to the KRA/AMC for verification. Wait for the webhook to be informed of success/failure and the reasons for failure, if any.
+In case there is a failure, you can use the API to update the same onboarding. You will, however, have to generate a new contract, get a new aadhaar e-sign and execute verification again.</p>
+<h3 id='json-response-6'>JSON Response</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>onboarding</td>
+<td>true</td>
+<td>Regular onboarding object.</td>
 </tr>
 </tbody></table>
 <h1 id='amcs'>AMCs</h1>
@@ -829,7 +1659,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>The above command returns an array of AMC JSON objects.</p>
 </blockquote>
-<h3 id='http-request-4'>HTTP Request</h3>
+<h3 id='http-request-17'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/amcs</code></p>
 <h1 id='funds'>Funds</h1>
 <p>This API gives you lists of supported mutual funds, by AMC. There is also support for NFOs, along with their timelines. Please note that NFOs are updated 1-2 days before the launch date.</p>
@@ -865,7 +1695,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>The above command returns an array of Fund JSON objects.</p>
 </blockquote>
-<h3 id='http-request-5'>HTTP Request</h3>
+<h3 id='http-request-18'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/funds</code></p>
 <h3 id='url-parameters'>URL Parameters</h3>
 <table><thead>
@@ -930,7 +1760,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>The above command returns a account JSON object.</p>
 </blockquote>
-<h3 id='http-request-6'>HTTP Request</h3>
+<h3 id='http-request-19'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/accounts/&lt;UUID&gt;</code></p>
 <h1 id='deposits'>Deposits</h1>
 <p>The deposits API describes how to create a mutual fund purchase transaction. This API can only be accessed post the onboarding flow. The workflow for creating and completing a purchase is:</p>
@@ -1025,7 +1855,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>The above command returns an array of deposit JSON objects.</p>
 </blockquote>
-<h3 id='http-request-7'>HTTP Request</h3>
+<h3 id='http-request-20'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/deposits?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-2'>URL Parameters</h3>
 <table><thead>
@@ -1048,7 +1878,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>The above command returns a deposit JSON object.</p>
 </blockquote>
-<h3 id='http-request-8'>HTTP Request</h3>
+<h3 id='http-request-21'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/deposits/&lt;UUID&gt;</code></p>
 <h2 id='create-deposit'>Create deposit</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"deposit"</span><span class="p">:</span><span class="w"> 
@@ -1068,7 +1898,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>The above command returns the deposit JSON object</p>
 </blockquote>
-<h3 id='http-request-9'>HTTP Request</h3>
+<h3 id='http-request-22'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/deposits</code></p>
 <h3 id='parameters-2'>Parameters</h3>
 <aside class="notice">
@@ -1182,7 +2012,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns an array of withdrawal JSON objects.</p>
 </blockquote>
-<h3 id='http-request-10'>HTTP Request</h3>
+<h3 id='http-request-23'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/withdrawals?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-3'>URL Parameters</h3>
 <table><thead>
@@ -1205,7 +2035,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns a withdrawal JSON object.</p>
 </blockquote>
-<h3 id='http-request-11'>HTTP Request</h3>
+<h3 id='http-request-24'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/withdrawals/&lt;UUID&gt;</code></p>
 <h2 id='create-withdrawal'>Create withdrawal</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"withdrawal"</span><span class="p">:</span><span class="w"> 
@@ -1225,7 +2055,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-12'>HTTP Request</h3>
+<h3 id='http-request-25'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/withdrawals</code></p>
 
 <p>On success, an OTP is sent on both the users&#39; registered email and phone number. This OTP has to be verified by the user and sent to us on API.</p>
@@ -1277,7 +2107,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-13'>HTTP Request</h3>
+<h3 id='http-request-26'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/withdrawals/&lt;UUID&gt;/verify_otp</code></p>
 
 <p>On success, the status of the withdrawal will change to <code>otp_complete</code>. The OTP verification will expire in 5 minutes, and the OTP can be resent in case of delivery failures after 30 seconds of first attempt. </p>
@@ -1402,7 +2232,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns a OCC JSON object.</p>
 </blockquote>
-<h3 id='http-request-14'>HTTP Request</h3>
+<h3 id='http-request-27'>HTTP Request</h3>
 <p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts</code></p>
 <h3 id='parameters-5'>Parameters</h3>
 <aside class="notice">
@@ -1576,7 +2406,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns a OCC JSON object.</p>
 </blockquote>
-<h3 id='http-request-15'>HTTP Request</h3>
+<h3 id='http-request-28'>HTTP Request</h3>
 <p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts/create_sip</code></p>
 <h3 id='parameters-6'>Parameters</h3>
 <aside class="notice">
@@ -1804,7 +2634,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns an array of sip JSON objects.</p>
 </blockquote>
-<h3 id='http-request-16'>HTTP Request</h3>
+<h3 id='http-request-29'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/sips?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-4'>URL Parameters</h3>
 <table><thead>
@@ -1827,7 +2657,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns a sip JSON object.</p>
 </blockquote>
-<h3 id='http-request-17'>HTTP Request</h3>
+<h3 id='http-request-30'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/sips/&lt;UUID&gt;</code></p>
 <h2 id='create-sip'>Create sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"sip"</span><span class="p">:</span><span class="w"> 
@@ -1851,7 +2681,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns the sip JSON object</p>
 </blockquote>
-<h3 id='http-request-18'>HTTP Request</h3>
+<h3 id='http-request-31'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/sips</code></p>
 
 <p>On success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate required for periodic auto-debits. If for some reason, the mandate fails to get signed, you can retry the mandate signing for a period of 24 hours, post which a new mandate must be created.</p>
@@ -1998,7 +2828,1123 @@ Webhooks are sent on a "best-effort" basis, and are sent at least once. That mea
 <p><code>HMAC(&#39;sha256&#39;, secret_key, payload)</code></p>
 
 <p>Make sure to verify this signature before using the payload.</p>
-<h1 id='enums'>Enums</h1><h2 id='annual-income-codes'>Annual Income Codes</h2><h2 id='gender-codes'>Gender Codes</h2><h2 id='occupation-codes'>Occupation Codes</h2><h2 id='marital-status-codes'>Marital Status Codes</h2><h1 id='errors'>Errors</h1>
+<h1 id='enums'>Enums</h1><h2 id='annual-income-codes'>Annual Income Codes</h2>
+<table><thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>31</td>
+<td>Below 1 Lac</td>
+</tr>
+<tr>
+<td>32</td>
+<td>1-5 Lacs</td>
+</tr>
+<tr>
+<td>33</td>
+<td>5-10 Lacs</td>
+</tr>
+<tr>
+<td>34</td>
+<td>10-25 Lacs</td>
+</tr>
+<tr>
+<td>35</td>
+<td>25 Lacs-1 crore</td>
+</tr>
+<tr>
+<td>36</td>
+<td>1 crore</td>
+</tr>
+</tbody></table>
+<h2 id='gender-codes'>Gender Codes</h2>
+<table><thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>M</td>
+<td>Male</td>
+</tr>
+<tr>
+<td>F</td>
+<td>Female</td>
+</tr>
+<tr>
+<td>T</td>
+<td>Transgender</td>
+</tr>
+</tbody></table>
+<h2 id='occupation-codes'>Occupation Codes</h2>
+<table><thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>01</td>
+<td>Private Sector</td>
+</tr>
+<tr>
+<td>02</td>
+<td>Public Sector</td>
+</tr>
+<tr>
+<td>03</td>
+<td>Business</td>
+</tr>
+<tr>
+<td>04</td>
+<td>Professional</td>
+</tr>
+<tr>
+<td>06</td>
+<td>Retired</td>
+</tr>
+<tr>
+<td>07</td>
+<td>Housewife</td>
+</tr>
+<tr>
+<td>08</td>
+<td>Student</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Government Sector</td>
+</tr>
+<tr>
+<td>99</td>
+<td>Others</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Self Employed</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Not Categorized</td>
+</tr>
+</tbody></table>
+<h2 id='marital-status-codes'>Marital Status Codes</h2>
+<table><thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>MARRIED</td>
+<td>Married</td>
+</tr>
+<tr>
+<td>UNMARRIED</td>
+<td>Unmarried</td>
+</tr>
+<tr>
+<td>OTHERS</td>
+<td>Others</td>
+</tr>
+</tbody></table>
+<h2 id='country-codes'>Country Codes</h2>
+<table><thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>India</td>
+<td>101</td>
+</tr>
+<tr>
+<td>Albania</td>
+<td>003</td>
+</tr>
+<tr>
+<td>Aland Islands</td>
+<td>002</td>
+</tr>
+<tr>
+<td>Afghanistan</td>
+<td>001</td>
+</tr>
+<tr>
+<td>Algeria</td>
+<td>004</td>
+</tr>
+<tr>
+<td>American Samoa</td>
+<td>005</td>
+</tr>
+<tr>
+<td>Andorra</td>
+<td>006</td>
+</tr>
+<tr>
+<td>Angola</td>
+<td>007</td>
+</tr>
+<tr>
+<td>Anguilla</td>
+<td>008</td>
+</tr>
+<tr>
+<td>Antarctica</td>
+<td>009</td>
+</tr>
+<tr>
+<td>Antigua And Barbuda</td>
+<td>010</td>
+</tr>
+<tr>
+<td>Argentina</td>
+<td>011</td>
+</tr>
+<tr>
+<td>Armenia</td>
+<td>012</td>
+</tr>
+<tr>
+<td>Aruba</td>
+<td>013</td>
+</tr>
+<tr>
+<td>Australia</td>
+<td>014</td>
+</tr>
+<tr>
+<td>Austria</td>
+<td>015</td>
+</tr>
+<tr>
+<td>Azerbaijan</td>
+<td>016</td>
+</tr>
+<tr>
+<td>Bahamas</td>
+<td>017</td>
+</tr>
+<tr>
+<td>Bahrain</td>
+<td>018</td>
+</tr>
+<tr>
+<td>Bangladesh</td>
+<td>019</td>
+</tr>
+<tr>
+<td>Barbados</td>
+<td>020</td>
+</tr>
+<tr>
+<td>Belarus</td>
+<td>021</td>
+</tr>
+<tr>
+<td>Belgium</td>
+<td>022</td>
+</tr>
+<tr>
+<td>Belize</td>
+<td>023</td>
+</tr>
+<tr>
+<td>Benin</td>
+<td>024</td>
+</tr>
+<tr>
+<td>Bermuda</td>
+<td>025</td>
+</tr>
+<tr>
+<td>Bhutan</td>
+<td>026</td>
+</tr>
+<tr>
+<td>Bolivia</td>
+<td>027</td>
+</tr>
+<tr>
+<td>Bosnia And Herzegovina</td>
+<td>028</td>
+</tr>
+<tr>
+<td>Botswana</td>
+<td>029</td>
+</tr>
+<tr>
+<td>Bouvet Island</td>
+<td>030</td>
+</tr>
+<tr>
+<td>Brazil</td>
+<td>031</td>
+</tr>
+<tr>
+<td>British Indian Ocean Territory</td>
+<td>032</td>
+</tr>
+<tr>
+<td>Brunei Darussalam</td>
+<td>033</td>
+</tr>
+<tr>
+<td>Bulgaria</td>
+<td>034</td>
+</tr>
+<tr>
+<td>Burkina Faso</td>
+<td>035</td>
+</tr>
+<tr>
+<td>Burundi</td>
+<td>036</td>
+</tr>
+<tr>
+<td>Cambodia</td>
+<td>037</td>
+</tr>
+<tr>
+<td>Cameroon</td>
+<td>038</td>
+</tr>
+<tr>
+<td>Canada</td>
+<td>039</td>
+</tr>
+<tr>
+<td>Cape Verde</td>
+<td>040</td>
+</tr>
+<tr>
+<td>Cayman Islands</td>
+<td>041</td>
+</tr>
+<tr>
+<td>Central African Republic</td>
+<td>042</td>
+</tr>
+<tr>
+<td>Chad</td>
+<td>043</td>
+</tr>
+<tr>
+<td>Chile</td>
+<td>044</td>
+</tr>
+<tr>
+<td>China</td>
+<td>045</td>
+</tr>
+<tr>
+<td>Christmas Island</td>
+<td>046</td>
+</tr>
+<tr>
+<td>Cocos (Keeling) Islands</td>
+<td>047</td>
+</tr>
+<tr>
+<td>Colombia</td>
+<td>048</td>
+</tr>
+<tr>
+<td>Comoros</td>
+<td>049</td>
+</tr>
+<tr>
+<td>Congo</td>
+<td>050</td>
+</tr>
+<tr>
+<td>Congo, The Democratic Republic Of The</td>
+<td>051</td>
+</tr>
+<tr>
+<td>Cook Islands</td>
+<td>052</td>
+</tr>
+<tr>
+<td>Costa Rica</td>
+<td>053</td>
+</tr>
+<tr>
+<td>Cote D&#39;Ivoire</td>
+<td>054</td>
+</tr>
+<tr>
+<td>Croatia</td>
+<td>055</td>
+</tr>
+<tr>
+<td>Cuba</td>
+<td>056</td>
+</tr>
+<tr>
+<td>Cyprus</td>
+<td>057</td>
+</tr>
+<tr>
+<td>Czech Republic</td>
+<td>058</td>
+</tr>
+<tr>
+<td>Denmark</td>
+<td>059</td>
+</tr>
+<tr>
+<td>Djibouti</td>
+<td>060</td>
+</tr>
+<tr>
+<td>Dominica</td>
+<td>061</td>
+</tr>
+<tr>
+<td>Dominican Republic</td>
+<td>062</td>
+</tr>
+<tr>
+<td>Ecuador</td>
+<td>063</td>
+</tr>
+<tr>
+<td>Egypt</td>
+<td>064</td>
+</tr>
+<tr>
+<td>El Salvador</td>
+<td>065</td>
+</tr>
+<tr>
+<td>Equatorial Guinea</td>
+<td>066</td>
+</tr>
+<tr>
+<td>Eritrea</td>
+<td>067</td>
+</tr>
+<tr>
+<td>Estonia</td>
+<td>068</td>
+</tr>
+<tr>
+<td>Ethiopia</td>
+<td>069</td>
+</tr>
+<tr>
+<td>Falkland Islands (Malvinas)</td>
+<td>070</td>
+</tr>
+<tr>
+<td>Faroe Islands</td>
+<td>071</td>
+</tr>
+<tr>
+<td>Fiji</td>
+<td>072</td>
+</tr>
+<tr>
+<td>Finland</td>
+<td>073</td>
+</tr>
+<tr>
+<td>France</td>
+<td>074</td>
+</tr>
+<tr>
+<td>French Guiana</td>
+<td>075</td>
+</tr>
+<tr>
+<td>French Polynesia</td>
+<td>076</td>
+</tr>
+<tr>
+<td>French Southern Territories</td>
+<td>077</td>
+</tr>
+<tr>
+<td>Gabon</td>
+<td>078</td>
+</tr>
+<tr>
+<td>Gambia</td>
+<td>079</td>
+</tr>
+<tr>
+<td>Georgia</td>
+<td>080</td>
+</tr>
+<tr>
+<td>Germany</td>
+<td>081</td>
+</tr>
+<tr>
+<td>Ghana</td>
+<td>082</td>
+</tr>
+<tr>
+<td>Gibraltar</td>
+<td>083</td>
+</tr>
+<tr>
+<td>Greece</td>
+<td>084</td>
+</tr>
+<tr>
+<td>Greenland</td>
+<td>085</td>
+</tr>
+<tr>
+<td>Grenada</td>
+<td>086</td>
+</tr>
+<tr>
+<td>Guadeloupe</td>
+<td>087</td>
+</tr>
+<tr>
+<td>Guam</td>
+<td>088</td>
+</tr>
+<tr>
+<td>Guatemala</td>
+<td>089</td>
+</tr>
+<tr>
+<td>Guernsey</td>
+<td>090</td>
+</tr>
+<tr>
+<td>Guinea</td>
+<td>091</td>
+</tr>
+<tr>
+<td>Guinea-Bissau</td>
+<td>092</td>
+</tr>
+<tr>
+<td>Guyana</td>
+<td>093</td>
+</tr>
+<tr>
+<td>Haiti</td>
+<td>094</td>
+</tr>
+<tr>
+<td>Heard Island And Mcdonald Islands</td>
+<td>095</td>
+</tr>
+<tr>
+<td>Holy See (Vatican City State)</td>
+<td>096</td>
+</tr>
+<tr>
+<td>Honduras</td>
+<td>097</td>
+</tr>
+<tr>
+<td>Hong Kong</td>
+<td>098</td>
+</tr>
+<tr>
+<td>Hungary</td>
+<td>099</td>
+</tr>
+<tr>
+<td>Iceland</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Indonesia</td>
+<td>102</td>
+</tr>
+<tr>
+<td>Iran, Islamic Republic Of</td>
+<td>103</td>
+</tr>
+<tr>
+<td>Iraq</td>
+<td>104</td>
+</tr>
+<tr>
+<td>Ireland</td>
+<td>105</td>
+</tr>
+<tr>
+<td>Isle Of Man</td>
+<td>106</td>
+</tr>
+<tr>
+<td>Israel</td>
+<td>107</td>
+</tr>
+<tr>
+<td>Italy</td>
+<td>108</td>
+</tr>
+<tr>
+<td>Jamaica</td>
+<td>109</td>
+</tr>
+<tr>
+<td>Japan</td>
+<td>110</td>
+</tr>
+<tr>
+<td>Jersey</td>
+<td>111</td>
+</tr>
+<tr>
+<td>Jordan</td>
+<td>112</td>
+</tr>
+<tr>
+<td>Kazakhstan</td>
+<td>113</td>
+</tr>
+<tr>
+<td>Kenya</td>
+<td>114</td>
+</tr>
+<tr>
+<td>Kiribati</td>
+<td>115</td>
+</tr>
+<tr>
+<td>Korea, Democratic People’s Republic Of</td>
+<td>116</td>
+</tr>
+<tr>
+<td>Korea, Republic Of</td>
+<td>117</td>
+</tr>
+<tr>
+<td>Kuwait</td>
+<td>118</td>
+</tr>
+<tr>
+<td>Kyrgyzstan</td>
+<td>119</td>
+</tr>
+<tr>
+<td>Lao People’s Democratic Republic</td>
+<td>120</td>
+</tr>
+<tr>
+<td>Latvia</td>
+<td>121</td>
+</tr>
+<tr>
+<td>Lebanon</td>
+<td>122</td>
+</tr>
+<tr>
+<td>Lesotho</td>
+<td>123</td>
+</tr>
+<tr>
+<td>Liberia</td>
+<td>124</td>
+</tr>
+<tr>
+<td>Libyan Arab Jamahiriya</td>
+<td>125</td>
+</tr>
+<tr>
+<td>Liechtenstein</td>
+<td>126</td>
+</tr>
+<tr>
+<td>Lithuania</td>
+<td>127</td>
+</tr>
+<tr>
+<td>Luxembourg</td>
+<td>128</td>
+</tr>
+<tr>
+<td>Macao</td>
+<td>129</td>
+</tr>
+<tr>
+<td>Macedonia, The Former Yugoslav Republic Of</td>
+<td>130</td>
+</tr>
+<tr>
+<td>Madagascar</td>
+<td>131</td>
+</tr>
+<tr>
+<td>Malawi</td>
+<td>132</td>
+</tr>
+<tr>
+<td>Malaysia</td>
+<td>133</td>
+</tr>
+<tr>
+<td>Maldives</td>
+<td>134</td>
+</tr>
+<tr>
+<td>Mali</td>
+<td>135</td>
+</tr>
+<tr>
+<td>Malta</td>
+<td>136</td>
+</tr>
+<tr>
+<td>Marshall Islands</td>
+<td>137</td>
+</tr>
+<tr>
+<td>Martinique</td>
+<td>138</td>
+</tr>
+<tr>
+<td>Mauritania</td>
+<td>139</td>
+</tr>
+<tr>
+<td>Mauritius</td>
+<td>140</td>
+</tr>
+<tr>
+<td>Mayotte</td>
+<td>141</td>
+</tr>
+<tr>
+<td>Mexico</td>
+<td>142</td>
+</tr>
+<tr>
+<td>Micronesia, Federated States Of</td>
+<td>143</td>
+</tr>
+<tr>
+<td>Moldova, Republic Of</td>
+<td>144</td>
+</tr>
+<tr>
+<td>Monaco</td>
+<td>145</td>
+</tr>
+<tr>
+<td>Mongolia</td>
+<td>146</td>
+</tr>
+<tr>
+<td>Montserrat</td>
+<td>147</td>
+</tr>
+<tr>
+<td>Morocco</td>
+<td>148</td>
+</tr>
+<tr>
+<td>Mozambique</td>
+<td>149</td>
+</tr>
+<tr>
+<td>Myanmar</td>
+<td>150</td>
+</tr>
+<tr>
+<td>Namibia</td>
+<td>151</td>
+</tr>
+<tr>
+<td>Nauru</td>
+<td>152</td>
+</tr>
+<tr>
+<td>Nepal</td>
+<td>153</td>
+</tr>
+<tr>
+<td>Netherlands</td>
+<td>154</td>
+</tr>
+<tr>
+<td>Netherlands Antilles</td>
+<td>155</td>
+</tr>
+<tr>
+<td>New Caledonia</td>
+<td>156</td>
+</tr>
+<tr>
+<td>New Zealand</td>
+<td>157</td>
+</tr>
+<tr>
+<td>Nicaragua</td>
+<td>158</td>
+</tr>
+<tr>
+<td>Niger</td>
+<td>159</td>
+</tr>
+<tr>
+<td>Nigeria</td>
+<td>160</td>
+</tr>
+<tr>
+<td>Niue</td>
+<td>161</td>
+</tr>
+<tr>
+<td>Norfolk Island</td>
+<td>162</td>
+</tr>
+<tr>
+<td>Northern Mariana Islands</td>
+<td>163</td>
+</tr>
+<tr>
+<td>Norway</td>
+<td>164</td>
+</tr>
+<tr>
+<td>Oman</td>
+<td>165</td>
+</tr>
+<tr>
+<td>Pakistan</td>
+<td>166</td>
+</tr>
+<tr>
+<td>Palau</td>
+<td>167</td>
+</tr>
+<tr>
+<td>Palestinian Territory, Occupied</td>
+<td>168</td>
+</tr>
+<tr>
+<td>Panama</td>
+<td>169</td>
+</tr>
+<tr>
+<td>Papua New Guinea</td>
+<td>170</td>
+</tr>
+<tr>
+<td>Paraguay</td>
+<td>171</td>
+</tr>
+<tr>
+<td>Peru</td>
+<td>172</td>
+</tr>
+<tr>
+<td>Philippines</td>
+<td>173</td>
+</tr>
+<tr>
+<td>Pitcairn</td>
+<td>174</td>
+</tr>
+<tr>
+<td>Poland</td>
+<td>175</td>
+</tr>
+<tr>
+<td>Portugal</td>
+<td>176</td>
+</tr>
+<tr>
+<td>Puerto Rico</td>
+<td>177</td>
+</tr>
+<tr>
+<td>Qatar</td>
+<td>178</td>
+</tr>
+<tr>
+<td>Reunion</td>
+<td>179</td>
+</tr>
+<tr>
+<td>Romania</td>
+<td>180</td>
+</tr>
+<tr>
+<td>Russian Federation</td>
+<td>181</td>
+</tr>
+<tr>
+<td>Rwanda</td>
+<td>182</td>
+</tr>
+<tr>
+<td>Saint Helena</td>
+<td>183</td>
+</tr>
+<tr>
+<td>Saint Kitts And Nevis</td>
+<td>184</td>
+</tr>
+<tr>
+<td>Saint Lucia</td>
+<td>185</td>
+</tr>
+<tr>
+<td>Saint Pierre And Miquelon</td>
+<td>186</td>
+</tr>
+<tr>
+<td>Saint Vincent And The Grenadines</td>
+<td>187</td>
+</tr>
+<tr>
+<td>Samoa</td>
+<td>188</td>
+</tr>
+<tr>
+<td>San Marino</td>
+<td>189</td>
+</tr>
+<tr>
+<td>Sao Tome And Principe</td>
+<td>190</td>
+</tr>
+<tr>
+<td>Saudi Arabia</td>
+<td>191</td>
+</tr>
+<tr>
+<td>Senegal</td>
+<td>192</td>
+</tr>
+<tr>
+<td>Serbia And Montenegro</td>
+<td>193</td>
+</tr>
+<tr>
+<td>Seychelles</td>
+<td>194</td>
+</tr>
+<tr>
+<td>Sierra Leone</td>
+<td>195</td>
+</tr>
+<tr>
+<td>Singapore</td>
+<td>196</td>
+</tr>
+<tr>
+<td>Slovakia</td>
+<td>197</td>
+</tr>
+<tr>
+<td>Slovenia</td>
+<td>198</td>
+</tr>
+<tr>
+<td>Solomon Islands</td>
+<td>199</td>
+</tr>
+<tr>
+<td>Somalia</td>
+<td>200</td>
+</tr>
+<tr>
+<td>South Africa</td>
+<td>201</td>
+</tr>
+<tr>
+<td>South Georgia And The South Sandwich Islands</td>
+<td>202</td>
+</tr>
+<tr>
+<td>Spain</td>
+<td>203</td>
+</tr>
+<tr>
+<td>Sri Lanka</td>
+<td>204</td>
+</tr>
+<tr>
+<td>Sudan</td>
+<td>205</td>
+</tr>
+<tr>
+<td>Suriname</td>
+<td>206</td>
+</tr>
+<tr>
+<td>Svalbard And Jan Mayen</td>
+<td>207</td>
+</tr>
+<tr>
+<td>Swaziland</td>
+<td>208</td>
+</tr>
+<tr>
+<td>Sweden</td>
+<td>209</td>
+</tr>
+<tr>
+<td>Switzerland</td>
+<td>210</td>
+</tr>
+<tr>
+<td>Syrian Arab Republic</td>
+<td>211</td>
+</tr>
+<tr>
+<td>Taiwan, Province Of China</td>
+<td>212</td>
+</tr>
+<tr>
+<td>Tajikistan</td>
+<td>213</td>
+</tr>
+<tr>
+<td>Tanzania, United Republic Of</td>
+<td>214</td>
+</tr>
+<tr>
+<td>Thailand</td>
+<td>215</td>
+</tr>
+<tr>
+<td>Timor-Leste</td>
+<td>216</td>
+</tr>
+<tr>
+<td>Togo</td>
+<td>217</td>
+</tr>
+<tr>
+<td>Tokelau</td>
+<td>218</td>
+</tr>
+<tr>
+<td>Tonga</td>
+<td>219</td>
+</tr>
+<tr>
+<td>Trinidad And Tobago</td>
+<td>220</td>
+</tr>
+<tr>
+<td>Tunisia</td>
+<td>221</td>
+</tr>
+<tr>
+<td>Turkey</td>
+<td>222</td>
+</tr>
+<tr>
+<td>Turkmenistan</td>
+<td>223</td>
+</tr>
+<tr>
+<td>Turks And Caicos Islands</td>
+<td>224</td>
+</tr>
+<tr>
+<td>Tuvalu</td>
+<td>225</td>
+</tr>
+<tr>
+<td>Uganda</td>
+<td>226</td>
+</tr>
+<tr>
+<td>Ukraine</td>
+<td>227</td>
+</tr>
+<tr>
+<td>United Arab Emirates</td>
+<td>228</td>
+</tr>
+<tr>
+<td>United Kingdom</td>
+<td>229</td>
+</tr>
+<tr>
+<td>United States</td>
+<td>230</td>
+</tr>
+<tr>
+<td>United States Minor Outlying Islands</td>
+<td>231</td>
+</tr>
+<tr>
+<td>Uruguay</td>
+<td>232</td>
+</tr>
+<tr>
+<td>Uzbekistan</td>
+<td>233</td>
+</tr>
+<tr>
+<td>Vanuatu</td>
+<td>234</td>
+</tr>
+<tr>
+<td>Venezuela</td>
+<td>235</td>
+</tr>
+<tr>
+<td>Viet Nam</td>
+<td>236</td>
+</tr>
+<tr>
+<td>Virgin Islands, British</td>
+<td>237</td>
+</tr>
+<tr>
+<td>Virgin Islands, U.S.</td>
+<td>238</td>
+</tr>
+<tr>
+<td>Wallis And Futuna</td>
+<td>239</td>
+</tr>
+<tr>
+<td>Western Sahara</td>
+<td>240</td>
+</tr>
+<tr>
+<td>Yemen</td>
+<td>241</td>
+</tr>
+<tr>
+<td>Zambia</td>
+<td>242</td>
+</tr>
+<tr>
+<td>Zimbabwe</td>
+<td>243</td>
+</tr>
+<tr>
+<td>Côte D&#39;ivoire</td>
+<td>CI</td>
+</tr>
+<tr>
+<td>Korea,Democratic People&#39;sRepublicOf</td>
+<td>KP</td>
+</tr>
+<tr>
+<td>Lao People’s Democratic Republic</td>
+<td>12</td>
+</tr>
+</tbody></table>
+<h1 id='errors'>Errors</h1>
 <p>The Savvy API uses the following error codes:</p>
 
 <table><thead>
