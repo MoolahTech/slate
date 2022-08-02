@@ -883,7 +883,6 @@ The deposits API describes how to create a mutual fund purchase transaction. Thi
 Parameter | Description
 --------- | ----------- 
 uuid | `String` Unique identifier of the deposit.
-account_uuid | `String` Account which the deposit is part of. 
 fund_code | `String` Code of the fund invested in.
 fund_name | `String` Name of the fund invested in.
 amount | `Integer` Original amount of the investment.
@@ -892,7 +891,6 @@ units | `Decimal` Units allocated for the investment.
 status | `Enum: created, payment_made, submitted_to_rta, completed, error` Status of the investment.
 status_description | `String` Reason in case of failure / rejections.
 reinvest_mode | `Enum: payout: 'N', reinvestment: 'Y', growth: 'Z', bonus: 'B'` What should happen with any dividend that is paid out.
-payment_link | `String` **Only applicable for create API** URL to which to take the user for payment checkout.
 partner_transaction_id | `String` Your ID associated with the transaction.
 user_completed_payment_at | `Datetime` Time at which payment was completed by the user.
 transferred_to_amc_at | `Datetime` Time at which the payment was transferred to the AMC.
@@ -903,7 +901,7 @@ stp_uuid | `String` Identifier of the STP that the deposit is part of
 ## Get deposits
 
 ```shell
-curl "http://surface.thesavvyapp.in/deposits?account_uuid=<UUID>" \
+curl "http://surface.thesavvyapp.in/secure/deposits?account_uuid=<UUID>" \
   -X GET \
   -H "Authorization: Bearer <token>"
 ```
@@ -911,7 +909,7 @@ curl "http://surface.thesavvyapp.in/deposits?account_uuid=<UUID>" \
 
 ### HTTP Request
 
-`GET http://surface.thesavvyapp.in/deposits?account_uuid=<UUID>`
+`GET http://surface.thesavvyapp.in/secure/deposits?account_uuid=<UUID>`
 
 ### URL Parameters
 
@@ -922,7 +920,7 @@ account_uuid | true | `String` All deposits associated with a account
 ## Show deposit
 
 ```shell
-curl "http://surface.thesavvyapp.in/deposits/<UUID>" \
+curl "http://surface.thesavvyapp.in/secure/deposits/<UUID>" \
   -X GET \
   -H "Authorization: Bearer <token>"
 ```
@@ -930,7 +928,7 @@ curl "http://surface.thesavvyapp.in/deposits/<UUID>" \
 
 ### HTTP Request
 
-`GET http://surface.thesavvyapp.in/deposits/<UUID>`
+`GET http://surface.thesavvyapp.in/secure/deposits/<UUID>`
 
 ## Create deposit
 
@@ -941,23 +939,24 @@ curl "http://surface.thesavvyapp.in/deposits/<UUID>" \
     "amount": "1000",
     "fund_code": "1234",
     "account_uuid": "aaaaa-bbbb-cccc-dddd",
+    "onboarding_uuid": "aaaaa-bbbb-cccc-dddd",
     "redirect_url": "https://example.com/payment_redirect"
   }
 }
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/deposits" \
+curl "http://surface.thesavvyapp.in/secure/deposits" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
 
 ```
-> The above command returns the deposit JSON object
+> The above command returns the deposit JSON object along with the payment URL
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/deposits`
+`POST http://surface.thesavvyapp.in/secure/deposits`
 
 ### Parameters
 
@@ -971,7 +970,72 @@ amount | true | `Integer` Amount to be invested
 fund_code | true | `Date` Code of the fund to be invested in
 redirect_url | true | `String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
 account_uuid | false | `String` If the deposit has to be created in an existing account.
+onboarding_uuid | false | `String` Mandatory if account uuid is not specified.
 partner_transaction_id | false | `String` Your custom ID to identify this transaction.
+
+### JSON response
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+deposit | true | `Object` Deposit object
+url | true | `String` URL to redirect the customer to for payment
+
+<aside class="warning">If account uuid is not specified, a new account will be created for the customer. Make sure this is the behavior you want. However, for first time customers, not passing the account id is the expected behavior.</aside>
+
+## Create basket of deposits
+
+```json
+// body
+{ "deposit": {
+  "account_uuid": "aaaaa-bbbb-cccc-dddd",
+  "onboarding_uuid": "aaaaa-bbbb-cccc-dddd",
+  "redirect_url": "https://example.com/payment_redirect",
+  "deposit_parts": [
+    {
+      "amount": "1000",
+      "fund_code": "1234"
+    },
+    {
+      "amount": "100",
+      "fund_code": "xyz"
+    }
+  ]}
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/secure/deposits/create_basket" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+
+```
+> The above command returns the deposit JSON object
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/secure/deposits/create_basket`
+
+### Parameters
+
+<aside class="notice">
+Note the <code>deposit</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ------- | -----------
+redirect_url | true | `String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
+account_uuid | false | `String` If the deposit has to be created in an existing account.
+onboarding_uuid | false | `String` Mandatory if account uuid is not specified.
+partner_transaction_id | false | `String` Your custom ID to identify this transaction.
+deposit_parts | true | `Array` [amount, fund_code] to specify how much to invest in which funds
+
+### JSON response
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+deposits | true | `Objects` Deposit object list
+url | true | `String` URL to redirect the customer to for payment
 
 <aside class="warning">If account uuid is not specified, a new account will be created for the customer. Make sure this is the behavior you want. However, for first time customers, not passing the account id is the expected behavior.</aside>
 
@@ -1006,7 +1070,7 @@ stp_uuid | `String` Identifier of the STP that the withdrawal is part of
 ## Get withdrawals
 
 ```shell
-curl "http://surface.thesavvyapp.in/withdrawals?account_uuid=<UUID>" \
+curl "http://surface.thesavvyapp.in/secure/withdrawals?account_uuid=<UUID>" \
   -X GET \
   -H "Authorization: Bearer <token>"
 ```
@@ -1014,7 +1078,7 @@ curl "http://surface.thesavvyapp.in/withdrawals?account_uuid=<UUID>" \
 
 ### HTTP Request
 
-`GET http://surface.thesavvyapp.in/withdrawals?account_uuid=<UUID>`
+`GET http://surface.thesavvyapp.in/secure/withdrawals?account_uuid=<UUID>`
 
 ### URL Parameters
 
@@ -1025,7 +1089,7 @@ account_uuid | true | `String` All withdrawals associated with a account
 ## Show withdrawal
 
 ```shell
-curl "http://surface.thesavvyapp.in/withdrawals/<UUID>" \
+curl "http://surface.thesavvyapp.in/secure/withdrawals/<UUID>" \
   -X GET \
   -H "Authorization: Bearer <token>"
 ```
@@ -1033,7 +1097,7 @@ curl "http://surface.thesavvyapp.in/withdrawals/<UUID>" \
 
 ### HTTP Request
 
-`GET http://surface.thesavvyapp.in/withdrawals/<UUID>`
+`GET http://surface.thesavvyapp.in/secure/withdrawals/<UUID>`
 
 ## Create withdrawal
 
@@ -1050,7 +1114,7 @@ curl "http://surface.thesavvyapp.in/withdrawals/<UUID>" \
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/withdrawals" \
+curl "http://surface.thesavvyapp.in/secure/withdrawals" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -1060,7 +1124,7 @@ curl "http://surface.thesavvyapp.in/withdrawals" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/withdrawals`
+`POST http://surface.thesavvyapp.in/secure/withdrawals`
 
 On success, an OTP is sent on both the users' registered email and phone number. This OTP has to be verified by the user and sent to us on API.
 
@@ -1089,7 +1153,7 @@ partner_transaction_id | false | `String` Your custom ID to identify this transa
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/withdrawals/<UUID>/verify_otp" \
+curl "http://surface.thesavvyapp.in/secure/withdrawals/<UUID>/verify_otp" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -1099,7 +1163,7 @@ curl "http://surface.thesavvyapp.in/withdrawals/<UUID>/verify_otp" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/withdrawals/<UUID>/verify_otp`
+`POST http://surface.thesavvyapp.in/secure/withdrawals/<UUID>/verify_otp`
 
 On success, the status of the withdrawal will change to `otp_complete`. The OTP verification will expire in 5 minutes, and the OTP can be resent in case of delivery failures after 30 seconds of first attempt. 
 
@@ -1358,7 +1422,7 @@ created_at | `Datetime` Time at which the SIP was created.
 ## Get sips
 
 ```shell
-curl "http://surface.thesavvyapp.in/sips?account_uuid=<UUID>" \
+curl "http://surface.thesavvyapp.in/secure/sips?account_uuid=<UUID>" \
   -X GET \
   -H "Authorization: Bearer <token>"
 ```
@@ -1366,7 +1430,7 @@ curl "http://surface.thesavvyapp.in/sips?account_uuid=<UUID>" \
 
 ### HTTP Request
 
-`GET http://surface.thesavvyapp.in/sips?account_uuid=<UUID>`
+`GET http://surface.thesavvyapp.in/secure/sips?account_uuid=<UUID>`
 
 ### URL Parameters
 
@@ -1377,7 +1441,7 @@ account_uuid | true | `String` All sips associated with a account
 ## Show sip
 
 ```shell
-curl "http://surface.thesavvyapp.in/sips/<UUID>" \
+curl "http://surface.thesavvyapp.in/secure/sips/<UUID>" \
   -X GET \
   -H "Authorization: Bearer <token>"
 ```
@@ -1385,7 +1449,7 @@ curl "http://surface.thesavvyapp.in/sips/<UUID>" \
 
 ### HTTP Request
 
-`GET http://surface.thesavvyapp.in/sips/<UUID>`
+`GET http://surface.thesavvyapp.in/secure/sips/<UUID>`
 
 ## Create sip
 
@@ -1406,7 +1470,7 @@ curl "http://surface.thesavvyapp.in/sips/<UUID>" \
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/sips" \
+curl "http://surface.thesavvyapp.in/secure/sips" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -1416,7 +1480,7 @@ curl "http://surface.thesavvyapp.in/sips" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/sips`
+`POST http://surface.thesavvyapp.in/secure/sips`
 
 On success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate required for periodic auto-debits. If for some reason, the mandate fails to get signed, you can retry the mandate signing for a period of 24 hours, post which a new mandate must be created.
 
