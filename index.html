@@ -2906,7 +2906,14 @@ Note the <code>sip</code>root key
         <span class="na">max_amount</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
         <span class="na">end_date</span><span class="p">:</span> <span class="dl">"</span><span class="s2">DD/MM/YYYY</span><span class="dl">"</span><span class="p">,</span>
         <span class="na">product_name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Mauritius Vacation</span><span class="dl">"</span><span class="p">,</span>
-        <span class="na">multiplier</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+        <span class="na">multiplier</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="na">onComplete</span><span class="p">:</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_COMPLETE_OCCURED</span><span class="dl">"</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+          <span class="nx">alert</span><span class="p">(</span><span class="dl">"</span><span class="s2">Savvy completed successfully!</span><span class="dl">"</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="na">onUserExit</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_USER_EXITED</span><span class="dl">"</span><span class="p">);</span>
+        <span class="p">}})</span>
 
       <span class="nx">Savvy</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
     <span class="p">})</span>
@@ -2914,9 +2921,9 @@ Note the <code>sip</code>root key
 <span class="nt">&lt;/script&gt;</span>
 ...
 
-<span class="nt">&lt;body</span> <span class="na">onload=</span><span class="s">"onLoad()&gt;
+<span class="nt">&lt;body</span> <span class="na">onload=</span><span class="s">"onLoad()"</span><span class="nt">&gt;</span>
 ...
-  &lt;button id="</span><span class="na">savvy</span><span class="err">"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"savvy"</span><span class="nt">&gt;</span>
 ...
 <span class="nt">&lt;/body&gt;</span>
 </code></pre></div><h2 id='snbl-sdk-object'>SNBL SDK object</h2>
@@ -2935,7 +2942,7 @@ Note the <code>sip</code>root key
 <tr>
 <td>offerUuid</td>
 <td>true</td>
-<td><code>String</code> Product offer uuid. This can be static, or dynamic. It is either created by the merchant at purchase time, or provided by Savvy and provided to the merchant.</td>
+<td><code>String</code> Product offer uuid. This can be static, or dynamic. It is either created by the merchant at purchase time, or created by Savvy and provided to the merchant.</td>
 </tr>
 <tr>
 <td>isProduction</td>
@@ -2948,22 +2955,22 @@ Note the <code>sip</code>root key
 <td><code>Object</code> User details, if any. Pass empty object if no details are available.</td>
 </tr>
 <tr>
-<td>min_amount</td>
+<td>minAmount</td>
 <td>false</td>
 <td><code>Decimal</code> Min amount, if the amount is a range.</td>
 </tr>
 <tr>
-<td>max_amount</td>
+<td>maxAmount</td>
 <td>false</td>
 <td><code>Decimal</code> Max amount, if the amount is a range, or the exact amount in case there is no range.</td>
 </tr>
 <tr>
-<td>end_date</td>
+<td>endDate</td>
 <td>false</td>
 <td><code>Date</code> Targeted purchase date of the product.</td>
 </tr>
 <tr>
-<td>product_name</td>
+<td>productName</td>
 <td>false</td>
 <td><code>String</code> Name of the product being purchased.</td>
 </tr>
@@ -2971,6 +2978,16 @@ Note the <code>sip</code>root key
 <td>multiplier</td>
 <td>false</td>
 <td><code>Integer</code> The amount of products being bought.</td>
+</tr>
+<tr>
+<td>onComplete(data)</td>
+<td>true</td>
+<td><code>Function</code> Callback hook on completion of SIP setup.</td>
+</tr>
+<tr>
+<td>onUserExit</td>
+<td>true</td>
+<td><code>Function</code> Callback hook if user exited before completion.</td>
 </tr>
 </tbody></table>
 <h1 id='risk-profiling'>Risk Profiling</h1>
