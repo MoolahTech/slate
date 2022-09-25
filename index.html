@@ -516,6 +516,20 @@
               </ul>
           </li>
           <li>
+            <a href="#save-now-buy-later-snbl" class="toc-h1 toc-link" data-title="Save Now, Buy Later (SNBL)">Save Now, Buy Later (SNBL)</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#importing-the-sdk" class="toc-h2 toc-link" data-title="Importing the SDK">Importing the SDK</a>
+                  </li>
+                  <li>
+                    <a href="#using-the-sdk" class="toc-h2 toc-link" data-title="Using the SDK">Using the SDK</a>
+                  </li>
+                  <li>
+                    <a href="#snbl-sdk-object" class="toc-h2 toc-link" data-title="SNBL SDK object">SNBL SDK object</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#risk-profiling" class="toc-h1 toc-link" data-title="Risk Profiling">Risk Profiling</a>
           </li>
           <li>
@@ -2866,6 +2880,99 @@ Note the <code>sip</code>root key
 </div>
 <h2 id='stp-object'>STP Object</h2>
 <p>Coming soon!</p>
+<h1 id='save-now-buy-later-snbl'>Save Now, Buy Later (SNBL)</h1>
+<p>SNBL is a unique proposition, where customers can save up (via SIP) to purchase products from merchants. This service is provided as an SDK to merchants so they can embed SNBL inside their purchase journeys.</p>
+<h2 id='importing-the-sdk'>Importing the SDK</h2>
+<p>Get the SDK from our CDN: <code>https://cdn.savvyapp.in/lib/savvypay.min.js</code></p>
+<div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script
+  </span><span class="na">defer=</span><span class="s">"defer"</span>
+  <span class="na">src=</span><span class="s">"https://cdn.savvyapp.in/lib/savvypay.min.js"</span> <span class="nt">/&gt;</span>
+</code></pre></div><h2 id='using-the-sdk'>Using the SDK</h2>
+<p>The SDK accepts a number of parameters, depending on what information is available to the merchant:</p>
+<div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script&gt;</span>
+  <span class="kd">function</span> <span class="nx">onLoad</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">savvy</span><span class="dl">"</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">"</span><span class="s2">click</span><span class="dl">"</span><span class="p">,</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">Savvy</span> <span class="o">=</span> <span class="nx">SavvyPay</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+        <span class="na">key</span><span class="p">:</span> <span class="dl">"</span><span class="s2">XXXXX-XXXXX</span><span class="dl">"</span><span class="p">,</span>
+        <span class="na">offerUuid</span><span class="p">:</span> <span class="dl">"</span><span class="s2">XXXXX-XXXXX</span><span class="dl">"</span><span class="p">,</span>
+        <span class="na">isProduction</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="na">user</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">firstName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Ravin</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">lastName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Pandu</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">phoneNumber</span><span class="p">:</span> <span class="dl">'</span><span class="s1">+919600012345</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ravindran@balo.app</span><span class="dl">'</span>
+        <span class="p">},</span>
+        <span class="na">min_amount</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
+        <span class="na">max_amount</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
+        <span class="na">end_date</span><span class="p">:</span> <span class="dl">"</span><span class="s2">DD/MM/YYYY</span><span class="dl">"</span><span class="p">,</span>
+        <span class="na">product_name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Mauritius Vacation</span><span class="dl">"</span><span class="p">,</span>
+        <span class="na">multiplier</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+
+      <span class="nx">Savvy</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+<span class="nt">&lt;/script&gt;</span>
+...
+
+<span class="nt">&lt;body</span> <span class="na">onload=</span><span class="s">"onLoad()&gt;
+...
+  &lt;button id="</span><span class="na">savvy</span><span class="err">"</span><span class="nt">&gt;</span>
+...
+<span class="nt">&lt;/body&gt;</span>
+</code></pre></div><h2 id='snbl-sdk-object'>SNBL SDK object</h2>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>key</td>
+<td>true</td>
+<td><code>String</code> API key provided to the merchant.</td>
+</tr>
+<tr>
+<td>offerUuid</td>
+<td>true</td>
+<td><code>String</code> Product offer uuid. This can be static, or dynamic. It is either created by the merchant at purchase time, or provided by Savvy and provided to the merchant.</td>
+</tr>
+<tr>
+<td>isProduction</td>
+<td>true</td>
+<td><code>Boolean</code> Production request or not</td>
+</tr>
+<tr>
+<td>user</td>
+<td>true</td>
+<td><code>Object</code> User details, if any. Pass empty object if no details are available.</td>
+</tr>
+<tr>
+<td>min_amount</td>
+<td>false</td>
+<td><code>Decimal</code> Min amount, if the amount is a range.</td>
+</tr>
+<tr>
+<td>max_amount</td>
+<td>false</td>
+<td><code>Decimal</code> Max amount, if the amount is a range, or the exact amount in case there is no range.</td>
+</tr>
+<tr>
+<td>end_date</td>
+<td>false</td>
+<td><code>Date</code> Targeted purchase date of the product.</td>
+</tr>
+<tr>
+<td>product_name</td>
+<td>false</td>
+<td><code>String</code> Name of the product being purchased.</td>
+</tr>
+<tr>
+<td>multiplier</td>
+<td>false</td>
+<td><code>Integer</code> The amount of products being bought.</td>
+</tr>
+</tbody></table>
 <h1 id='risk-profiling'>Risk Profiling</h1>
 <p>To improve the user experience in terms of fund selection, we offer a risk profiling API that takes customer profile information + a couple of risk related questions as inputs to output a maximum of 4 funds. While designed by our in-house MF experts, this API is provided &quot;as-is&quot;, without any guarantees of correctness.</p>
 <h1 id='reports'>Reports</h1>
