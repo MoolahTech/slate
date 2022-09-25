@@ -1531,6 +1531,80 @@ This API describes how to create a STP transaction, for periodic transfers from 
 
 Coming soon!
 
+# Save Now, Buy Later (SNBL)
+
+SNBL is a unique proposition, where customers can save up (via SIP) to purchase products from merchants. This service is provided as an SDK to merchants so they can embed SNBL inside their purchase journeys.
+
+## Importing the SDK
+
+Get the SDK from our CDN: `https://cdn.savvyapp.in/lib/savvypay.min.js`
+
+```html
+<script
+  defer="defer"
+  src="https://cdn.savvyapp.in/lib/savvypay.min.js" />
+```
+
+## Using the SDK
+
+The SDK accepts a number of parameters, depending on what information is available to the merchant:
+
+```html
+<script>
+  function onLoad() {
+    document.getElementById("savvy").addEventListener("click", (e) => {
+      var Savvy = SavvyPay.init({
+        key: "XXXXX-XXXXX",
+        offerUuid: "XXXXX-XXXXX",
+        isProduction: false,
+        user: {
+          firstName: 'Ravin',
+          lastName: 'Pandu',
+          phoneNumber: '+919600012345',
+          email: 'ravindran@balo.app'
+        },
+        min_amount: 10000,
+        max_amount: 20000,
+        end_date: "DD/MM/YYYY",
+        product_name: "Mauritius Vacation",
+        multiplier: 1,
+        onComplete: (data) => {
+          console.log("ON_COMPLETE_OCCURED", data);
+          alert("Savvy completed successfully!");
+        },
+        onUserExit: () => {
+          console.log("ON_USER_EXITED");
+        }})
+
+      Savvy.start();
+    })
+  }
+</script>
+...
+
+<body onload="onLoad()">
+...
+  <button id="savvy">
+...
+</body>
+```
+
+## SNBL SDK object
+
+Parameter | Required | Description
+--------- | -------- | ----------- 
+key | true | `String` API key provided to the merchant.
+offerUuid | true | `String` Product offer uuid. This can be static, or dynamic. It is either created by the merchant at purchase time, or created by Savvy and provided to the merchant.
+isProduction | true | `Boolean` Production request or not
+user | true | `Object` User details, if any. Pass empty object if no details are available.
+minAmount | false | `Decimal` Min amount, if the amount is a range.
+maxAmount | false | `Decimal` Max amount, if the amount is a range, or the exact amount in case there is no range.
+endDate | false | `Date` Targeted purchase date of the product.
+productName | false | `String` Name of the product being purchased.
+multiplier | false | `Integer` The amount of products being bought.
+onComplete(data) | true | `Function` Callback hook on completion of SIP setup.
+onUserExit | true | `Function` Callback hook if user exited before completion.
+
 # Risk Profiling
 
 To improve the user experience in terms of fund selection, we offer a risk profiling API that takes customer profile information + a couple of risk related questions as inputs to output a maximum of 4 funds. While designed by our in-house MF experts, this API is provided "as-is", without any guarantees of correctness.
