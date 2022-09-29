@@ -2907,6 +2907,9 @@ Note the <code>sip</code>root key
         <span class="na">end_date</span><span class="p">:</span> <span class="dl">"</span><span class="s2">DD/MM/YYYY</span><span class="dl">"</span><span class="p">,</span>
         <span class="na">product_name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Mauritius Vacation</span><span class="dl">"</span><span class="p">,</span>
         <span class="na">multiplier</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="na">amcCode</span><span class="p">:</span> <span class="dl">'</span><span class="s1">IPRU</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">merchantLogo</span><span class="p">:</span> <span class="dl">'</span><span class="s1">https://www.logo.com</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">merchantName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Name</span><span class="dl">'</span><span class="p">,</span>
         <span class="na">onComplete</span><span class="p">:</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
           <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_COMPLETE_OCCURED</span><span class="dl">"</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
           <span class="nx">alert</span><span class="p">(</span><span class="dl">"</span><span class="s2">Savvy completed successfully!</span><span class="dl">"</span><span class="p">);</span>
@@ -2978,6 +2981,21 @@ Note the <code>sip</code>root key
 <td>multiplier</td>
 <td>false</td>
 <td><code>Integer</code> The amount of products being bought.</td>
+</tr>
+<tr>
+<td>amcCode</td>
+<td>true</td>
+<td><code>String</code> Code of the AMC being used.</td>
+</tr>
+<tr>
+<td>merchantLogo:</td>
+<td>true</td>
+<td><code>String</code> Image for the merchant logo.</td>
+</tr>
+<tr>
+<td>merchantName:</td>
+<td>true</td>
+<td><code>String</code> Name of the merchant.</td>
 </tr>
 <tr>
 <td>onComplete(data)</td>
