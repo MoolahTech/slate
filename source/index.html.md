@@ -1568,6 +1568,9 @@ The SDK accepts a number of parameters, depending on what information is availab
         end_date: "DD/MM/YYYY",
         product_name: "Mauritius Vacation",
         multiplier: 1,
+        amcCode: 'IPRU',
+        merchantLogo: 'https://www.logo.com',
+        merchantName: 'Name',
         onComplete: (data) => {
           console.log("ON_COMPLETE_OCCURED", data);
           alert("Savvy completed successfully!");
@@ -1602,6 +1605,9 @@ maxAmount | false | `Decimal` Max amount, if the amount is a range, or the exact
 endDate | false | `Date` Targeted purchase date of the product.
 productName | false | `String` Name of the product being purchased.
 multiplier | false | `Integer` The amount of products being bought.
+amcCode | true | `String` Code of the AMC being used.
+merchantLogo: | true | `String` Image for the merchant logo.
+merchantName: | true | `String` Name of the merchant.
 onComplete(data) | true | `Function` Callback hook on completion of SIP setup.
 onUserExit | true | `Function` Callback hook if user exited before completion.
 
