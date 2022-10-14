@@ -1223,10 +1223,14 @@ short_link | `URL string` This URL can be shared with the user to go to for tran
       "ifsc_code": "HDFC0000001",
       "bank_name": "HDFC BANK LTD"
     },
-    "deposit": {
+    "deposits": [{
       "amount": 1000,
       "mutual_fund_id": 10
     },
+    {
+      "amount": 2000,
+      "mutual_fund_id": 20
+    }]
   }
 }
 ```
@@ -1285,7 +1289,7 @@ ifsc_code | true | `String` IFSC code
 bank_name | true | `String` Name of bank
 
 
-Deposit
+Deposits (Array)
 
 Parameter | Required | Description
 --------- | ------- | -----------
@@ -1314,12 +1318,16 @@ mutual_fund_id | true | `String` Fund ID
       "ifsc_code": "HDFC0000001",
       "bank_name": "HDFC BANK LTD"
     },
-    "sip": {
+    "sips": [{
       "amount": 1000,
-      "mutual_fund_id": 10,
-      "sip_day": 1,
-      "number_of_installments": 12
+      "mutual_fund_id": 10
     },
+    {
+      "amount": 1000,
+      "mutual_fund_id": 10
+    }],
+    "sip_day": 1,
+    "number_of_installments": 12
   }
 }
 ```
@@ -1348,6 +1356,8 @@ onboarding | false | `Object` Investor details
 account | false | `Object` Account details
 bank_account | false | `Object` Bank account details
 sip | true if deposit is null | `Object` Transaction details
+sip_day | false | `Integer` Day of the month that the SIP should be triggered
+number_of_installments | false | `Integer` Number of instalments
 
 
 Onboarding
@@ -1378,14 +1388,12 @@ ifsc_code | true | `String` IFSC code
 bank_name | true | `String` Name of bank
 
 
-SIP
+SIPs (Array)
 
 Parameter | Required | Description
 --------- | ------- | -----------
 amount | true | `Integer` 
 mutual_fund_id | true | `String` Fund ID
-sip_day | false | `Integer` Day of the month that the SIP should be triggered
-number_of_installments | false | `Integer` Number of instalments
 
 # Systematic Investment Plans
 
