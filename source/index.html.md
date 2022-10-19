@@ -1619,6 +1619,29 @@ merchantName: | true | `String` Name of the merchant.
 onComplete(data) | true | `Function` Callback hook on completion of SIP setup.
 onUserExit | true | `Function` Callback hook if user exited before completion.
 
+## AMC name & fund
+
+This API is used for displaying the name of the fund, AMC name and link.
+
+```shell
+curl "http://surface.thesavvyapp.in/amcs/<AMC_CODE>/name_and_liquid_fund" \
+  -X GET \
+  -H "X-PARTNER-ACCESS-KEY: <YOUR KEY>"
+```
+> The above command returns a JSON object.
+
+### HTTP Request
+
+`GET http://surface.thesavvyapp.in/amcs/<AMC_CODE>/name_and_liquid_fund`
+
+### Response parameters
+
+Parameter | Description
+--------- | -----------
+amc_name | AMC name
+liquid_fund | Name of the fund
+liquid_fund_link | Link to the fund
+
 # Risk Profiling
 
 To improve the user experience in terms of fund selection, we offer a risk profiling API that takes customer profile information + a couple of risk related questions as inputs to output a maximum of 4 funds. While designed by our in-house MF experts, this API is provided "as-is", without any guarantees of correctness.
