@@ -527,6 +527,9 @@
                   <li>
                     <a href="#snbl-sdk-object" class="toc-h2 toc-link" data-title="SNBL SDK object">SNBL SDK object</a>
                   </li>
+                  <li>
+                    <a href="#amc-name-amp-fund" class="toc-h2 toc-link" data-title="AMC name &amp; fund">AMC name &amp; fund</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -3014,6 +3017,37 @@ Note the <code>sip</code>root key
 <td>onUserExit</td>
 <td>true</td>
 <td><code>Function</code> Callback hook if user exited before completion.</td>
+</tr>
+</tbody></table>
+<h2 id='amc-name-amp-fund'>AMC name &amp; fund</h2>
+<p>This API is used for displaying the name of the fund, AMC name and link.</p>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/amcs/&lt;AMC_CODE&gt;/name_and_liquid_fund"</span> <span class="se">\</span>
+  <span class="nt">-X</span> GET <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"X-PARTNER-ACCESS-KEY: &lt;YOUR KEY&gt;"</span>
+</code></pre></div>
+<blockquote>
+<p>The above command returns a JSON object.</p>
+</blockquote>
+<h3 id='http-request-33'>HTTP Request</h3>
+<p><code>GET http://surface.thesavvyapp.in/amcs/&lt;AMC_CODE&gt;/name_and_liquid_fund</code></p>
+<h3 id='response-parameters'>Response parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>amc_name</td>
+<td>AMC name</td>
+</tr>
+<tr>
+<td>liquid_fund</td>
+<td>Name of the fund</td>
+</tr>
+<tr>
+<td>liquid_fund_link</td>
+<td>Link to the fund</td>
 </tr>
 </tbody></table>
 <h1 id='risk-profiling'>Risk Profiling</h1>
