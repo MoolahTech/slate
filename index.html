@@ -2894,25 +2894,18 @@ Note the <code>sip</code>root key
 <h1 id='save-now-buy-later-snbl'>Save Now, Buy Later (SNBL)</h1>
 <p>SNBL is a unique proposition, where customers can save up (via SIP) to purchase products from merchants. This service is provided as an SDK to merchants so they can embed SNBL inside their purchase journeys.</p>
 <h2 id='importing-the-sdk'>Importing the SDK</h2>
-<p>Get the SDK from our CDN: <code>https://cdn.savvyapp.in/lib/savvypay.min.js</code></p>
+<p>Get the SDK from our CDN: <code>https://cdn.savvyapp.in/lib/savvypayCoreSDK.min.js</code></p>
 <div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script
   </span><span class="na">defer=</span><span class="s">"defer"</span>
-  <span class="na">src=</span><span class="s">"https://cdn.savvyapp.in/lib/savvypay.min.js"</span> <span class="nt">/&gt;</span>
+  <span class="na">src=</span><span class="s">"https://cdn.savvyapp.in/lib/savvypayCoreSDK.min.js"</span> <span class="nt">/&gt;</span>
 </code></pre></div><h2 id='using-the-sdk'>Using the SDK</h2>
 <p>The SDK accepts a number of parameters, depending on what information is available to the merchant:</p>
 <div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script&gt;</span>
-  <span class="kd">function</span> <span class="nx">onLoad</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">savvy</span><span class="dl">"</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">"</span><span class="s2">click</span><span class="dl">"</span><span class="p">,</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">Savvy</span> <span class="o">=</span> <span class="nx">SavvyPay</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+  <span class="kd">function</span> <span class="nx">doPayment</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
         <span class="na">key</span><span class="p">:</span> <span class="dl">"</span><span class="s2">XXXXX-XXXXX</span><span class="dl">"</span><span class="p">,</span>
         <span class="na">offerUuid</span><span class="p">:</span> <span class="dl">"</span><span class="s2">XXXXX-XXXXX</span><span class="dl">"</span><span class="p">,</span>
         <span class="na">isProduction</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-        <span class="na">user</span><span class="p">:</span> <span class="p">{</span>
-          <span class="na">firstName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Ravin</span><span class="dl">'</span><span class="p">,</span>
-          <span class="na">lastName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Pandu</span><span class="dl">'</span><span class="p">,</span>
-          <span class="na">phoneNumber</span><span class="p">:</span> <span class="dl">'</span><span class="s1">+919600012345</span><span class="dl">'</span><span class="p">,</span>
-          <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ravindran@balo.app</span><span class="dl">'</span>
-        <span class="p">},</span>
         <span class="na">min_amount</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
         <span class="na">max_amount</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
         <span class="na">end_date</span><span class="p">:</span> <span class="dl">"</span><span class="s2">DD/MM/YYYY</span><span class="dl">"</span><span class="p">,</span>
@@ -2927,19 +2920,16 @@ Note the <code>sip</code>root key
         <span class="p">},</span>
         <span class="na">onUserExit</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
           <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_USER_EXITED</span><span class="dl">"</span><span class="p">);</span>
-        <span class="p">}})</span>
+        <span class="p">}}</span>
 
-      <span class="nx">Savvy</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
-    <span class="p">})</span>
+      <span class="kd">var</span> <span class="nx">savvySDK</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SavvySDK</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+        <span class="nx">savvySDK</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+    <span class="p">}</span>
   <span class="p">}</span>
 <span class="nt">&lt;/script&gt;</span>
 ...
 
-<span class="nt">&lt;body</span> <span class="na">onload=</span><span class="s">"onLoad()"</span><span class="nt">&gt;</span>
-...
-  <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"savvy"</span><span class="nt">&gt;</span>
-...
-<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"doPayment()"</span><span class="nt">&gt;</span>Do Payment<span class="nt">&lt;/button&gt;</span>
 </code></pre></div><h2 id='snbl-sdk-object'>SNBL SDK object</h2>
 <table><thead>
 <tr>
@@ -2962,11 +2952,6 @@ Note the <code>sip</code>root key
 <td>isProduction</td>
 <td>true</td>
 <td><code>Boolean</code> Production request or not</td>
-</tr>
-<tr>
-<td>user</td>
-<td>true</td>
-<td><code>Object</code> User details, if any. Pass empty object if no details are available.</td>
 </tr>
 <tr>
 <td>minAmount</td>
