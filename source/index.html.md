@@ -1545,12 +1545,12 @@ SNBL is a unique proposition, where customers can save up (via SIP) to purchase 
 
 ## Importing the SDK
 
-Get the SDK from our CDN: `https://cdn.savvyapp.in/lib/savvypay.min.js`
+Get the SDK from our CDN: `https://cdn.savvyapp.in/lib/savvypayCoreSDK.min.js`
 
 ```html
 <script
   defer="defer"
-  src="https://cdn.savvyapp.in/lib/savvypay.min.js" />
+  src="https://cdn.savvyapp.in/lib/savvypayCoreSDK.min.js" />
 ```
 
 ## Using the SDK
@@ -1559,18 +1559,11 @@ The SDK accepts a number of parameters, depending on what information is availab
 
 ```html
 <script>
-  function onLoad() {
-    document.getElementById("savvy").addEventListener("click", (e) => {
-      var Savvy = SavvyPay.init({
+  function doPayment() {
+      var config = {
         key: "XXXXX-XXXXX",
         offerUuid: "XXXXX-XXXXX",
         isProduction: false,
-        user: {
-          firstName: 'Ravin',
-          lastName: 'Pandu',
-          phoneNumber: '+919600012345',
-          email: 'ravindran@balo.app'
-        },
         min_amount: 10000,
         max_amount: 20000,
         end_date: "DD/MM/YYYY",
@@ -1585,19 +1578,16 @@ The SDK accepts a number of parameters, depending on what information is availab
         },
         onUserExit: () => {
           console.log("ON_USER_EXITED");
-        }})
+        }}
 
-      Savvy.start();
-    })
+      var savvySDK = new SavvySDK(config);
+        savvySDK.start();
+    }
   }
 </script>
 ...
 
-<body onload="onLoad()">
-...
-  <button id="savvy">
-...
-</body>
+<button onclick="doPayment()">Do Payment</button>
 ```
 
 ## SNBL SDK object
@@ -1607,7 +1597,6 @@ Parameter | Required | Description
 key | true | `String` API key provided to the merchant.
 offerUuid | true | `String` Product offer uuid. This can be static, or dynamic. It is either created by the merchant at purchase time, or created by Savvy and provided to the merchant.
 isProduction | true | `Boolean` Production request or not
-user | true | `Object` User details, if any. Pass empty object if no details are available.
 minAmount | false | `Decimal` Min amount, if the amount is a range.
 maxAmount | false | `Decimal` Max amount, if the amount is a range, or the exact amount in case there is no range.
 endDate | false | `Date` Targeted purchase date of the product.
