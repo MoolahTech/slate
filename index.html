@@ -525,6 +525,9 @@
                     <a href="#using-the-sdk" class="toc-h2 toc-link" data-title="Using the SDK">Using the SDK</a>
                   </li>
                   <li>
+                    <a href="#track-investment-sdk-usage" class="toc-h2 toc-link" data-title="Track investment SDK usage">Track investment SDK usage</a>
+                  </li>
+                  <li>
                     <a href="#snbl-sdk-object" class="toc-h2 toc-link" data-title="SNBL SDK object">SNBL SDK object</a>
                   </li>
                   <li>
@@ -2906,6 +2909,7 @@ Note the <code>sip</code>root key
         <span class="na">key</span><span class="p">:</span> <span class="dl">"</span><span class="s2">XXXXX-XXXXX</span><span class="dl">"</span><span class="p">,</span>
         <span class="na">offerUuid</span><span class="p">:</span> <span class="dl">"</span><span class="s2">XXXXX-XXXXX</span><span class="dl">"</span><span class="p">,</span>
         <span class="na">isProduction</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="na">isDisplayDetail</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
         <span class="na">minAmount</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
         <span class="na">maxAmount</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
         <span class="na">endDate</span><span class="p">:</span> <span class="dl">"</span><span class="s2">DD/MM/YYYY</span><span class="dl">"</span><span class="p">,</span>
@@ -2930,6 +2934,29 @@ Note the <code>sip</code>root key
 ...
 
 <span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"doPayment()"</span><span class="nt">&gt;</span>Do Payment<span class="nt">&lt;/button&gt;</span>
+</code></pre></div><h2 id='track-investment-sdk-usage'>Track investment SDK usage</h2>
+<p>After SNBL setup, a customer may want to track their investment. In this case, pass one extra option, <code>isDisplayDetail</code> as <code>true</code> to the same SDK:</p>
+<div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script&gt;</span>
+  <span class="kd">function</span> <span class="nx">showTracker</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">key</span><span class="p">:</span> <span class="dl">"</span><span class="s2">XXXXX-XXXXX</span><span class="dl">"</span><span class="p">,</span>
+        <span class="na">isProduction</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="na">isDisplayDetail</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="na">amcCode</span><span class="p">:</span> <span class="dl">'</span><span class="s1">IPRU</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">merchantLogo</span><span class="p">:</span> <span class="dl">'</span><span class="s1">https://www.logo.com</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">merchantName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Name</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">onUserExit</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_USER_EXITED</span><span class="dl">"</span><span class="p">);</span>
+        <span class="p">}}</span>
+
+      <span class="kd">var</span> <span class="nx">savvySDK</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SavvySDK</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+        <span class="nx">savvySDK</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="nt">&lt;/script&gt;</span>
+...
+
+<span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"showTracker()"</span><span class="nt">&gt;</span>Show Tracker<span class="nt">&lt;/button&gt;</span>
 </code></pre></div><h2 id='snbl-sdk-object'>SNBL SDK object</h2>
 <table><thead>
 <tr>
@@ -2952,6 +2979,11 @@ Note the <code>sip</code>root key
 <td>isProduction</td>
 <td>true</td>
 <td><code>Boolean</code> Production request or not</td>
+</tr>
+<tr>
+<td>isDisplayDetail</td>
+<td>false</td>
+<td><code>Boolean</code> Whether to open in track investment mode or not.</td>
 </tr>
 <tr>
 <td>minAmount</td>
