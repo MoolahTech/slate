@@ -1564,6 +1564,7 @@ The SDK accepts a number of parameters, depending on what information is availab
         key: "XXXXX-XXXXX",
         offerUuid: "XXXXX-XXXXX",
         isProduction: false,
+        isDisplayDetail: false,
         minAmount: 10000,
         maxAmount: 20000,
         endDate: "DD/MM/YYYY",
@@ -1590,6 +1591,34 @@ The SDK accepts a number of parameters, depending on what information is availab
 <button onclick="doPayment()">Do Payment</button>
 ```
 
+## Track investment SDK usage
+
+After SNBL setup, a customer may want to track their investment. In this case, pass one extra option, `isDisplayDetail` as `true` to the same SDK:
+
+```html
+<script>
+  function showTracker() {
+      var config = {
+        key: "XXXXX-XXXXX",
+        isProduction: false,
+        isDisplayDetail: true,
+        amcCode: 'IPRU',
+        merchantLogo: 'https://www.logo.com',
+        merchantName: 'Name',
+        onUserExit: () => {
+          console.log("ON_USER_EXITED");
+        }}
+
+      var savvySDK = new SavvySDK(config);
+        savvySDK.start();
+    }
+  }
+</script>
+...
+
+<button onclick="showTracker()">Show Tracker</button>
+```
+
 ## SNBL SDK object
 
 Parameter | Required | Description
@@ -1597,6 +1626,7 @@ Parameter | Required | Description
 key | true | `String` API key provided to the merchant.
 offerUuid | true | `String` Product offer uuid. This can be static, or dynamic. It is either created by the merchant at purchase time, or created by Savvy and provided to the merchant.
 isProduction | true | `Boolean` Production request or not
+isDisplayDetail | false | `Boolean` Whether to open in track investment mode or not.
 minAmount | false | `Decimal` Min amount, if the amount is a range.
 maxAmount | false | `Decimal` Max amount, if the amount is a range, or the exact amount in case there is no range.
 endDate | false | `Date` Targeted purchase date of the product.
