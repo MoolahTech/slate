@@ -1658,6 +1658,7 @@ curl "http://surface.thesavvyapp.in/amcs/<AMC_CODE>/name_and_liquid_fund" \
 Parameter | Description
 --------- | -----------
 amc_name | AMC name
+amc_logo | Link to amc logo
 liquid_fund | Name of the fund
 liquid_fund_link | Link to the fund
 
