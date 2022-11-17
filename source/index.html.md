@@ -1395,6 +1395,69 @@ Parameter | Required | Description
 amount | true | `Integer` 
 mutual_fund_id | true | `String` Fund ID
 
+## Importing the SDK
+
+Get the SDK from our CDN: `https://cdn.savvyapp.in/lib/savvy.min.js`
+
+```html
+<script
+  defer="defer"
+  src="https://cdn.savvyapp.in/lib/savvy.min.js" />
+```
+
+## Using the SDK
+
+The SDK accepts a number of parameters, depending on what information is available to the merchant:
+
+```html
+<script>
+  function doPayment() {
+      let objectData = {
+        type: 'one-click-checkout',
+        token: 'id', // SDK key
+        one_click_checkout_id: 'uuid', // UUID from API response
+        onComplete: () => {
+          console.log("ON_COMPLETE_OCCURED");
+        },
+        onError: () => {
+          console.log("ON_ERROR_OCCURED");
+        },
+        onUserExit: () => {
+          console.log("ON_USER_EXITED");
+        },
+      };
+
+      SavvyInit.start({
+        user: {
+          firstName: "Ravin", // optional
+          lastName: "Pandu", // optional
+          phoneNumber: "+919600012345", // optional
+          email: "ravindran@balo.app", // optional
+        }
+      });
+    }
+  }
+</script>
+...
+
+<button onclick="doPayment()">Do Payment</button>
+```
+
+## Track investment SDK usage
+
+After investment, a customer may want to track their investment. In this case, pass one extra option, `isDisplayDetail` as `true` to the same SDK:
+
+```html
+<script>
+  function showTracker() {
+    #TODO
+  }
+</script>
+...
+
+<button onclick="showTracker()">Show Tracker</button>
+```
+
 # Systematic Investment Plans
 
 This API describes how to create a SIP transaction. This API can only be accessed post the onboarding flow. The workflow for creating and registering an SIP is:
