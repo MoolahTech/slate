@@ -793,7 +793,7 @@ code | `String` Operational code of the AMC. This code must be submitted in API 
 ## Get all AMCs
 
 ```shell
-curl "http://surface.thesavvyapp.in/amcs" \
+curl "http://surface.thesavvyapp.in/secure/amcs" \
   -X GET \
   -H "Authorization: Bearer <token>"
 ```
@@ -801,7 +801,7 @@ curl "http://surface.thesavvyapp.in/amcs" \
 
 ### HTTP Request
 
-`GET http://surface.thesavvyapp.in/amcs`
+`GET http://surface.thesavvyapp.in/secure/amcs`
 
 # Funds
 
@@ -819,7 +819,7 @@ code | `String` Global unique identifier of this fund. This code must be submitt
 ## Get all funds
 
 ```shell
-curl "http://surface.thesavvyapp.in/funds?amc_code=code" \
+curl "http://surface.thesavvyapp.in/secure/funds?amc_code=code" \
   -X GET \
   -H "Authorization: Bearer <token>"
 
@@ -828,7 +828,7 @@ curl "http://surface.thesavvyapp.in/funds?amc_code=code" \
 
 ### HTTP Request
 
-`GET http://surface.thesavvyapp.in/funds`
+`GET http://surface.thesavvyapp.in/secure/funds`
 
 ### URL Parameters
 
@@ -856,7 +856,7 @@ holding_mode | `Enum: ["SI"]` Only Single mode is supported as of now.
 ## Show account
 
 ```shell
-curl "http://surface.thesavvyapp.in/accounts/<UUID>" \
+curl "http://surface.thesavvyapp.in/secure/accounts/<UUID>" \
   -X GET \
   -H "Authorization: Bearer <token>"
 ```
@@ -864,7 +864,7 @@ curl "http://surface.thesavvyapp.in/accounts/<UUID>" \
 
 ### HTTP Request
 
-`GET http://surface.thesavvyapp.in/accounts/<UUID>`
+`GET http://surface.thesavvyapp.in/secure/accounts/<UUID>`
 
 # Deposits
 
