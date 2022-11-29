@@ -1911,7 +1911,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
     </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/payment_redirect"</span><span class="w">
+    </span><span class="nl">"payment_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/payment_redirect"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/deposits"</span> <span class="se">\</span>
@@ -1948,7 +1948,7 @@ Note the <code>deposit</code>root key
 <td><code>Date</code> Code of the fund to be invested in</td>
 </tr>
 <tr>
-<td>redirect_url</td>
+<td>payment_redirect_url</td>
 <td>true</td>
 <td><code>String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure.</td>
 </tr>
@@ -1993,7 +1993,7 @@ Note the <code>deposit</code>root key
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"deposit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
   </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/payment_redirect"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"payment_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/payment_redirect"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"deposit_parts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000"</span><span class="p">,</span><span class="w">
@@ -2029,7 +2029,7 @@ Note the <code>deposit</code>root key
 </tr>
 </thead><tbody>
 <tr>
-<td>redirect_url</td>
+<td>payment_redirect_url</td>
 <td>true</td>
 <td><code>String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure.</td>
 </tr>
@@ -2802,7 +2802,7 @@ Note the <code>one_click_checkout</code>root key
 <td><code>String</code> <strong>Only applicable for create API</strong> URL to which to take the user for mandate checkout.</td>
 </tr>
 <tr>
-<td>redirect_url</td>
+<td>mandate_redirect_url</td>
 <td><code>String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure.</td>
 </tr>
 <tr>
@@ -2860,7 +2860,7 @@ Note the <code>one_click_checkout</code>root key
     </span><span class="nl">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/01/2022"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/12/2022"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"frequency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monthly"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/redirect"</span><span class="w">
+    </span><span class="nl">"mandate_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/redirect"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/sips"</span> <span class="se">\</span>
@@ -2924,7 +2924,7 @@ Note the <code>sip</code>root key
 <td><code>Enum: monthly, weekly, daily, ad-hoc</code> Frequency of debits</td>
 </tr>
 <tr>
-<td>redirect_url</td>
+<td>mandate_redirect_url</td>
 <td>true</td>
 <td><code>URL String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure.</td>
 </tr>
