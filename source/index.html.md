@@ -201,7 +201,7 @@ ifsc_code | true | `String` A valid IFSC code
     "city": "Mumbai",
     "pincode": "900900",
     "date_of_birth": "27/06/1981",
-    "occupation_code": "05"
+    "occupation": "05"
   }
 }
 ```
