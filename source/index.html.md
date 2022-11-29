@@ -940,7 +940,7 @@ curl "http://surface.thesavvyapp.in/secure/deposits/<UUID>" \
     "fund_code": "1234",
     "account_uuid": "aaaaa-bbbb-cccc-dddd",
     "onboarding_uuid": "aaaaa-bbbb-cccc-dddd",
-    "redirect_url": "https://example.com/payment_redirect"
+    "payment_redirect_url": "https://example.com/payment_redirect"
   }
 }
 ```
@@ -968,7 +968,7 @@ Parameter | Required | Description
 --------- | ------- | -----------
 amount | true | `Integer` Amount to be invested
 fund_code | true | `Date` Code of the fund to be invested in
-redirect_url | true | `String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
+payment_redirect_url | true | `String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
 account_uuid | false | `String` If the deposit has to be created in an existing account.
 onboarding_uuid | false | `String` Mandatory if account uuid is not specified.
 partner_transaction_id | false | `String` Your custom ID to identify this transaction.
@@ -989,7 +989,7 @@ url | true | `String` URL to redirect the customer to for payment
 { "deposit": {
   "account_uuid": "aaaaa-bbbb-cccc-dddd",
   "onboarding_uuid": "aaaaa-bbbb-cccc-dddd",
-  "redirect_url": "https://example.com/payment_redirect",
+  "payment_redirect_url": "https://example.com/payment_redirect",
   "deposit_parts": [
     {
       "amount": "1000",
@@ -1024,7 +1024,7 @@ Note the <code>deposit</code>root key
 
 Parameter | Required | Description
 --------- | ------- | -----------
-redirect_url | true | `String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
+payment_redirect_url | true | `String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
 account_uuid | false | `String` If the deposit has to be created in an existing account.
 onboarding_uuid | false | `String` Mandatory if account uuid is not specified.
 partner_transaction_id | false | `String` Your custom ID to identify this transaction.
@@ -1485,7 +1485,7 @@ end_date | `Date` End date of the SIP.
 frequency | `Enum: monthly, weekly, daily, ad-hoc` Frequency of debits
 amount | `Integer` Amount to be deposited at each installment.
 payment_link | `String` **Only applicable for create API** URL to which to take the user for mandate checkout.
-redirect_url | `String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
+mandate_redirect_url | `String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
 active | `Boolean` Whether the SIP is actively debiting.
 partner_transaction_id | `String` Your ID associated with the transaction.
 created_at | `Datetime` Time at which the SIP was created.
@@ -1535,7 +1535,7 @@ curl "http://surface.thesavvyapp.in/secure/sips/<UUID>" \
     "start_date": "30/01/2022",
     "end_date": "30/12/2022",
     "frequency": "monthly",
-    "redirect_url": "https://example.com/redirect"
+    "mandate_redirect_url": "https://example.com/redirect"
   }
 }
 ```
@@ -1570,7 +1570,7 @@ partner_transaction_id | false | `String` Your custom ID to identify this transa
 start_date | true | `Date` Start date of the SIP.
 end_date | true | `Date` End date of the SIP.
 frequency | true | `Enum: monthly, weekly, daily, ad-hoc` Frequency of debits 
-redirect_url | true | `URL String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
+mandate_redirect_url | true | `URL String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
 
 # Systematic Withdrawal Plans
 
