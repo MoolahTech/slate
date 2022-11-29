@@ -1684,7 +1684,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <td><code>String</code> Operational code of the AMC. This code must be submitted in API requests, <strong>not</strong> the name.</td>
 </tr>
 </tbody></table>
-<h2 id='get-all-amcs'>Get all AMCs</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/amcs"</span> <span class="se">\</span>
+<h2 id='get-all-amcs'>Get all AMCs</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/amcs"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 </code></pre></div>
@@ -1692,7 +1692,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <p>The above command returns an array of AMC JSON objects.</p>
 </blockquote>
 <h3 id='http-request-17'>HTTP Request</h3>
-<p><code>GET http://surface.thesavvyapp.in/amcs</code></p>
+<p><code>GET http://surface.thesavvyapp.in/secure/amcs</code></p>
 <h1 id='funds'>Funds</h1>
 <p>This API gives you lists of supported mutual funds, by AMC. There is also support for NFOs, along with their timelines. Please note that NFOs are updated 1-2 days before the launch date.</p>
 <h2 id='fund-object'>Fund object</h2>
@@ -1719,7 +1719,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <td><code>String</code> Global unique identifier of this fund. This code must be submitted in API requests, <strong>not</strong> the name.</td>
 </tr>
 </tbody></table>
-<h2 id='get-all-funds'>Get all funds</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/funds?amc_code=code"</span> <span class="se">\</span>
+<h2 id='get-all-funds'>Get all funds</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/funds?amc_code=code"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 
@@ -1728,7 +1728,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <p>The above command returns an array of Fund JSON objects.</p>
 </blockquote>
 <h3 id='http-request-18'>HTTP Request</h3>
-<p><code>GET http://surface.thesavvyapp.in/funds</code></p>
+<p><code>GET http://surface.thesavvyapp.in/secure/funds</code></p>
 <h3 id='url-parameters'>URL Parameters</h3>
 <table><thead>
 <tr>
@@ -1785,7 +1785,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <td><code>Enum: [&quot;SI&quot;]</code> Only Single mode is supported as of now.</td>
 </tr>
 </tbody></table>
-<h2 id='show-account'>Show account</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/accounts/&lt;UUID&gt;"</span> <span class="se">\</span>
+<h2 id='show-account'>Show account</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/accounts/&lt;UUID&gt;"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 </code></pre></div>
@@ -1793,7 +1793,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <p>The above command returns a account JSON object.</p>
 </blockquote>
 <h3 id='http-request-19'>HTTP Request</h3>
-<p><code>GET http://surface.thesavvyapp.in/accounts/&lt;UUID&gt;</code></p>
+<p><code>GET http://surface.thesavvyapp.in/secure/accounts/&lt;UUID&gt;</code></p>
 <h1 id='deposits'>Deposits</h1>
 <p>The deposits API describes how to create a mutual fund purchase transaction. This API can only be accessed post the onboarding flow. The workflow for creating and completing a purchase is:</p>
 
