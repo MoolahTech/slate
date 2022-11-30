@@ -2856,6 +2856,7 @@ Note the <code>one_click_checkout</code>root key
     </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"partner_transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xyv-abc"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/01/2022"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/12/2022"</span><span class="p">,</span><span class="w">
@@ -2900,8 +2901,13 @@ Note the <code>sip</code>root key
 </tr>
 <tr>
 <td>account_uuid</td>
-<td>true</td>
-<td><code>String</code> If the deposit has to be created in an existing account.</td>
+<td>false</td>
+<td><code>String</code> If the SIP has to be created in an existing account.</td>
+</tr>
+<tr>
+<td>onboarding_uuid</td>
+<td>false</td>
+<td><code>String</code> If the SIP has to be created in a new account.</td>
 </tr>
 <tr>
 <td>partner_transaction_id</td>
