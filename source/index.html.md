@@ -1531,6 +1531,7 @@ curl "http://surface.thesavvyapp.in/secure/sips/<UUID>" \
     "amount": "1000",
     "fund_code": "1234",
     "account_uuid": "aaaaa-bbbb-cccc-dddd",
+    "onboarding_uuid": "aaaaa-bbbb-cccc-dddd",
     "partner_transaction_id": "xyv-abc",
     "start_date": "30/01/2022",
     "end_date": "30/12/2022",
@@ -1565,7 +1566,8 @@ Parameter | Required | Description
 --------- | ------- | -----------
 amount | true | `Decimal` Amount to be invested
 fund_code | true | `Date` Code of the fund to be invested in
-account_uuid | true | `String` If the deposit has to be created in an existing account.
+account_uuid | false | `String` If the SIP has to be created in an existing account.
+onboarding_uuid | false | `String` If the SIP has to be created in a new account.
 partner_transaction_id | false | `String` Your custom ID to identify this transaction.
 start_date | true | `Date` Start date of the SIP.
 end_date | true | `Date` End date of the SIP.
