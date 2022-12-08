@@ -813,8 +813,29 @@ Parameter | Description
 --------- | ----------- 
 name | `String` Name of the fund.
 active | `Boolean` Whether the fund is currently accepting purchases from customers.
-nav | `Decimal` Current value of a unit of this fund.
 code | `String` Global unique identifier of this fund. This code must be submitted in API requests, **not** the name.
+fund_info | `Object` Current information of the fund; full object below.
+minimum_first_time_investment | `Decimal` Min investment if investing first time in the account. This is **per** account; if a new account is opened then this will apply.
+minimum_ongoing_investment | `Decimal` Min investment if investing again in the account. This is **per** account; if a new account is opened then this will **not** apply.
+minimum_redemption_amount | `Decimal` Min amount for withdrawals. If submitting a transaction that will make the balance fall below this min, it will **not** be accepted
+settlement_days | `Integer` Amount of days taken for units to get allocated.
+minimum_sip_amount | `Decimal` Min amount for an SIP.
+minimum_swp_amount | `Decimal` Min amount for an SWP.
+minimum_stp_amount | `Decimal` Min amount for an STP.
+factsheet_link | `String` Link to the factsheet on the AMC website.
+category | `String` Category of the fund
+risk_rating | `Integer` 1-6 rating on the riskometer
+expense_ratio | `Decimal` Expense ratio as a percentage
+fund_managers | `Array[String]` List of fund managers
+
+### Fund info
+
+Parameter | Description
+--------- | -----------
+nav | `Decimal` Current net asset value of the fund. This is updated at cutoff time.
+return_year_1 | `Decimal` CAGR since last 1 year
+return_year_3 | `Decimal` CAGR since last 3 year
+return_year_5 | `Decimal` CAGR since last 5 year
 
 ## Get all funds
 
