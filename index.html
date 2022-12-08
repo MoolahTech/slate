@@ -1711,12 +1711,84 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <td><code>Boolean</code> Whether the fund is currently accepting purchases from customers.</td>
 </tr>
 <tr>
-<td>nav</td>
-<td><code>Decimal</code> Current value of a unit of this fund.</td>
-</tr>
-<tr>
 <td>code</td>
 <td><code>String</code> Global unique identifier of this fund. This code must be submitted in API requests, <strong>not</strong> the name.</td>
+</tr>
+<tr>
+<td>fund_info</td>
+<td><code>Object</code> Current information of the fund; full object below.</td>
+</tr>
+<tr>
+<td>minimum_first_time_investment</td>
+<td><code>Decimal</code> Min investment if investing first time in the account. This is <strong>per</strong> account; if a new account is opened then this will apply.</td>
+</tr>
+<tr>
+<td>minimum_ongoing_investment</td>
+<td><code>Decimal</code> Min investment if investing again in the account. This is <strong>per</strong> account; if a new account is opened then this will <strong>not</strong> apply.</td>
+</tr>
+<tr>
+<td>minimum_redemption_amount</td>
+<td><code>Decimal</code> Min amount for withdrawals. If submitting a transaction that will make the balance fall below this min, it will <strong>not</strong> be accepted</td>
+</tr>
+<tr>
+<td>settlement_days</td>
+<td><code>Integer</code> Amount of days taken for units to get allocated.</td>
+</tr>
+<tr>
+<td>minimum_sip_amount</td>
+<td><code>Decimal</code> Min amount for an SIP.</td>
+</tr>
+<tr>
+<td>minimum_swp_amount</td>
+<td><code>Decimal</code> Min amount for an SWP.</td>
+</tr>
+<tr>
+<td>minimum_stp_amount</td>
+<td><code>Decimal</code> Min amount for an STP.</td>
+</tr>
+<tr>
+<td>factsheet_link</td>
+<td><code>String</code> Link to the factsheet on the AMC website.</td>
+</tr>
+<tr>
+<td>category</td>
+<td><code>String</code> Category of the fund</td>
+</tr>
+<tr>
+<td>risk_rating</td>
+<td><code>Integer</code> 1-6 rating on the riskometer</td>
+</tr>
+<tr>
+<td>expense_ratio</td>
+<td><code>Decimal</code> Expense ratio as a percentage</td>
+</tr>
+<tr>
+<td>fund_managers</td>
+<td><code>Array[String]</code> List of fund managers</td>
+</tr>
+</tbody></table>
+<h3 id='fund-info'>Fund info</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>nav</td>
+<td><code>Decimal</code> Current net asset value of the fund. This is updated at cutoff time.</td>
+</tr>
+<tr>
+<td>return_year_1</td>
+<td><code>Decimal</code> CAGR since last 1 year</td>
+</tr>
+<tr>
+<td>return_year_3</td>
+<td><code>Decimal</code> CAGR since last 3 year</td>
+</tr>
+<tr>
+<td>return_year_5</td>
+<td><code>Decimal</code> CAGR since last 5 year</td>
 </tr>
 </tbody></table>
 <h2 id='get-all-funds'>Get all funds</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/funds?amc_code=code"</span> <span class="se">\</span>
