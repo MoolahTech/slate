@@ -1464,20 +1464,57 @@ The SDK accepts a number of parameters, depending on what information is availab
 <button onclick="doPayment()">Do Payment</button>
 ```
 
-## Track investment SDK usage
+# Generic Checkout
 
-After investment, a customer may want to track their investment. In this case, pass one extra option, `isDisplayDetail` as `true` to the same SDK:
+While the previously mentioned one-click-checkout is for a specific user and is a one-time use only, generic checkout is a way to make the same checkout experience, but for many users. This feature is currently available only on the dashboard, and not over API. SDK usage for embedding is described below:
+
+## Using the SDK
+
+Create a new generic link on the dashboard. Then, pass in the generated UUID to the SDK to start the journey.
 
 ```html
 <script>
-  function showTracker() {
-    #TODO
+  function startPayment() {
+      let objectData = {
+        type: 'generic_checkout',
+        token: 'id', // Partner access key provided to you
+        one_click_checkout_id: 'uuid', // UUID from generated link on dashboard
+        isProduction: false, // If hitting UAT or production
+        onComplete: () => {
+          console.log("ON_COMPLETE_OCCURED");
+        },
+        onError: () => {
+          console.log("ON_ERROR_OCCURED");
+        },
+        onUserExit: () => {
+          console.log("ON_USER_EXITED");
+        },
+      };
+
+      Savvy.init({ ...objectData }).start({});
+    }
   }
 </script>
+<script
+  defer="defer"
+  src="https://cdn.savvyapp.in/lib/savvy.min.js"
+></script>
 ...
 
-<button onclick="showTracker()">Show Tracker</button>
+<button onclick="startPayment()">Start</button>
 ```
+
+## Generic Checkout SDK object
+
+Parameter | Required | Description
+--------- | -------- | ----------- 
+token | true | `String` Access key provided to the partner.
+type | true | `String` Type of checkout, in this case `generic_checkout`
+isProduction | true | `Boolean` Production request or not
+one_click_checkout_id | false | `Boolean` UUID of the generic checkout (name is confusing, this will change in a subsequent build :) ).
+onComplete(data) | true | `Function` Callback hook on completion of SIP setup.
+onUserExit | true | `Function` Callback hook if user exited before completion.
+onError | true | `Function` Callback hook in case of error with the transaction.
 
 # Systematic Investment Plans
 
