@@ -486,8 +486,16 @@
                   <li>
                     <a href="#using-the-sdk" class="toc-h2 toc-link" data-title="Using the SDK">Using the SDK</a>
                   </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#generic-checkout" class="toc-h1 toc-link" data-title="Generic Checkout">Generic Checkout</a>
+              <ul class="toc-list-h2">
                   <li>
-                    <a href="#track-investment-sdk-usage" class="toc-h2 toc-link" data-title="Track investment SDK usage">Track investment SDK usage</a>
+                    <a href="#using-the-sdk-2" class="toc-h2 toc-link" data-title="Using the SDK">Using the SDK</a>
+                  </li>
+                  <li>
+                    <a href="#generic-checkout-sdk-object" class="toc-h2 toc-link" data-title="Generic Checkout SDK object">Generic Checkout SDK object</a>
                   </li>
               </ul>
           </li>
@@ -531,10 +539,10 @@
                     <a href="#importing-the-sdk-2" class="toc-h2 toc-link" data-title="Importing the SDK">Importing the SDK</a>
                   </li>
                   <li>
-                    <a href="#using-the-sdk-2" class="toc-h2 toc-link" data-title="Using the SDK">Using the SDK</a>
+                    <a href="#using-the-sdk-3" class="toc-h2 toc-link" data-title="Using the SDK">Using the SDK</a>
                   </li>
                   <li>
-                    <a href="#track-investment-sdk-usage-2" class="toc-h2 toc-link" data-title="Track investment SDK usage">Track investment SDK usage</a>
+                    <a href="#track-investment-sdk-usage" class="toc-h2 toc-link" data-title="Track investment SDK usage">Track investment SDK usage</a>
                   </li>
                   <li>
                     <a href="#snbl-sdk-object" class="toc-h2 toc-link" data-title="SNBL SDK object">SNBL SDK object</a>
@@ -2808,17 +2816,84 @@ Note the <code>one_click_checkout</code>root key
 ...
 
 <span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"doPayment()"</span><span class="nt">&gt;</span>Do Payment<span class="nt">&lt;/button&gt;</span>
-</code></pre></div><h2 id='track-investment-sdk-usage'>Track investment SDK usage</h2>
-<p>After investment, a customer may want to track their investment. In this case, pass one extra option, <code>isDisplayDetail</code> as <code>true</code> to the same SDK:</p>
+</code></pre></div><h1 id='generic-checkout'>Generic Checkout</h1>
+<p>While the previously mentioned one-click-checkout is for a specific user and is a one-time use only, generic checkout is a way to make the same checkout experience, but for many users. This feature is currently available only on the dashboard, and not over API. SDK usage for embedding is described below:</p>
+<h2 id='using-the-sdk-2'>Using the SDK</h2>
+<p>Create a new generic link on the dashboard. Then, pass in the generated UUID to the SDK to start the journey.</p>
 <div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script&gt;</span>
-  <span class="kd">function</span> <span class="nx">showTracker</span><span class="p">()</span> <span class="p">{</span>
-    <span class="err">#</span><span class="nx">TODO</span>
+  <span class="kd">function</span> <span class="nx">startPayment</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">objectData</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">generic_checkout</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">token</span><span class="p">:</span> <span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// Partner access key provided to you</span>
+        <span class="na">one_click_checkout_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">uuid</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// UUID from generated link on dashboard</span>
+        <span class="na">isProduction</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span> <span class="c1">// If hitting UAT or production</span>
+        <span class="na">onComplete</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_COMPLETE_OCCURED</span><span class="dl">"</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="na">onError</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_ERROR_OCCURED</span><span class="dl">"</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="na">onUserExit</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_USER_EXITED</span><span class="dl">"</span><span class="p">);</span>
+        <span class="p">},</span>
+      <span class="p">};</span>
+
+      <span class="nx">Savvy</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span> <span class="p">...</span><span class="nx">objectData</span> <span class="p">}).</span><span class="nx">start</span><span class="p">({});</span>
+    <span class="p">}</span>
   <span class="p">}</span>
 <span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script
+  </span><span class="na">defer=</span><span class="s">"defer"</span>
+  <span class="na">src=</span><span class="s">"https://cdn.savvyapp.in/lib/savvy.min.js"</span>
+<span class="nt">&gt;&lt;/script&gt;</span>
 ...
 
-<span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"showTracker()"</span><span class="nt">&gt;</span>Show Tracker<span class="nt">&lt;/button&gt;</span>
-</code></pre></div><h1 id='systematic-investment-plans'>Systematic Investment Plans</h1>
+<span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"startPayment()"</span><span class="nt">&gt;</span>Start<span class="nt">&lt;/button&gt;</span>
+</code></pre></div><h2 id='generic-checkout-sdk-object'>Generic Checkout SDK object</h2>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>token</td>
+<td>true</td>
+<td><code>String</code> Access key provided to the partner.</td>
+</tr>
+<tr>
+<td>type</td>
+<td>true</td>
+<td><code>String</code> Type of checkout, in this case <code>generic_checkout</code></td>
+</tr>
+<tr>
+<td>isProduction</td>
+<td>true</td>
+<td><code>Boolean</code> Production request or not</td>
+</tr>
+<tr>
+<td>one_click_checkout_id</td>
+<td>false</td>
+<td><code>Boolean</code> UUID of the generic checkout (name is confusing, this will change in a subsequent build :) ).</td>
+</tr>
+<tr>
+<td>onComplete(data)</td>
+<td>true</td>
+<td><code>Function</code> Callback hook on completion of SIP setup.</td>
+</tr>
+<tr>
+<td>onUserExit</td>
+<td>true</td>
+<td><code>Function</code> Callback hook if user exited before completion.</td>
+</tr>
+<tr>
+<td>onError</td>
+<td>true</td>
+<td><code>Function</code> Callback hook in case of error with the transaction.</td>
+</tr>
+</tbody></table>
+<h1 id='systematic-investment-plans'>Systematic Investment Plans</h1>
 <p>This API describes how to create a SIP transaction. This API can only be accessed post the onboarding flow. The workflow for creating and registering an SIP is:</p>
 
 <div class="mermaid">
@@ -3036,7 +3111,7 @@ Note the <code>sip</code>root key
 <div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script
   </span><span class="na">defer=</span><span class="s">"defer"</span>
   <span class="na">src=</span><span class="s">"https://cdn.savvyapp.in/lib/savvypayCoreSDK.min.js"</span> <span class="nt">/&gt;</span>
-</code></pre></div><h2 id='using-the-sdk-2'>Using the SDK</h2>
+</code></pre></div><h2 id='using-the-sdk-3'>Using the SDK</h2>
 <p>The SDK accepts a number of parameters, depending on what information is available to the merchant:</p>
 <div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script&gt;</span>
   <span class="kd">function</span> <span class="nx">doPayment</span><span class="p">()</span> <span class="p">{</span>
@@ -3069,7 +3144,7 @@ Note the <code>sip</code>root key
 ...
 
 <span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"doPayment()"</span><span class="nt">&gt;</span>Do Payment<span class="nt">&lt;/button&gt;</span>
-</code></pre></div><h2 id='track-investment-sdk-usage-2'>Track investment SDK usage</h2>
+</code></pre></div><h2 id='track-investment-sdk-usage'>Track investment SDK usage</h2>
 <p>After SNBL setup, a customer may want to track their investment. In this case, pass one extra option, <code>isDisplayDetail</code> as <code>true</code> to the same SDK:</p>
 <div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script&gt;</span>
   <span class="kd">function</span> <span class="nx">showTracker</span><span class="p">()</span> <span class="p">{</span>
