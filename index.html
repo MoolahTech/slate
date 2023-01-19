@@ -664,7 +664,7 @@ You must replace <code>token</code> with your own secure token or individual tok
   create_onboarding(Create onboarding with pan number and date of birth)-- Existing investor -->submit_bank_details(Submit bank details)
   create_onboarding-- Not an existing investor -->full_kyc(Full KYC);
   submit_bank_details-->update_onboarding(Submit user details and other FATCA details);
-  update_onboarding-->create_nominees(Create nominees, (optional))
+  update_onboarding-->create_nominees(Optionally: Create nominees);
   create_nominees-->create_transaction(Move ahead to create a transaction);
   full_kyc-->submit_pan(Submit picture of PAN card);
   submit_pan-->submit_address(Submit picture of an address proof);
