@@ -576,6 +576,9 @@
                   <li>
                     <a href="#webhook-authentication" class="toc-h2 toc-link" data-title="Webhook authentication">Webhook authentication</a>
                   </li>
+                  <li>
+                    <a href="#webhook-structure-2" class="toc-h2 toc-link" data-title="Webhook structure">Webhook structure</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -598,6 +601,9 @@
                   </li>
                   <li>
                     <a href="#fatca-sources-of-wealth" class="toc-h2 toc-link" data-title="FATCA Sources of Wealth">FATCA Sources of Wealth</a>
+                  </li>
+                  <li>
+                    <a href="#application-status-codes-and-description" class="toc-h2 toc-link" data-title="Application status codes and description">Application status codes and description</a>
                   </li>
                   <li>
                     <a href="#fatca-country-codes" class="toc-h2 toc-link" data-title="FATCA country codes">FATCA country codes</a>
@@ -3499,19 +3505,27 @@ Webhooks are sent on a "best-effort" basis, and are sent at least once. That mea
 </tr>
 </thead><tbody>
 <tr>
-<td><code>deposit.created</code></td>
+<td><code>onboardings.create</code></td>
+<td>Sent when an</td>
+</tr>
+<tr>
+<td><code>deposits.create</code></td>
 <td>Sent when a deposit is created</td>
 </tr>
 <tr>
-<td><code>deposit.status.updated</code></td>
+<td><code>deposits.status.update</code></td>
 <td>Sent when a deposit status is updated. Use this for tracking success / failure of deposit transactions.</td>
 </tr>
 <tr>
-<td><code>withdrawal.created</code></td>
+<td><code>accounts.create</code></td>
+<td>Sent when a folio number is allocated (folio number is equivalent to new account creation).</td>
+</tr>
+<tr>
+<td><code>withdrawals.create</code></td>
 <td>Sent when a withdrawal is created</td>
 </tr>
 <tr>
-<td><code>withdrawal.status.updated</code></td>
+<td><code>withdrawals.status.update</code></td>
 <td>Sent when a withdrawal status is updated. Use this for tracking success / failure of withdrawal transactions.</td>
 </tr>
 </tbody></table>
@@ -3521,7 +3535,32 @@ Webhooks are sent on a "best-effort" basis, and are sent at least once. That mea
 <p><code>HMAC(&#39;sha256&#39;, secret_key, payload)</code></p>
 
 <p>Make sure to verify this signature before using the payload.</p>
-<h1 id='enums'>Enums</h1><h2 id='annual-income-codes'>Annual Income Codes</h2>
+<h2 id='webhook-structure-2'>Webhook structure</h2><h3 id='onboardings-2'>Onboardings</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"partner_transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa-vvv"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aa-bb-cc-dd"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DSP"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h3 id='deposits-2'>Deposits</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"deposit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa-bbb-ddd"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aa-bb-cc-ff"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"fund"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;Fund object: plz see above&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"completed"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h3 id='accounts-2'>Accounts</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa-vvv-www"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aa-dd-ff"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h1 id='enums'>Enums</h1><h2 id='annual-income-codes'>Annual Income Codes</h2>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -3707,6 +3746,30 @@ Webhooks are sent on a "best-effort" basis, and are sent at least once. That mea
 <tr>
 <td>08</td>
 <td>Others</td>
+</tr>
+</tbody></table>
+<h2 id='application-status-codes-and-description'>Application status codes and description</h2>
+<table><thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>R</td>
+<td>Resident Indian</td>
+</tr>
+<tr>
+<td>N</td>
+<td>Non-Resident Indian</td>
+</tr>
+<tr>
+<td>P</td>
+<td>Foreign National</td>
+</tr>
+<tr>
+<td>I</td>
+<td>Person of Indian Origin</td>
 </tr>
 </tbody></table>
 <h2 id='fatca-country-codes'>FATCA country codes</h2>
