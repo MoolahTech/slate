@@ -2998,35 +2998,37 @@ Note the <code>one_click_checkout</code>root key
 <p>While the previously mentioned one-click-checkout is for a specific user and is a one-time use only, generic checkout is a way to make the same checkout experience, but for many users. This feature is currently available only on the dashboard, and not over API. SDK usage for embedding is described below:</p>
 <h2 id='using-the-sdk-2'>Using the SDK</h2>
 <p>Create a new generic link on the dashboard. Then, pass in the generated UUID to the SDK to start the journey.</p>
-<div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script&gt;</span>
-  <span class="kd">function</span> <span class="nx">startPayment</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">let</span> <span class="nx">objectData</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">generic_checkout</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">token</span><span class="p">:</span> <span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// Partner access key provided to you</span>
-        <span class="na">one_click_checkout_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">uuid</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// UUID from generated link on dashboard</span>
-        <span class="na">isProduction</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span> <span class="c1">// If hitting UAT or production</span>
-        <span class="na">onComplete</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_COMPLETE_OCCURED</span><span class="dl">"</span><span class="p">);</span>
-        <span class="p">},</span>
-        <span class="na">onError</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_ERROR_OCCURED</span><span class="dl">"</span><span class="p">);</span>
-        <span class="p">},</span>
-        <span class="na">onUserExit</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_USER_EXITED</span><span class="dl">"</span><span class="p">);</span>
-        <span class="p">},</span>
-      <span class="p">};</span>
 
-      <span class="nx">Savvy</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span> <span class="p">...</span><span class="nx">objectData</span> <span class="p">}).</span><span class="nx">start</span><span class="p">({});</span>
-    <span class="p">}</span>
+<p>Staging library: <code>https://cdn.savvyapp.in/lib/savvyJsStagingSDK.min.js</code></p>
+
+<p>Production library: <code>https://cdn.savvyapp.in/lib/savvyJsSDK.min.js</code></p>
+<div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://cdn.savvyapp.in/lib/savvyJsStagingSDK.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+  <span class="kd">function</span> <span class="nx">doPayment</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">isProduction</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span> <span class="c1">// If hitting UAT or production</span>
+      <span class="na">uuid</span><span class="p">:</span> <span class="dl">"</span><span class="s2">uuid</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// UUID from generated link on dashboard</span>
+      <span class="na">partnerAccessKey</span><span class="p">:</span> <span class="dl">"</span><span class="s2">key</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// Partner access key provided to you</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">generic_checkout</span><span class="dl">"</span><span class="p">,</span>
+      <span class="na">amcCode</span><span class="p">:</span> <span class="dl">""</span><span class="p">,</span>
+      <span class="na">partnerTransactionId</span><span class="p">:</span> <span class="dl">""</span><span class="p">,</span> <span class="c1">// Unique ID generated by partner</span>
+      <span class="na">onUserExit</span><span class="p">:</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_USER_EXITED</span><span class="dl">"</span><span class="p">);</span>
+      <span class="p">},</span>
+      <span class="na">onError</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_ERROR_OCCURED</span><span class="dl">"</span><span class="p">);</span>
+      <span class="p">},</span>
+      <span class="na">onComplete</span><span class="p">:</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_COMPLETE_OCCURED</span><span class="dl">"</span><span class="p">);</span>
+      <span class="p">},</span>
+    <span class="p">};</span>
+    <span class="kd">var</span> <span class="nx">savvySDK</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SavvySDK</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+    <span class="nx">savvySDK</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
   <span class="p">}</span>
 <span class="nt">&lt;/script&gt;</span>
-<span class="nt">&lt;script
-  </span><span class="na">defer=</span><span class="s">"defer"</span>
-  <span class="na">src=</span><span class="s">"https://cdn.savvyapp.in/lib/savvy.min.js"</span>
-<span class="nt">&gt;&lt;/script&gt;</span>
-...
-
-<span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"startPayment()"</span><span class="nt">&gt;</span>Start<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;div&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"doPayment()"</span><span class="nt">&gt;</span>Do Payment<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
 </code></pre></div><h2 id='generic-checkout-sdk-object'>Generic Checkout SDK object</h2>
 <table><thead>
 <tr>
@@ -3036,7 +3038,7 @@ Note the <code>one_click_checkout</code>root key
 </tr>
 </thead><tbody>
 <tr>
-<td>token</td>
+<td>partnerAccessKey</td>
 <td>true</td>
 <td><code>String</code> Access key provided to the partner.</td>
 </tr>
@@ -3051,9 +3053,14 @@ Note the <code>one_click_checkout</code>root key
 <td><code>Boolean</code> Production request or not</td>
 </tr>
 <tr>
-<td>one_click_checkout_id</td>
+<td>uuid</td>
 <td>true</td>
-<td><code>String</code> UUID of the generic checkout (name is confusing, this will change in a subsequent build :) ).</td>
+<td><code>String</code> UUID of the generic checkout.</td>
+</tr>
+<tr>
+<td>partnerTransactionId</td>
+<td>false</td>
+<td>Unique ID of the partner. Gets put into the newly created onboarding.</td>
 </tr>
 <tr>
 <td>onComplete(data)</td>
