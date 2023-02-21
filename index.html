@@ -349,6 +349,9 @@
                     <a href="#create-onboarding" class="toc-h2 toc-link" data-title="Create onboarding">Create onboarding</a>
                   </li>
                   <li>
+                    <a href="#show-onboarding" class="toc-h2 toc-link" data-title="Show onboarding">Show onboarding</a>
+                  </li>
+                  <li>
                     <a href="#create-onboarding-bank-account" class="toc-h2 toc-link" data-title="Create onboarding bank account">Create onboarding bank account</a>
                   </li>
                   <li>
@@ -836,6 +839,16 @@ Note the <code>onboarding</code>root key
 <td><code>String</code> AMC code for which this onboarding is being done</td>
 </tr>
 </tbody></table>
+<h2 id='show-onboarding'>Show onboarding</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;"</span> <span class="se">\</span>
+  <span class="nt">-X</span> GET <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
+
+</code></pre></div>
+<blockquote>
+<p>The above command returns the onboarding JSON object.</p>
+</blockquote>
+<h3 id='http-request-2'>HTTP Request</h3>
+<p><code>GET http://surface.thesavvyapp.in/onboardings</code></p>
 <h2 id='create-onboarding-bank-account'>Create onboarding bank account</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> 
   </span><span class="p">{</span><span class="w">
@@ -852,7 +865,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>The above command returns the onboarding JSON object</p>
 </blockquote>
-<h3 id='http-request-2'>HTTP Request</h3>
+<h3 id='http-request-3'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/bank_account</code></p>
 <h3 id='json-parameters'>JSON Parameters</h3>
 <aside class="notice">
@@ -906,7 +919,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>The above command returns the onboarding JSON object</p>
 </blockquote>
-<h3 id='http-request-3'>HTTP Request</h3>
+<h3 id='http-request-4'>HTTP Request</h3>
 <p><code>PUT http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;</code></p>
 <h3 id='json-parameters-2'>JSON Parameters</h3>
 <aside class="notice">
@@ -1012,7 +1025,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>The above command returns the nominee JSON object</p>
 </blockquote>
-<h3 id='http-request-4'>HTTP Request</h3>
+<h3 id='http-request-5'>HTTP Request</h3>
 <p><code>PUT http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/nominees</code></p>
 <h3 id='important-note'>Important note</h3>
 <aside class="notice">
@@ -1110,7 +1123,7 @@ Note the <code>nominees</code>root key and that it is an array
 </blockquote>
 
 <p>This endpoint prepares the onboarding object for a full KYC</p>
-<h3 id='http-request-5'>HTTP Request</h3>
+<h3 id='http-request-6'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/full_kyc</code></p>
 <h3 id='json-parameters-4'>JSON Parameters</h3>
 <aside class="notice">
@@ -1159,7 +1172,7 @@ Note the <code>onboarding</code>root key
 </blockquote>
 
 <p>This endpoint uploads files to our server for further processing and analysis.</p>
-<h3 id='http-request-6'>HTTP Request</h3>
+<h3 id='http-request-7'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/upload_file</code></p>
 <h3 id='json-parameters-5'>JSON Parameters</h3>
 <aside class="notice">
@@ -1207,7 +1220,7 @@ Note the absence of <code>onboarding</code>root key!
 <blockquote>
 <p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
-<h3 id='http-request-7'>HTTP Request</h3>
+<h3 id='http-request-8'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/read_pan_card</code></p>
 <h3 id='json-parameters-6'>JSON Parameters</h3>
 <aside class="notice">
@@ -1280,7 +1293,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-8'>HTTP Request</h3>
+<h3 id='http-request-9'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/pan_card</code></p>
 <h3 id='json-parameters-7'>JSON Parameters</h3>
 <aside class="notice">
@@ -1332,7 +1345,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns extra params along with the onboarding object, depending on the type of address proof. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
-<h3 id='http-request-9'>HTTP Request</h3>
+<h3 id='http-request-10'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/read_address_proof</code></p>
 <h3 id='json-parameters-8'>JSON Parameters</h3>
 <aside class="notice">
@@ -1470,7 +1483,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-10'>HTTP Request</h3>
+<h3 id='http-request-11'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/address_proof</code></p>
 <h3 id='json-parameters-9'>JSON Parameters</h3>
 <aside class="notice">
@@ -1579,7 +1592,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-11'>HTTP Request</h3>
+<h3 id='http-request-12'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/form</code></p>
 <h3 id='json-parameters-10'>JSON Parameters</h3>
 <aside class="notice">
@@ -1653,7 +1666,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-12'>HTTP Request</h3>
+<h3 id='http-request-13'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/signature</code></p>
 <h3 id='json-parameters-11'>JSON Parameters</h3>
 <aside class="notice">
@@ -1689,7 +1702,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-13'>HTTP Request</h3>
+<h3 id='http-request-14'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/selfie</code></p>
 <h3 id='json-parameters-12'>JSON Parameters</h3>
 <aside class="notice">
@@ -1719,7 +1732,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
-<h3 id='http-request-14'>HTTP Request</h3>
+<h3 id='http-request-15'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/start_video_verification</code></p>
 <h3 id='important-info-about-this-api'><strong>Important Info about this API</strong></h3>
 <p>The API will return a random 6 digit number. The user must say this number on video. This allows to do a &quot;liveness check&quot; (make sure it&#39;s not a pre-recorded video).</p>
@@ -1766,7 +1779,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-15'>HTTP Request</h3>
+<h3 id='http-request-16'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/video_verification</code></p>
 <h3 id='json-parameters-13'>JSON Parameters</h3>
 <aside class="notice">
@@ -1801,7 +1814,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
-<h3 id='http-request-16'>HTTP Request</h3>
+<h3 id='http-request-17'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/generate_contract</code></p>
 <h3 id='important-info-about-this-api-2'><strong>Important Info about this API</strong></h3>
 <p>The API will return a url which you must redirect the user to. The webpage will show all the information submitted so far, and the user must sign the contract displayed with their aadhaar e-signature. The page has been known to not play well with app-embedded browsers. So it&#39;s recommended that your redirect the user to the actual browser on the phone.</p>
@@ -1839,7 +1852,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-17'>HTTP Request</h3>
+<h3 id='http-request-18'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/execute_verification</code></p>
 <h3 id='important-info-about-this-api-3'><strong>Important Info about this API</strong></h3>
 <p>On success response of this API, the investors&#39; details are pushed to the KRA/AMC for verification. Wait for the webhook to be informed of success/failure and the reasons for failure, if any.
@@ -1883,7 +1896,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns an array of AMC JSON objects.</p>
 </blockquote>
-<h3 id='http-request-18'>HTTP Request</h3>
+<h3 id='http-request-19'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/amcs</code></p>
 <h1 id='funds'>Funds</h1>
 <p>This API gives you lists of supported mutual funds, by AMC. There is also support for NFOs, along with their timelines. Please note that NFOs are updated 1-2 days before the launch date.</p>
@@ -1991,7 +2004,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns an array of Fund JSON objects.</p>
 </blockquote>
-<h3 id='http-request-19'>HTTP Request</h3>
+<h3 id='http-request-20'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/funds</code></p>
 <h3 id='url-parameters'>URL Parameters</h3>
 <table><thead>
@@ -2015,7 +2028,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a map of date mapped to average NAV value.</p>
 </blockquote>
-<h3 id='http-request-20'>HTTP Request</h3>
+<h3 id='http-request-21'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/funds/&lt;fund_code&gt;/performance</code></p>
 <h3 id='url-parameters-2'>URL Parameters</h3>
 <table><thead>
@@ -2053,7 +2066,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a map of date mapped to average NAV value.</p>
 </blockquote>
-<h3 id='http-request-21'>HTTP Request</h3>
+<h3 id='http-request-22'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/funds/&lt;fund_code&gt;/holdings</code></p>
 <h3 id='url-parameters-3'>URL Parameters</h3>
 <table><thead>
@@ -2137,7 +2150,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a account JSON object.</p>
 </blockquote>
-<h3 id='http-request-22'>HTTP Request</h3>
+<h3 id='http-request-23'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/accounts/&lt;UUID&gt;</code></p>
 <h1 id='deposits'>Deposits</h1>
 <p>The deposits API describes how to create a mutual fund purchase transaction. This API can only be accessed post the onboarding flow. The workflow for creating and completing a purchase is:</p>
@@ -2224,7 +2237,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns an array of deposit JSON objects.</p>
 </blockquote>
-<h3 id='http-request-23'>HTTP Request</h3>
+<h3 id='http-request-24'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/deposits?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-4'>URL Parameters</h3>
 <table><thead>
@@ -2252,7 +2265,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a deposit JSON object.</p>
 </blockquote>
-<h3 id='http-request-24'>HTTP Request</h3>
+<h3 id='http-request-25'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/deposits/&lt;UUID&gt;</code></p>
 <h2 id='create-deposit'>Create deposit</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"deposit"</span><span class="p">:</span><span class="w"> 
@@ -2273,7 +2286,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns the deposit JSON object along with the payment URL</p>
 </blockquote>
-<h3 id='http-request-25'>HTTP Request</h3>
+<h3 id='http-request-26'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/deposits</code></p>
 <h3 id='parameters-2'>Parameters</h3>
 <aside class="notice">
@@ -2364,7 +2377,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the deposit JSON object</p>
 </blockquote>
-<h3 id='http-request-26'>HTTP Request</h3>
+<h3 id='http-request-27'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/deposits/create_basket</code></p>
 <h3 id='parameters-3'>Parameters</h3>
 <aside class="notice">
@@ -2497,7 +2510,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns an array of withdrawal JSON objects.</p>
 </blockquote>
-<h3 id='http-request-27'>HTTP Request</h3>
+<h3 id='http-request-28'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/withdrawals?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-5'>URL Parameters</h3>
 <table><thead>
@@ -2520,7 +2533,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns a withdrawal JSON object.</p>
 </blockquote>
-<h3 id='http-request-28'>HTTP Request</h3>
+<h3 id='http-request-29'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/withdrawals/&lt;UUID&gt;</code></p>
 <h2 id='create-withdrawal'>Create withdrawal</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"withdrawal"</span><span class="p">:</span><span class="w"> 
@@ -2540,7 +2553,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-29'>HTTP Request</h3>
+<h3 id='http-request-30'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals</code></p>
 
 <p>On success, an OTP is sent on both the users&#39; registered email and phone number. This OTP has to be verified by the user and sent to us on API.</p>
@@ -2592,7 +2605,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-30'>HTTP Request</h3>
+<h3 id='http-request-31'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals/&lt;UUID&gt;/verify_otp</code></p>
 
 <p>On success, the status of the withdrawal will change to <code>otp_complete</code>. The OTP verification will expire in 5 minutes, and the OTP can be resent in case of delivery failures after 30 seconds of first attempt. </p>
@@ -2721,7 +2734,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns a OCC JSON object.</p>
 </blockquote>
-<h3 id='http-request-31'>HTTP Request</h3>
+<h3 id='http-request-32'>HTTP Request</h3>
 <p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts</code></p>
 <h3 id='parameters-6'>Parameters</h3>
 <aside class="notice">
@@ -2899,7 +2912,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns a OCC JSON object.</p>
 </blockquote>
-<h3 id='http-request-32'>HTTP Request</h3>
+<h3 id='http-request-33'>HTTP Request</h3>
 <p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts/create_sip</code></p>
 <h3 id='parameters-7'>Parameters</h3>
 <aside class="notice">
@@ -3249,7 +3262,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns an array of sip JSON objects.</p>
 </blockquote>
-<h3 id='http-request-33'>HTTP Request</h3>
+<h3 id='http-request-34'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/sips?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-6'>URL Parameters</h3>
 <table><thead>
@@ -3272,7 +3285,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns a sip JSON object.</p>
 </blockquote>
-<h3 id='http-request-34'>HTTP Request</h3>
+<h3 id='http-request-35'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;</code></p>
 <h2 id='create-sip'>Create sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"sip"</span><span class="p">:</span><span class="w"> 
@@ -3297,7 +3310,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns the sip JSON object</p>
 </blockquote>
-<h3 id='http-request-35'>HTTP Request</h3>
+<h3 id='http-request-36'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/sips</code></p>
 
 <p>On success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate required for periodic auto-debits. If for some reason, the mandate fails to get signed, you can retry the mandate signing for a period of 24 hours, post which a new mandate must be created.</p>
@@ -3532,7 +3545,7 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns a JSON object.</p>
 </blockquote>
-<h3 id='http-request-36'>HTTP Request</h3>
+<h3 id='http-request-37'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/amcs/&lt;AMC_CODE&gt;/name_and_liquid_fund</code></p>
 <h3 id='response-parameters'>Response parameters</h3>
 <table><thead>
