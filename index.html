@@ -382,6 +382,9 @@
                     <a href="#submit-investor-details" class="toc-h2 toc-link" data-title="Submit Investor Details">Submit Investor Details</a>
                   </li>
                   <li>
+                    <a href="#penny-check" class="toc-h2 toc-link" data-title="Penny check">Penny check</a>
+                  </li>
+                  <li>
                     <a href="#upload-signature" class="toc-h2 toc-link" data-title="Upload signature">Upload signature</a>
                   </li>
                   <li>
@@ -1658,6 +1661,67 @@ Note the <code>onboarding</code>root key
 <td><code>Enum</code> Refer to Enum tables at the bottom</td>
 </tr>
 </tbody></table>
+<h2 id='penny-check'>Penny check</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"account_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234567890"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"ifsc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HDFC0000001"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/one_time_penny_drop"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns the onboarding object, along with penny check result.</p>
+</blockquote>
+
+<p>This API analyzes the bank account and returns whether it belongs to the user in the onboarding. Note that the name of the user must already be filled in the onboarding object for this API to work.</p>
+<h3 id='http-request-13'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/one_time_penny_drop</code></p>
+<h3 id='json-parameters-11'>JSON Parameters</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>account_number</td>
+<td>true</td>
+<td><code>String</code> Bank account number</td>
+</tr>
+<tr>
+<td>ifsc_code</td>
+<td>true</td>
+<td><code>String</code> Bank account IFSC code</td>
+</tr>
+</tbody></table>
+<h3 id='response-parameters'>Response Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>fuzzy_match_score</td>
+<td>true</td>
+<td><code>Decimal</code> The matching score between the bank account owners&#39; name and the onboarding name</td>
+</tr>
+<tr>
+<td>onboarding</td>
+<td>true</td>
+<td><code>Object</code> Onboarding object (see above)</td>
+</tr>
+</tbody></table>
 <h2 id='upload-signature'>Upload signature</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w">
   </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1672,9 +1736,9 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-13'>HTTP Request</h3>
+<h3 id='http-request-14'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/signature</code></p>
-<h3 id='json-parameters-11'>JSON Parameters</h3>
+<h3 id='json-parameters-12'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -1708,9 +1772,9 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-14'>HTTP Request</h3>
+<h3 id='http-request-15'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/selfie</code></p>
-<h3 id='json-parameters-12'>JSON Parameters</h3>
+<h3 id='json-parameters-13'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -1738,7 +1802,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
-<h3 id='http-request-15'>HTTP Request</h3>
+<h3 id='http-request-16'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/start_video_verification</code></p>
 <h3 id='important-info-about-this-api'><strong>Important Info about this API</strong></h3>
 <p>The API will return a random 6 digit number. The user must say this number on video. This allows to do a &quot;liveness check&quot; (make sure it&#39;s not a pre-recorded video).</p>
@@ -1785,9 +1849,9 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-16'>HTTP Request</h3>
+<h3 id='http-request-17'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/video_verification</code></p>
-<h3 id='json-parameters-13'>JSON Parameters</h3>
+<h3 id='json-parameters-14'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -1820,7 +1884,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
-<h3 id='http-request-17'>HTTP Request</h3>
+<h3 id='http-request-18'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/generate_contract</code></p>
 <h3 id='important-info-about-this-api-2'><strong>Important Info about this API</strong></h3>
 <p>The API will return a url which you must redirect the user to. The webpage will show all the information submitted so far, and the user must sign the contract displayed with their aadhaar e-signature. The page has been known to not play well with app-embedded browsers. So it&#39;s recommended that your redirect the user to the actual browser on the phone.</p>
@@ -1858,7 +1922,7 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-18'>HTTP Request</h3>
+<h3 id='http-request-19'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/execute_verification</code></p>
 <h3 id='important-info-about-this-api-3'><strong>Important Info about this API</strong></h3>
 <p>On success response of this API, the investors&#39; details are pushed to the KRA/AMC for verification. Wait for the webhook to be informed of success/failure and the reasons for failure, if any.
@@ -1902,7 +1966,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns an array of AMC JSON objects.</p>
 </blockquote>
-<h3 id='http-request-19'>HTTP Request</h3>
+<h3 id='http-request-20'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/amcs</code></p>
 <h1 id='funds'>Funds</h1>
 <p>This API gives you lists of supported mutual funds, by AMC. There is also support for NFOs, along with their timelines. Please note that NFOs are updated 1-2 days before the launch date.</p>
@@ -2010,7 +2074,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns an array of Fund JSON objects.</p>
 </blockquote>
-<h3 id='http-request-20'>HTTP Request</h3>
+<h3 id='http-request-21'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/funds</code></p>
 <h3 id='url-parameters'>URL Parameters</h3>
 <table><thead>
@@ -2034,7 +2098,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a map of date mapped to average NAV value.</p>
 </blockquote>
-<h3 id='http-request-21'>HTTP Request</h3>
+<h3 id='http-request-22'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/funds/&lt;fund_code&gt;/performance</code></p>
 <h3 id='url-parameters-2'>URL Parameters</h3>
 <table><thead>
@@ -2072,7 +2136,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a map of date mapped to average NAV value.</p>
 </blockquote>
-<h3 id='http-request-22'>HTTP Request</h3>
+<h3 id='http-request-23'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/funds/&lt;fund_code&gt;/holdings</code></p>
 <h3 id='url-parameters-3'>URL Parameters</h3>
 <table><thead>
@@ -2156,7 +2220,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a list of account JSON objects.</p>
 </blockquote>
-<h3 id='http-request-23'>HTTP Request</h3>
+<h3 id='http-request-24'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/accounts</code></p>
 <h2 id='show-account'>Show account</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/accounts/&lt;UUID&gt;"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
@@ -2165,7 +2229,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a account JSON object.</p>
 </blockquote>
-<h3 id='http-request-24'>HTTP Request</h3>
+<h3 id='http-request-25'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/accounts/&lt;UUID&gt;</code></p>
 <h1 id='deposits'>Deposits</h1>
 <p>The deposits API describes how to create a mutual fund purchase transaction. This API can only be accessed post the onboarding flow. The workflow for creating and completing a purchase is:</p>
@@ -2252,7 +2316,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns an array of deposit JSON objects.</p>
 </blockquote>
-<h3 id='http-request-25'>HTTP Request</h3>
+<h3 id='http-request-26'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/deposits?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-4'>URL Parameters</h3>
 <table><thead>
@@ -2280,7 +2344,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a deposit JSON object.</p>
 </blockquote>
-<h3 id='http-request-26'>HTTP Request</h3>
+<h3 id='http-request-27'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/deposits/&lt;UUID&gt;</code></p>
 <h2 id='create-deposit'>Create deposit</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"deposit"</span><span class="p">:</span><span class="w"> 
@@ -2301,7 +2365,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns the deposit JSON object along with the payment URL</p>
 </blockquote>
-<h3 id='http-request-27'>HTTP Request</h3>
+<h3 id='http-request-28'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/deposits</code></p>
 <h3 id='parameters-2'>Parameters</h3>
 <aside class="notice">
@@ -2392,7 +2456,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the deposit JSON object</p>
 </blockquote>
-<h3 id='http-request-28'>HTTP Request</h3>
+<h3 id='http-request-29'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/deposits/create_basket</code></p>
 <h3 id='parameters-3'>Parameters</h3>
 <aside class="notice">
@@ -2525,7 +2589,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns an array of withdrawal JSON objects.</p>
 </blockquote>
-<h3 id='http-request-29'>HTTP Request</h3>
+<h3 id='http-request-30'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/withdrawals?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-5'>URL Parameters</h3>
 <table><thead>
@@ -2548,7 +2612,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns a withdrawal JSON object.</p>
 </blockquote>
-<h3 id='http-request-30'>HTTP Request</h3>
+<h3 id='http-request-31'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/withdrawals/&lt;UUID&gt;</code></p>
 <h2 id='create-withdrawal'>Create withdrawal</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"withdrawal"</span><span class="p">:</span><span class="w"> 
@@ -2568,7 +2632,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-31'>HTTP Request</h3>
+<h3 id='http-request-32'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals</code></p>
 
 <p>On success, an OTP is sent on both the users&#39; registered email and phone number. This OTP has to be verified by the user and sent to us on API.</p>
@@ -2620,7 +2684,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-32'>HTTP Request</h3>
+<h3 id='http-request-33'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals/&lt;UUID&gt;/verify_otp</code></p>
 
 <p>On success, the status of the withdrawal will change to <code>otp_complete</code>. The OTP verification will expire in 5 minutes, and the OTP can be resent in case of delivery failures after 30 seconds of first attempt. </p>
@@ -2719,11 +2783,12 @@ Note the <code>withdrawal</code>root key
       </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"James Bond"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9800011111"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email@example.com"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="w">
+      </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"folio_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MOS"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SI"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"bank_account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -2733,11 +2798,13 @@ Note the <code>withdrawal</code>root key
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"deposits"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"mutual_fund_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+      </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="p">,</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">2000</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"mutual_fund_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
+      </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="w">
     </span><span class="p">}]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2749,7 +2816,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns a OCC JSON object.</p>
 </blockquote>
-<h3 id='http-request-33'>HTTP Request</h3>
+<h3 id='http-request-34'>HTTP Request</h3>
 <p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts</code></p>
 <h3 id='parameters-6'>Parameters</h3>
 <aside class="notice">
@@ -2779,9 +2846,9 @@ Note the <code>one_click_checkout</code>root key
 <td><code>Object</code> Bank account details</td>
 </tr>
 <tr>
-<td>deposit</td>
+<td>deposits</td>
 <td>true</td>
-<td><code>Object</code> Transaction details</td>
+<td><code>Array[Object]</code> Transaction details</td>
 </tr>
 </tbody></table>
 
@@ -2883,9 +2950,14 @@ Note the <code>one_click_checkout</code>root key
 <td><code>Integer</code> Amount of the investment</td>
 </tr>
 <tr>
-<td>mutual_fund_id</td>
+<td>fund_code</td>
 <td>true</td>
 <td><code>String</code> Fund ID</td>
+</tr>
+<tr>
+<td>amc_code</td>
+<td>true</td>
+<td><code>String</code> AMC code</td>
 </tr>
 </tbody></table>
 <h2 id='create-occ-sip'>Create OCC (SIP)</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
@@ -2895,7 +2967,8 @@ Note the <code>one_click_checkout</code>root key
       </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"James Bond"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9800011111"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email@example.com"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="w">
+      </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"folio_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678"</span><span class="p">,</span><span class="w">
@@ -2909,14 +2982,17 @@ Note the <code>one_click_checkout</code>root key
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"sips"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"mutual_fund_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+      </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"mutual_fund_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+      </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="w">
     </span><span class="p">}],</span><span class="w">
     </span><span class="nl">"sip_day"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"number_of_installments"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="w">
+    </span><span class="nl">"frequency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monthly"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"25/12/2024"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://surface.thesavvyapp.in/secure/one_click_checkouts/create_sip"</span> <span class="se">\</span>
@@ -2927,7 +3003,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns a OCC JSON object.</p>
 </blockquote>
-<h3 id='http-request-34'>HTTP Request</h3>
+<h3 id='http-request-35'>HTTP Request</h3>
 <p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts/create_sip</code></p>
 <h3 id='parameters-7'>Parameters</h3>
 <aside class="notice">
@@ -2957,19 +3033,24 @@ Note the <code>one_click_checkout</code>root key
 <td><code>Object</code> Bank account details</td>
 </tr>
 <tr>
-<td>sip</td>
-<td>true if deposit is null</td>
-<td><code>Object</code> Transaction details</td>
+<td>sips</td>
+<td>true</td>
+<td><code>Array[Object]</code> Transaction details</td>
 </tr>
 <tr>
 <td>sip_day</td>
-<td>false</td>
+<td>true</td>
 <td><code>Integer</code> Day of the month that the SIP should be triggered</td>
 </tr>
 <tr>
-<td>number_of_installments</td>
-<td>false</td>
-<td><code>Integer</code> Number of instalments</td>
+<td>frequency</td>
+<td>true</td>
+<td><code>Enum</code> Either &quot;monthly&quot; or &quot;weekly&quot;</td>
+</tr>
+<tr>
+<td>start_date</td>
+<td>true</td>
+<td><code>Date</code> Start date of the SIP. Minimum 2 business days from current date. Format: &quot;DD/MM/YYYY&quot;.</td>
 </tr>
 </tbody></table>
 
@@ -3071,9 +3152,14 @@ Note the <code>one_click_checkout</code>root key
 <td><code>Integer</code></td>
 </tr>
 <tr>
-<td>mutual_fund_id</td>
+<td>fund_code</td>
 <td>true</td>
 <td><code>String</code> Fund ID</td>
+</tr>
+<tr>
+<td>amc_code</td>
+<td>true</td>
+<td><code>String</code> AMC code</td>
 </tr>
 </tbody></table>
 <h2 id='importing-the-sdk'>Importing the SDK</h2>
@@ -3083,37 +3169,44 @@ Note the <code>one_click_checkout</code>root key
   <span class="na">src=</span><span class="s">"https://cdn.savvyapp.in/lib/savvy.min.js"</span> <span class="nt">/&gt;</span>
 </code></pre></div><h2 id='using-the-sdk'>Using the SDK</h2>
 <p>The SDK accepts a number of parameters, depending on what information is available to the merchant:</p>
-<div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script&gt;</span>
-  <span class="kd">function</span> <span class="nx">doPayment</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">let</span> <span class="nx">objectData</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">one-click-checkout</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">token</span><span class="p">:</span> <span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// SDK key</span>
-        <span class="na">one_click_checkout_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">uuid</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// UUID from API response</span>
-        <span class="na">onComplete</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_COMPLETE_OCCURED</span><span class="dl">"</span><span class="p">);</span>
-        <span class="p">},</span>
-        <span class="na">onError</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_ERROR_OCCURED</span><span class="dl">"</span><span class="p">);</span>
-        <span class="p">},</span>
-        <span class="na">onUserExit</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_USER_EXITED</span><span class="dl">"</span><span class="p">);</span>
-        <span class="p">},</span>
-      <span class="p">};</span>
 
-      <span class="nx">SavvyInit</span><span class="p">.</span><span class="nx">start</span><span class="p">({</span>
-        <span class="na">user</span><span class="p">:</span> <span class="p">{</span>
-          <span class="na">firstName</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Ravin</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// optional</span>
-          <span class="na">lastName</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Pandu</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// optional</span>
-          <span class="na">phoneNumber</span><span class="p">:</span> <span class="dl">"</span><span class="s2">+919600012345</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// optional</span>
-          <span class="na">email</span><span class="p">:</span> <span class="dl">"</span><span class="s2">ravindran@balo.app</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// optional</span>
-        <span class="p">}</span>
-      <span class="p">});</span>
-    <span class="p">}</span>
+<p>Staging library: <code>https://cdn.savvyapp.in/lib/savvyJsStagingSDK.min.js</code></p>
+
+<p>Production library: <code>https://cdn.savvyapp.in/lib/savvyJsSDK.min.js</code></p>
+<div class="highlight"><pre class="highlight html tab-html"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://cdn.savvyapp.in/lib/savvyJsStagingSDK.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+  <span class="kd">function</span> <span class="nx">doPayment</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">isProduction</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span> <span class="c1">// If hitting UAT or production</span>
+      <span class="na">uuid</span><span class="p">:</span> <span class="dl">"</span><span class="s2">uuid</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// UUID from generated link on dashboard OR from API</span>
+      <span class="na">partnerAccessKey</span><span class="p">:</span> <span class="dl">"</span><span class="s2">key</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// Partner access key provided to you</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">one_click_checkout</span><span class="dl">"</span><span class="p">,</span>
+      <span class="na">amcCode</span><span class="p">:</span> <span class="dl">""</span><span class="p">,</span>
+      <span class="na">partnerTransactionId</span><span class="p">:</span> <span class="dl">""</span><span class="p">,</span> <span class="c1">// Unique ID generated by partner</span>
+      <span class="na">phoneNumber</span><span class="p">:</span> <span class="dl">""</span><span class="p">,</span>
+      <span class="na">panNumber</span><span class="p">:</span> <span class="dl">""</span><span class="p">,</span>
+      <span class="na">paymentSamePageRedirection</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="na">redirectUrl</span><span class="p">:</span> <span class="dl">""</span><span class="p">,</span>
+      <span class="na">onUserExit</span><span class="p">:</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_USER_EXITED</span><span class="dl">"</span><span class="p">);</span>
+      <span class="p">},</span>
+      <span class="na">onError</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_ERROR_OCCURED</span><span class="dl">"</span><span class="p">);</span>
+      <span class="p">},</span>
+      <span class="na">onComplete</span><span class="p">:</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_COMPLETE_OCCURED</span><span class="dl">"</span><span class="p">);</span>
+      <span class="p">},</span>
+      <span class="na">onPaymentUrlReceived</span><span class="p">:</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_PAYMENT_URL_RECEIVED_OCCURED</span><span class="dl">"</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+    <span class="kd">var</span> <span class="nx">savvySDK</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SavvySDK</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+    <span class="nx">savvySDK</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
   <span class="p">}</span>
 <span class="nt">&lt;/script&gt;</span>
-...
-
-<span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"doPayment()"</span><span class="nt">&gt;</span>Do Payment<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;div&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"doPayment()"</span><span class="nt">&gt;</span>Do Payment<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
 </code></pre></div><h1 id='generic-checkout'>Generic Checkout</h1>
 <p>While the previously mentioned one-click-checkout is for a specific user and is a one-time use only, generic checkout is a way to make the same checkout experience, but for many users. This feature is currently available only on the dashboard, and not over API. SDK usage for embedding is described below:</p>
 <h2 id='using-the-sdk-2'>Using the SDK</h2>
@@ -3319,7 +3412,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns an array of sip JSON objects.</p>
 </blockquote>
-<h3 id='http-request-35'>HTTP Request</h3>
+<h3 id='http-request-36'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/sips?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-6'>URL Parameters</h3>
 <table><thead>
@@ -3342,7 +3435,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns a sip JSON object.</p>
 </blockquote>
-<h3 id='http-request-36'>HTTP Request</h3>
+<h3 id='http-request-37'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;</code></p>
 <h2 id='create-sip'>Create sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"sip"</span><span class="p">:</span><span class="w"> 
@@ -3367,7 +3460,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns the sip JSON object</p>
 </blockquote>
-<h3 id='http-request-37'>HTTP Request</h3>
+<h3 id='http-request-38'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/sips</code></p>
 
 <p>On success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate required for periodic auto-debits. If for some reason, the mandate fails to get signed, you can retry the mandate signing for a period of 24 hours, post which a new mandate must be created.</p>
@@ -3602,9 +3695,9 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns a JSON object.</p>
 </blockquote>
-<h3 id='http-request-38'>HTTP Request</h3>
+<h3 id='http-request-39'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/amcs/&lt;AMC_CODE&gt;/name_and_liquid_fund</code></p>
-<h3 id='response-parameters'>Response parameters</h3>
+<h3 id='response-parameters-2'>Response parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
