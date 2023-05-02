@@ -811,7 +811,8 @@ If doing Full KYC, you should wait for verification confirmation via webhook bef
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> 
   </span><span class="p">{</span><span class="w">
     </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MOF"</span><span class="w">
+    </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MOF"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9801234567"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings"</span> <span class="se">\</span>
@@ -2030,8 +2031,32 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <td><code>String</code> Category of the fund</td>
 </tr>
 <tr>
+<td>sub_category</td>
+<td><code>String</code> Sub-category of the fund</td>
+</tr>
+<tr>
 <td>risk_rating</td>
 <td><code>Integer</code> 1-6 rating on the riskometer</td>
+</tr>
+<tr>
+<td>crisil_rating</td>
+<td><code>String</code> Rating from CRISIL</td>
+</tr>
+<tr>
+<td>expense_ratio</td>
+<td><code>Decimal</code> Expense ratio (fees collected by the scheme) for this fund</td>
+</tr>
+<tr>
+<td>objective</td>
+<td><code>String</code> Investment objective of this fund</td>
+</tr>
+<tr>
+<td>aum</td>
+<td><code>Decimal</code> Assets under management for this fund</td>
+</tr>
+<tr>
+<td>comparisons</td>
+<td><code>Array</code> Comparisons of this fund with other similar funds</td>
 </tr>
 <tr>
 <td>expense_ratio</td>
@@ -2040,6 +2065,14 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <tr>
 <td>fund_managers</td>
 <td><code>Array[String]</code> List of fund managers</td>
+</tr>
+<tr>
+<td>volatility</td>
+<td><code>Decimal</code> Volatility rating of this fund</td>
+</tr>
+<tr>
+<td>is_regular_scheme</td>
+<td><code>Boolean</code> Whether fund is regular or direct</td>
 </tr>
 </tbody></table>
 <h3 id='fund-info'>Fund info</h3>
