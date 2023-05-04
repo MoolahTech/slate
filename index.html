@@ -521,6 +521,17 @@
               </ul>
           </li>
           <li>
+            <a href="#mandates" class="toc-h1 toc-link" data-title="Mandates">Mandates</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#mandate-object" class="toc-h2 toc-link" data-title="Mandate object">Mandate object</a>
+                  </li>
+                  <li>
+                    <a href="#create-mandate" class="toc-h2 toc-link" data-title="Create Mandate">Create Mandate</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#systematic-investment-plans" class="toc-h1 toc-link" data-title="Systematic Investment Plans">Systematic Investment Plans</a>
               <ul class="toc-list-h2">
                   <li>
@@ -812,7 +823,8 @@ If doing Full KYC, you should wait for verification confirmation via webhook bef
   </span><span class="p">{</span><span class="w">
     </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MOF"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9801234567"</span><span class="w">
+    </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9801234567"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aa@bb.com"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings"</span> <span class="se">\</span>
@@ -908,6 +920,7 @@ Note the <code>onboarding</code>root key
     </span><span class="nl">"pincode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"900900"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"date_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="s2">"27/06/1981"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"occupation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"05"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aa@bb.com"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"fatca"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"fatca_birth_country_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IN"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"fatca_citizenship_country_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IN"</span><span class="p">,</span><span class="w">
@@ -943,6 +956,11 @@ Note the <code>onboarding</code>root key
 <th>Description</th>
 </tr>
 </thead><tbody>
+<tr>
+<td>email</td>
+<td>false</td>
+<td><code>String</code> Required only if onboarding wasn&#39;t created with an email</td>
+</tr>
 <tr>
 <td>address</td>
 <td>true</td>
@@ -3366,6 +3384,131 @@ Note the <code>one_click_checkout</code>root key
 <li>The user will land on the redirect URL you specify. A few params will be included in the URL: <code>status</code> and <code>reason</code>. The <code>status</code> can either be <code>success</code> or <code>failure</code>. If it&#39;s a failure, then the <code>reason</code> will also be specified.</li>
 <li>You can handle showing the status of the payment to use user as you see fit.</li>
 </ol>
+<h1 id='mandates'>Mandates</h1>
+<p>This API describes how to create mandates for use with SIPs. This API can only be accessed post the onboarding flow.</p>
+<h2 id='mandate-object'>Mandate object</h2>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>uuid</td>
+<td><code>String</code> Unique identifier of the mandate.</td>
+</tr>
+<tr>
+<td>start_date</td>
+<td><code>Date</code> Start date of the mandate.</td>
+</tr>
+<tr>
+<td>end_date</td>
+<td><code>Date</code> End date of the mandate.</td>
+</tr>
+<tr>
+<td>amount</td>
+<td><code>Integer</code> Max amount that can be debited.</td>
+</tr>
+<tr>
+<td>status</td>
+<td><code>Enum: null, pending, completed, error, cancelled</code> Current status of the mandate</td>
+</tr>
+</tbody></table>
+<h2 id='create-mandate'>Create Mandate</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w"> </span><span class="nl">"mandate"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/01/2022"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/12/2022"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/redirect"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@smith.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9888810000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"bank_account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"account_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456789"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"ifsc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HDFC0000873"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"bank_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HDFC BANK LTD"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/mandates"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+
+</code></pre></div>
+<blockquote>
+<p>The above command returns the mandate JSON object</p>
+</blockquote>
+<h3 id='http-request-36'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/mandates</code></p>
+
+<p>On success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate.</p>
+
+<p>NOTE: The link that will be generated must be embedded in the browser as a <code>POST</code> request. This means you cannot simply copy-paste the link into the browser URL input. You will have to make a dummy form. Example is as shown on the right</p>
+<div class="highlight"><pre class="highlight html tab-html"><code><span class="c">&lt;!-- The &lt;button&gt; can be auto-triggered via javascript --&gt;</span>
+<span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">id=</span><span class="s">"savvy-html"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"&lt;URL HERE&gt;"</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+
+      <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Submit"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/form&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div><h3 id='parameters-8'>Parameters</h3>
+<aside class="notice">
+Note the <code>mandate</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>amount</td>
+<td>true</td>
+<td><code>Decimal</code> Max amount of mandate</td>
+</tr>
+<tr>
+<td>start_date</td>
+<td>true</td>
+<td><code>Date</code> Start date of the mandate.</td>
+</tr>
+<tr>
+<td>end_date</td>
+<td>true</td>
+<td><code>Date</code> End date of the mandate.</td>
+</tr>
+<tr>
+<td>redirect_url</td>
+<td>true</td>
+<td><code>URL String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure. <em>Do not</em> put query params in the redirect url.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>true</td>
+<td><code>String</code> Name of investor.</td>
+</tr>
+<tr>
+<td>email</td>
+<td>true</td>
+<td><code>String</code> Email of investor.</td>
+</tr>
+<tr>
+<td>phone_number</td>
+<td>true</td>
+<td><code>String</code> Phone number of investor.</td>
+</tr>
+<tr>
+<td>bank_account</td>
+<td>true</td>
+<td><code>Object</code> Must contain <code>account_number</code>, <code>ifsc_code</code> and <code>bank_name</code></td>
+</tr>
+</tbody></table>
 <h1 id='systematic-investment-plans'>Systematic Investment Plans</h1>
 <p>This API describes how to create a SIP transaction. This API can only be accessed post the onboarding flow. The workflow for creating and registering an SIP is:</p>
 
@@ -3387,7 +3530,7 @@ Note the <code>one_click_checkout</code>root key
 </thead><tbody>
 <tr>
 <td>uuid</td>
-<td><code>String</code> Unique identifier of the withdrawal.</td>
+<td><code>String</code> Unique identifier of the SIP.</td>
 </tr>
 <tr>
 <td>account_uuid</td>
@@ -3445,7 +3588,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns an array of sip JSON objects.</p>
 </blockquote>
-<h3 id='http-request-36'>HTTP Request</h3>
+<h3 id='http-request-37'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/sips?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-6'>URL Parameters</h3>
 <table><thead>
@@ -3468,7 +3611,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns a sip JSON object.</p>
 </blockquote>
-<h3 id='http-request-37'>HTTP Request</h3>
+<h3 id='http-request-38'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;</code></p>
 <h2 id='create-sip'>Create sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"sip"</span><span class="p">:</span><span class="w"> 
@@ -3481,6 +3624,7 @@ Note the <code>one_click_checkout</code>root key
     </span><span class="nl">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/01/2022"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/12/2022"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"frequency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monthly"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"mandate_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"mandate_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/redirect"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -3493,11 +3637,23 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns the sip JSON object</p>
 </blockquote>
-<h3 id='http-request-38'>HTTP Request</h3>
+<h3 id='http-request-39'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/sips</code></p>
 
-<p>On success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate required for periodic auto-debits. If for some reason, the mandate fails to get signed, you can retry the mandate signing for a period of 24 hours, post which a new mandate must be created.</p>
-<h3 id='parameters-8'>Parameters</h3>
+<p>If <code>mandate_uuid</code> is specified, then the mandate will be used for the SIP. If no <code>mandate_uuid</code> is specified, then on success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate required for periodic auto-debits.</p>
+
+<p>NOTE: The link that will be generated must be embedded in the browser as a <code>POST</code> request. This means you cannot simply copy-paste the link into the browser URL input. You will have to make a dummy form. Example is as shown on the right</p>
+<div class="highlight"><pre class="highlight html tab-html"><code><span class="c">&lt;!-- The &lt;button&gt; can be auto-triggered via javascript --&gt;</span>
+<span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">id=</span><span class="s">"savvy-html"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"&lt;URL HERE&gt;"</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+
+      <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Submit"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/form&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div><h3 id='parameters-9'>Parameters</h3>
 <aside class="notice">
 Note the <code>sip</code>root key
 </aside>
@@ -3548,6 +3704,11 @@ Note the <code>sip</code>root key
 <td>frequency</td>
 <td>true</td>
 <td><code>Enum: monthly, weekly, daily, ad-hoc</code> Frequency of debits</td>
+</tr>
+<tr>
+<td>mandate_uuid</td>
+<td>false</td>
+<td><code>String</code> UUID of an existing mandate.</td>
 </tr>
 <tr>
 <td>mandate_redirect_url</td>
@@ -3728,7 +3889,7 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns a JSON object.</p>
 </blockquote>
-<h3 id='http-request-39'>HTTP Request</h3>
+<h3 id='http-request-40'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/amcs/&lt;AMC_CODE&gt;/name_and_liquid_fund</code></p>
 <h3 id='response-parameters-2'>Response parameters</h3>
 <table><thead>
