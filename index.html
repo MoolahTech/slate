@@ -546,6 +546,9 @@
                   <li>
                     <a href="#create-sip" class="toc-h2 toc-link" data-title="Create sip">Create sip</a>
                   </li>
+                  <li>
+                    <a href="#cancel-sip" class="toc-h2 toc-link" data-title="Cancel sip">Cancel sip</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -3716,6 +3719,21 @@ Note the <code>sip</code>root key
 <td><code>URL String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure.</td>
 </tr>
 </tbody></table>
+<h2 id='cancel-sip'>Cancel sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;/cancel"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+
+</code></pre></div>
+<blockquote>
+<p>The above command returns the sip JSON object</p>
+</blockquote>
+<h3 id='http-request-40'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;/cancel</code></p>
+
+<p>This API cancels an existing SIP. Note that cancellation is not instant. The AMC will communicate the cancellation within 24 hours of the request being registered. However, the API will stop accepting new requests on the cancelled SIP instantly.</p>
 <h1 id='systematic-withdrawal-plans'>Systematic Withdrawal Plans</h1>
 <p>This API describes how to create a SWP transaction. This API can only be accessed post the onboarding flow. The workflow for creating and registering an SWP is:</p>
 
@@ -3889,7 +3907,7 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns a JSON object.</p>
 </blockquote>
-<h3 id='http-request-40'>HTTP Request</h3>
+<h3 id='http-request-41'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/amcs/&lt;AMC_CODE&gt;/name_and_liquid_fund</code></p>
 <h3 id='response-parameters-2'>Response parameters</h3>
 <table><thead>
