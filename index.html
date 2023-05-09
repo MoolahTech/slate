@@ -669,7 +669,7 @@
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
 <span class="c"># encoded_key = Base64.encode("ACCESS_KEY:PASSWORD")</span>
-curl <span class="s2">"https://surface.thesavvyapp.in/secure/tokens"</span> <span class="se">\</span>
+curl <span class="nt">-XPOST</span> <span class="s2">"https://surface.thesavvyapp.in/secure/tokens"</span> <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Basic &lt;encoded_key&gt;"</span>
 </code></pre></div><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">Response:</span><span class="w">
 </span><span class="p">{</span><span class="w">
@@ -3283,6 +3283,8 @@ Note the <code>one_click_checkout</code>root key
       <span class="na">panNumber</span><span class="p">:</span> <span class="dl">""</span><span class="p">,</span>
       <span class="na">paymentSamePageRedirection</span><span class="p">:</span> <span class="dl">""</span><span class="p">,</span>
       <span class="na">redirectUrl</span><span class="p">:</span> <span class="dl">""</span><span class="p">,</span>
+      <span class="na">defaultMandateMax</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span> <span class="c1">// Default mandate maximum</span>
+      <span class="na">defaultTransactionType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">sip</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// If you want to show SIP or lumpsum first</span>
       <span class="na">onUserExit</span><span class="p">:</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">ON_USER_EXITED</span><span class="dl">"</span><span class="p">);</span>
       <span class="p">},</span>
@@ -3375,6 +3377,16 @@ Note the <code>one_click_checkout</code>root key
 <td>onPaymentUrlReceived</td>
 <td>false</td>
 <td><code>Function(data)</code> Callback hook in case you would like to conduct the payment flow yourself. More on this below.</td>
+</tr>
+<tr>
+<td>defaultMandateMax</td>
+<td>false</td>
+<td><code>Integer</code> Default maximum for the mandate. If not specified, the default is zero.</td>
+</tr>
+<tr>
+<td>defaultTransactionType</td>
+<td>false</td>
+<td><code>Enum: [&#39;lumpsum&#39;, &#39;sip&#39;]</code> The transaction type you&#39;d like to show first. If not specified, the default is lumpsum.</td>
 </tr>
 </tbody></table>
 <h2 id='payment-flow'>Payment flow</h2>
