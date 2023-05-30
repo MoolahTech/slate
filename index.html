@@ -370,10 +370,16 @@
                     <a href="#read-pan-card" class="toc-h2 toc-link" data-title="Read pan card">Read pan card</a>
                   </li>
                   <li>
+                    <a href="#read-pan-card-from-digilocker" class="toc-h2 toc-link" data-title="Read pan card from Digilocker">Read pan card from Digilocker</a>
+                  </li>
+                  <li>
                     <a href="#submit-pan-card" class="toc-h2 toc-link" data-title="Submit pan card">Submit pan card</a>
                   </li>
                   <li>
                     <a href="#read-address-proof" class="toc-h2 toc-link" data-title="Read address proof">Read address proof</a>
+                  </li>
+                  <li>
+                    <a href="#read-address-proof-from-digilocker" class="toc-h2 toc-link" data-title="Read address proof from Digilocker">Read address proof from Digilocker</a>
                   </li>
                   <li>
                     <a href="#submit-address-proof" class="toc-h2 toc-link" data-title="Submit address proof">Submit address proof</a>
@@ -1307,13 +1313,110 @@ Note the <code>onboarding</code>root key
 </tbody></table>
 
 <p><strong>Note that the scanned details are not guaranteed to match the PAN card exactly. They&#39;re on a best effort basis.</strong></p>
+<h2 id='read-pan-card-from-digilocker'>Read pan card from Digilocker</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">digilocker</span><span class="w"> </span><span class="err">auth</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"is_digilocker"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"digilocker_stage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"createUrl"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">fetching</span><span class="w"> </span><span class="err">info</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"is_digilocker"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"digilocker_stage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"getDetails"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/read_pan_card"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
+</blockquote>
+
+<p>Instead of scanning an image, you may choose to give the option the user for extracting the PAN from digilocker. For this option, first generate an authorization URL by calling the API with the &quot;createUrl&quot; param, and then fetch the PAN using the &quot;getDetails&quot; param. Note that the digilocker authorization is only valid for 60 minutes. Post that, the user would have to re-auth.</p>
+
+<p>For fetching further details like address proof etc, you <em>do not</em> need to call &quot;createUrl&quot; again. You can extract other docs using the same authorization.</p>
+<h3 id='http-request-9'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/read_pan_card</code></p>
+<h3 id='json-parameters-7'>JSON Parameters</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>is_digilocker</td>
+<td>true</td>
+<td><code>Boolean</code> Whether to initiate a digilocker request.</td>
+</tr>
+<tr>
+<td>digilocker_stage</td>
+<td>true</td>
+<td><code>Enum: createUrl, getDetails</code> Which function to run.</td>
+</tr>
+</tbody></table>
+<h3 id='json-response-3'>JSON response</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>onboarding</td>
+<td>true</td>
+<td><code>Object</code> The normal onboarding object</td>
+</tr>
+<tr>
+<td>url</td>
+<td>false</td>
+<td><code>String</code> Only returned in case of digilocker of stage &quot;createUrl&quot;. This is the URL to direct the user to for authorizing digilocker.</td>
+</tr>
+<tr>
+<td>images</td>
+<td>false</td>
+<td><code>Array of strings</code> Only returned in case of digilocker of stage &quot;getDetails&quot;. Images of the PAN extracted from Digilocker.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>false</td>
+<td><code>String</code> Name on the pan card</td>
+</tr>
+<tr>
+<td>fathers_name</td>
+<td>false</td>
+<td><code>String</code> Fathers name on the pan card</td>
+</tr>
+<tr>
+<td>date_of_birth</td>
+<td>false</td>
+<td><code>String</code> Date of birth on the pan card</td>
+</tr>
+<tr>
+<td>pan_number</td>
+<td>false</td>
+<td><code>String</code> Pan number on the pan card</td>
+</tr>
+</tbody></table>
 <h2 id='submit-pan-card'>Submit pan card</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w">
   </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"fathers_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mark Smith"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"date_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/1991"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCD1234C"</span><span class="w">
+    </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCD1234C"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is_digilocker"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/pan_card"</span> <span class="se">\</span>
@@ -1324,9 +1427,9 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-9'>HTTP Request</h3>
+<h3 id='http-request-10'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/pan_card</code></p>
-<h3 id='json-parameters-7'>JSON Parameters</h3>
+<h3 id='json-parameters-8'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -1358,6 +1461,11 @@ Note the <code>onboarding</code>root key
 <td>true</td>
 <td><code>String</code> Pan number on the pan card</td>
 </tr>
+<tr>
+<td>is_digilocker</td>
+<td>false</td>
+<td><code>Boolean</code> If submitted details are from digilocker</td>
+</tr>
 </tbody></table>
 
 <p><strong>The details submitted and the actual details on the PAN card must match. If they don&#39;t, the KYC will be rejected.</strong></p>
@@ -1376,9 +1484,9 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns extra params along with the onboarding object, depending on the type of address proof. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
-<h3 id='http-request-10'>HTTP Request</h3>
+<h3 id='http-request-11'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/read_address_proof</code></p>
-<h3 id='json-parameters-8'>JSON Parameters</h3>
+<h3 id='json-parameters-9'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -1393,7 +1501,7 @@ Note the <code>onboarding</code>root key
 <tr>
 <td>address_proof_type</td>
 <td>true</td>
-<td><code>Enum</code> One of <code>[aadhaar, voter_id, passport, license]</code></td>
+<td><code>Enum</code> One of <code>[voter_id, passport, license]</code></td>
 </tr>
 <tr>
 <td>image_urls</td>
@@ -1401,7 +1509,7 @@ Note the <code>onboarding</code>root key
 <td><code>Array</code> List of images to process. In the case of address proof, we need both back and front of the document.</td>
 </tr>
 </tbody></table>
-<h3 id='json-response-3'>JSON response</h3>
+<h3 id='json-response-4'>JSON response</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1487,23 +1595,184 @@ Note the <code>onboarding</code>root key
 </tbody></table>
 
 <p><strong>Note that the scanned details are not guaranteed to be correct. They&#39;re on a best effort basis.</strong></p>
+<h2 id='read-address-proof-from-digilocker'>Read address proof from Digilocker</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">digilocker</span><span class="w"> </span><span class="err">auth</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"address_proof_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aadhaar"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is_digilocker"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"digilocker_stage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"createUrl"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">fetching</span><span class="w"> </span><span class="err">info</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"address_proof_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aadhaar"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is_digilocker"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"digilocker_stage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"getDetails"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/read_address_proof"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+</code></pre></div>
+<blockquote>
+<p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
+</blockquote>
+
+<p>Please note that Digilocker is only available for Aadhaar and Drivers&#39; license</p>
+
+<p>Instead of scanning an image, you may choose to give the option the user for extracting the address proof from digilocker. For this option, first generate an authorization URL by calling the API with the &quot;createUrl&quot; param, and then fetch the address proof using the &quot;getDetails&quot; param. Note that the digilocker authorization is only valid for 60 minutes. Post that, the user would have to re-auth.</p>
+
+<p>If the user has already given authorization for PAN, you <em>do not</em> need to re-auth.</p>
+<h3 id='http-request-12'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/read_address_proof</code></p>
+<h3 id='json-parameters-10'>JSON Parameters</h3>
+<aside class="notice">
+Note the <code>onboarding</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>address_proof_type</td>
+<td>true</td>
+<td><code>Enum</code> One of <code>[aadhaar, license]</code></td>
+</tr>
+<tr>
+<td>is_digilocker</td>
+<td>true</td>
+<td><code>Boolean</code> Whether to initiate a digilocker request.</td>
+</tr>
+<tr>
+<td>digilocker_stage</td>
+<td>true</td>
+<td><code>Enum: createUrl, getDetails</code> Which function to run.</td>
+</tr>
+</tbody></table>
+<h3 id='json-response-5'>JSON response</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>onboarding</td>
+<td>true</td>
+<td><code>Object</code> The normal onboarding object</td>
+</tr>
+<tr>
+<td>url</td>
+<td>false</td>
+<td><code>String</code> Only returned in case of digilocker of stage &quot;createUrl&quot;. This is the URL to direct the user to for authorizing digilocker.</td>
+</tr>
+<tr>
+<td>images</td>
+<td>false</td>
+<td><code>Array of strings</code> Only returned in case of digilocker of stage &quot;getDetails&quot;. Images of the PAN extracted from Digilocker.</td>
+</tr>
+<tr>
+<td>onboarding</td>
+<td>true</td>
+<td><code>Object</code> The normal onboarding object.</td>
+</tr>
+<tr>
+<td>aadhaar_uid</td>
+<td>false</td>
+<td><code>String</code> Masked aadhaar UID.</td>
+</tr>
+<tr>
+<td>license_number</td>
+<td>false</td>
+<td><code>String</code> License number.</td>
+</tr>
+<tr>
+<td>passport_number</td>
+<td>false</td>
+<td><code>String</code> Passport number.</td>
+</tr>
+<tr>
+<td>voter_id_number</td>
+<td>false</td>
+<td><code>String</code> Voter ID number.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>true</td>
+<td>true</td>
+</tr>
+<tr>
+<td>date_of_birth</td>
+<td>true</td>
+<td><code>Date</code> Date of birth on the proof.</td>
+</tr>
+<tr>
+<td>pincode</td>
+<td>true</td>
+<td><code>String</code> Pincode on the proof.</td>
+</tr>
+<tr>
+<td>address</td>
+<td>true</td>
+<td><code>String</code> Street address on the proof.</td>
+</tr>
+<tr>
+<td>district</td>
+<td>true</td>
+<td><code>String</code> District on the proof.</td>
+</tr>
+<tr>
+<td>city</td>
+<td>true</td>
+<td><code>String</code> City on the proof.</td>
+</tr>
+<tr>
+<td>state</td>
+<td>true</td>
+<td><code>String</code> State on the proof.</td>
+</tr>
+<tr>
+<td>issue_date</td>
+<td>false</td>
+<td><code>Date</code> Only present in license and passport.</td>
+</tr>
+<tr>
+<td>expiry_date</td>
+<td>false</td>
+<td><code>Date</code> Only present in license and passport.</td>
+</tr>
+<tr>
+<td>fathers_name</td>
+<td>false</td>
+<td><code>String</code> Only present in license, passport and voter id.</td>
+</tr>
+</tbody></table>
 <h2 id='submit-address-proof'>Submit address proof</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w">
   </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"address_proof_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aadhaar"</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"expiry_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/2029"</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"date_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/1991"</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"issue_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/2000"</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"address"</span><span class="p">:</span><span class="s2">"23 Baker Street"</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mumbai"</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Maharashtra"</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"district"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Malad"</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"pincode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"400051"</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"license_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678"</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"aadhaar_uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"passport_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-     </span><span class="nl">"voter_id_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+    </span><span class="nl">"is_digilocker"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"expiry_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/2029"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/1991"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"issue_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/2000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="s2">"23 Baker Street"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mumbai"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Maharashtra"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"district"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Malad"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"pincode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"400051"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"license_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">The</span><span class="w"> </span><span class="err">aadhaar</span><span class="w"> </span><span class="err">masked</span><span class="w"> </span><span class="err">UID</span><span class="w">
+    </span><span class="nl">"passport_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"voter_id_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/address_proof"</span> <span class="se">\</span>
@@ -1514,9 +1783,9 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-11'>HTTP Request</h3>
+<h3 id='http-request-13'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/address_proof</code></p>
-<h3 id='json-parameters-9'>JSON Parameters</h3>
+<h3 id='json-parameters-11'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -1532,6 +1801,11 @@ Note the <code>onboarding</code>root key
 <td>address_proof_type</td>
 <td>true</td>
 <td><code>String</code> type of address proof being processed.</td>
+</tr>
+<tr>
+<td>is_digilocker</td>
+<td>false</td>
+<td><code>Boolean</code> If submitted details are from digilocker</td>
 </tr>
 <tr>
 <td>name</td>
@@ -1623,9 +1897,9 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-12'>HTTP Request</h3>
+<h3 id='http-request-14'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/form</code></p>
-<h3 id='json-parameters-10'>JSON Parameters</h3>
+<h3 id='json-parameters-12'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -1700,9 +1974,9 @@ Note the <code>onboarding</code>root key
 </blockquote>
 
 <p>This API analyzes the bank account and returns whether it belongs to the user in the onboarding. Note that the name of the user must already be filled in the onboarding object for this API to work.</p>
-<h3 id='http-request-13'>HTTP Request</h3>
+<h3 id='http-request-15'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/one_time_penny_drop</code></p>
-<h3 id='json-parameters-11'>JSON Parameters</h3>
+<h3 id='json-parameters-13'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -1758,9 +2032,9 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-14'>HTTP Request</h3>
+<h3 id='http-request-16'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/signature</code></p>
-<h3 id='json-parameters-12'>JSON Parameters</h3>
+<h3 id='json-parameters-14'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -1794,9 +2068,9 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-15'>HTTP Request</h3>
+<h3 id='http-request-17'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/selfie</code></p>
-<h3 id='json-parameters-13'>JSON Parameters</h3>
+<h3 id='json-parameters-15'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -1824,11 +2098,11 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
-<h3 id='http-request-16'>HTTP Request</h3>
+<h3 id='http-request-18'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/start_video_verification</code></p>
 <h3 id='important-info-about-this-api'><strong>Important Info about this API</strong></h3>
 <p>The API will return a random 6 digit number. The user must say this number on video. This allows to do a &quot;liveness check&quot; (make sure it&#39;s not a pre-recorded video).</p>
-<h3 id='json-response-4'>JSON Response</h3>
+<h3 id='json-response-6'>JSON Response</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -1871,9 +2145,9 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-17'>HTTP Request</h3>
+<h3 id='http-request-19'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/video_verification</code></p>
-<h3 id='json-parameters-14'>JSON Parameters</h3>
+<h3 id='json-parameters-16'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
 </aside>
@@ -1906,11 +2180,11 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
-<h3 id='http-request-18'>HTTP Request</h3>
+<h3 id='http-request-20'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/generate_contract</code></p>
 <h3 id='important-info-about-this-api-2'><strong>Important Info about this API</strong></h3>
 <p>The API will return a url which you must redirect the user to. The webpage will show all the information submitted so far, and the user must sign the contract displayed with their aadhaar e-signature. The page has been known to not play well with app-embedded browsers. So it&#39;s recommended that your redirect the user to the actual browser on the phone.</p>
-<h3 id='json-response-5'>JSON Response</h3>
+<h3 id='json-response-7'>JSON Response</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1944,12 +2218,12 @@ Note the <code>onboarding</code>root key
 <blockquote>
 <p>This API returns the onboarding object.</p>
 </blockquote>
-<h3 id='http-request-19'>HTTP Request</h3>
+<h3 id='http-request-21'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/execute_verification</code></p>
 <h3 id='important-info-about-this-api-3'><strong>Important Info about this API</strong></h3>
 <p>On success response of this API, the investors&#39; details are pushed to the KRA/AMC for verification. Wait for the webhook to be informed of success/failure and the reasons for failure, if any.
 In case there is a failure, you can use the API to update the same onboarding. You will, however, have to generate a new contract, get a new aadhaar e-sign and execute verification again.</p>
-<h3 id='json-response-6'>JSON Response</h3>
+<h3 id='json-response-8'>JSON Response</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1988,7 +2262,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns an array of AMC JSON objects.</p>
 </blockquote>
-<h3 id='http-request-20'>HTTP Request</h3>
+<h3 id='http-request-22'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/amcs</code></p>
 <h1 id='funds'>Funds</h1>
 <p>This API gives you lists of supported mutual funds, by AMC. There is also support for NFOs, along with their timelines. Please note that NFOs are updated 1-2 days before the launch date.</p>
@@ -2128,7 +2402,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns an array of Fund JSON objects.</p>
 </blockquote>
-<h3 id='http-request-21'>HTTP Request</h3>
+<h3 id='http-request-23'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/funds</code></p>
 <h3 id='url-parameters'>URL Parameters</h3>
 <table><thead>
@@ -2152,7 +2426,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a map of date mapped to average NAV value.</p>
 </blockquote>
-<h3 id='http-request-22'>HTTP Request</h3>
+<h3 id='http-request-24'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/funds/&lt;fund_code&gt;/performance</code></p>
 <h3 id='url-parameters-2'>URL Parameters</h3>
 <table><thead>
@@ -2168,7 +2442,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <td><code>String</code> Code of the AMC from the AMC list API.</td>
 </tr>
 </tbody></table>
-<h3 id='json-response-7'>JSON Response</h3>
+<h3 id='json-response-9'>JSON Response</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -2190,7 +2464,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a map of date mapped to average NAV value.</p>
 </blockquote>
-<h3 id='http-request-23'>HTTP Request</h3>
+<h3 id='http-request-25'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/funds/&lt;fund_code&gt;/holdings</code></p>
 <h3 id='url-parameters-3'>URL Parameters</h3>
 <table><thead>
@@ -2206,7 +2480,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <td><code>String</code> Code of the AMC from the AMC list API.</td>
 </tr>
 </tbody></table>
-<h3 id='json-response-8'>JSON Response</h3>
+<h3 id='json-response-10'>JSON Response</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -2274,7 +2548,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a list of account JSON objects.</p>
 </blockquote>
-<h3 id='http-request-24'>HTTP Request</h3>
+<h3 id='http-request-26'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/accounts</code></p>
 <h2 id='show-account'>Show account</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/accounts/&lt;UUID&gt;"</span> <span class="se">\</span>
   <span class="nt">-X</span> GET <span class="se">\</span>
@@ -2283,7 +2557,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a account JSON object.</p>
 </blockquote>
-<h3 id='http-request-25'>HTTP Request</h3>
+<h3 id='http-request-27'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/accounts/&lt;UUID&gt;</code></p>
 <h1 id='deposits'>Deposits</h1>
 <p>The deposits API describes how to create a mutual fund purchase transaction. This API can only be accessed post the onboarding flow. The workflow for creating and completing a purchase is:</p>
@@ -2370,7 +2644,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns an array of deposit JSON objects.</p>
 </blockquote>
-<h3 id='http-request-26'>HTTP Request</h3>
+<h3 id='http-request-28'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/deposits?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-4'>URL Parameters</h3>
 <table><thead>
@@ -2398,7 +2672,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a deposit JSON object.</p>
 </blockquote>
-<h3 id='http-request-27'>HTTP Request</h3>
+<h3 id='http-request-29'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/deposits/&lt;UUID&gt;</code></p>
 <h2 id='create-deposit'>Create deposit</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"deposit"</span><span class="p">:</span><span class="w"> 
@@ -2419,7 +2693,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns the deposit JSON object along with the payment URL</p>
 </blockquote>
-<h3 id='http-request-28'>HTTP Request</h3>
+<h3 id='http-request-30'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/deposits</code></p>
 <h3 id='parameters-2'>Parameters</h3>
 <aside class="notice">
@@ -2464,7 +2738,7 @@ Note the <code>deposit</code>root key
 <td><code>String</code> Your custom ID to identify this transaction.</td>
 </tr>
 </tbody></table>
-<h3 id='json-response-9'>JSON response</h3>
+<h3 id='json-response-11'>JSON response</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -2510,7 +2784,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the deposit JSON object</p>
 </blockquote>
-<h3 id='http-request-29'>HTTP Request</h3>
+<h3 id='http-request-31'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/deposits/create_basket</code></p>
 <h3 id='parameters-3'>Parameters</h3>
 <aside class="notice">
@@ -2550,7 +2824,7 @@ Note the <code>deposit</code>root key
 <td><code>Array</code> [amount, fund_code] to specify how much to invest in which funds</td>
 </tr>
 </tbody></table>
-<h3 id='json-response-10'>JSON response</h3>
+<h3 id='json-response-12'>JSON response</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -2643,7 +2917,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns an array of withdrawal JSON objects.</p>
 </blockquote>
-<h3 id='http-request-30'>HTTP Request</h3>
+<h3 id='http-request-32'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/withdrawals?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-5'>URL Parameters</h3>
 <table><thead>
@@ -2666,7 +2940,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns a withdrawal JSON object.</p>
 </blockquote>
-<h3 id='http-request-31'>HTTP Request</h3>
+<h3 id='http-request-33'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/withdrawals/&lt;UUID&gt;</code></p>
 <h2 id='create-withdrawal'>Create withdrawal</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"withdrawal"</span><span class="p">:</span><span class="w"> 
@@ -2686,7 +2960,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-32'>HTTP Request</h3>
+<h3 id='http-request-34'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals</code></p>
 
 <p>On success, an OTP is sent on both the users&#39; registered email and phone number. This OTP has to be verified by the user and sent to us on API.</p>
@@ -2738,7 +3012,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-33'>HTTP Request</h3>
+<h3 id='http-request-35'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals/&lt;UUID&gt;/verify_otp</code></p>
 
 <p>On success, the status of the withdrawal will change to <code>otp_complete</code>. The OTP verification will expire in 5 minutes, and the OTP can be resent in case of delivery failures after 30 seconds of first attempt. </p>
@@ -2870,7 +3144,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns a OCC JSON object.</p>
 </blockquote>
-<h3 id='http-request-34'>HTTP Request</h3>
+<h3 id='http-request-36'>HTTP Request</h3>
 <p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts</code></p>
 <h3 id='parameters-6'>Parameters</h3>
 <aside class="notice">
@@ -3057,7 +3331,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns a OCC JSON object.</p>
 </blockquote>
-<h3 id='http-request-35'>HTTP Request</h3>
+<h3 id='http-request-37'>HTTP Request</h3>
 <p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts/create_sip</code></p>
 <h3 id='parameters-7'>Parameters</h3>
 <aside class="notice">
@@ -3455,7 +3729,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns the mandate JSON object</p>
 </blockquote>
-<h3 id='http-request-36'>HTTP Request</h3>
+<h3 id='http-request-38'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/mandates</code></p>
 
 <p>On success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate.</p>
@@ -3603,7 +3877,7 @@ Note the <code>mandate</code>root key
 <blockquote>
 <p>The above command returns an array of sip JSON objects.</p>
 </blockquote>
-<h3 id='http-request-37'>HTTP Request</h3>
+<h3 id='http-request-39'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/sips?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-6'>URL Parameters</h3>
 <table><thead>
@@ -3626,7 +3900,7 @@ Note the <code>mandate</code>root key
 <blockquote>
 <p>The above command returns a sip JSON object.</p>
 </blockquote>
-<h3 id='http-request-38'>HTTP Request</h3>
+<h3 id='http-request-40'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;</code></p>
 <h2 id='create-sip'>Create sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"sip"</span><span class="p">:</span><span class="w"> 
@@ -3652,7 +3926,7 @@ Note the <code>mandate</code>root key
 <blockquote>
 <p>The above command returns the sip JSON object</p>
 </blockquote>
-<h3 id='http-request-39'>HTTP Request</h3>
+<h3 id='http-request-41'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/sips</code></p>
 
 <p>If <code>mandate_uuid</code> is specified, then the mandate will be used for the SIP. If no <code>mandate_uuid</code> is specified, then on success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate required for periodic auto-debits.</p>
@@ -3742,7 +4016,7 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns the sip JSON object</p>
 </blockquote>
-<h3 id='http-request-40'>HTTP Request</h3>
+<h3 id='http-request-42'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;/cancel</code></p>
 
 <p>This API cancels an existing SIP. Note that cancellation is not instant. The AMC will communicate the cancellation within 24 hours of the request being registered. However, the API will stop accepting new requests on the cancelled SIP instantly.</p>
@@ -3919,7 +4193,7 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns a JSON object.</p>
 </blockquote>
-<h3 id='http-request-41'>HTTP Request</h3>
+<h3 id='http-request-43'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/amcs/&lt;AMC_CODE&gt;/name_and_liquid_fund</code></p>
 <h3 id='response-parameters-2'>Response parameters</h3>
 <table><thead>
