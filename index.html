@@ -2171,7 +2171,9 @@ Note the <code>onboarding</code>root key
 </tr>
 </tbody></table>
 <h2 id='generate-kyc-contract'>Generate KYC Contract</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
-</span><span class="p">{}</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com"</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/generate_contract"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
@@ -2183,7 +2185,24 @@ Note the <code>onboarding</code>root key
 <h3 id='http-request-20'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/generate_contract</code></p>
 <h3 id='important-info-about-this-api-2'><strong>Important Info about this API</strong></h3>
-<p>The API will return a url which you must redirect the user to. The webpage will show all the information submitted so far, and the user must sign the contract displayed with their aadhaar e-signature. The page has been known to not play well with app-embedded browsers. So it&#39;s recommended that your redirect the user to the actual browser on the phone.</p>
+<p>The API will return a url which you must redirect the user to. The webpage will show all the information submitted so far, and the user must sign the contract displayed with their aadhaar e-signature. The page has been known to not play well with app-embedded browsers. So it&#39;s recommended that you redirect the user to the actual browser on the phone.</p>
+
+<p>Wait for the webhook to be informed of success/failure of contract signing and the reasons for failure, if any. The webhook will usually be triggered before the redirect URL. Refer to the webhook section for more info regarding the <code>esign_success</code> and 
+<code>esign_error</code> params in the webhook.</p>
+<h3 id='json-request'>JSON Request</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>redirect_url</td>
+<td>false</td>
+<td>A URL to redirect user to post signing the contract. This is optional, if not supplied, the user will be redirected to a generic savvy page.</td>
+</tr>
+</tbody></table>
 <h3 id='json-response-7'>JSON Response</h3>
 <table><thead>
 <tr>
@@ -2201,11 +2220,6 @@ Note the <code>onboarding</code>root key
 <td>url</td>
 <td>true</td>
 <td>Aadhaar e-sign contract URL.</td>
-</tr>
-<tr>
-<td>random_number</td>
-<td>true</td>
-<td>Random number to say on video</td>
 </tr>
 </tbody></table>
 <h2 id='execute-verification'>Execute Verification</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
@@ -4300,7 +4314,11 @@ Webhooks are sent on a "best-effort" basis, and are sent at least once. That mea
   </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"partner_transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa-vvv"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aa-bb-cc-dd"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DSP"</span><span class="w">
+    </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DSP"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"existing_investor"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"full_kyc_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pending"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"esign_success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"esign_error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User cancelled E-sign"</span><span class="p">,</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><h3 id='deposits-2'>Deposits</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
