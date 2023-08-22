@@ -3873,6 +3873,7 @@ Note the <code>one_click_checkout</code>root key
     </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@smith.com"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9888810000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"authentication_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debit_card"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"bank_account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"account_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456789"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"ifsc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HDFC0000873"</span><span class="p">,</span><span class="w">
@@ -3936,6 +3937,11 @@ Note the <code>mandate</code>root key
 <td>redirect_url</td>
 <td>true</td>
 <td><code>URL String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure. <em>Do not</em> put query params in the redirect url.</td>
+</tr>
+<tr>
+<td>authentication_method</td>
+<td>false</td>
+<td><code>Enum: net_banking (default), debit_card</code> The auth method to use. Net banking will require a login to the internet banking page of the bank. Debit card will be authenticated directly with NPCI.</td>
 </tr>
 <tr>
 <td>name</td>
@@ -4512,7 +4518,7 @@ Webhooks are sent on a "best-effort" basis, and are sent at least once. That mea
 </thead><tbody>
 <tr>
 <td><code>onboardings.create</code></td>
-<td>Sent when an</td>
+<td>Sent when an onboarding is created</td>
 </tr>
 <tr>
 <td><code>deposits.create</code></td>
@@ -4533,6 +4539,10 @@ Webhooks are sent on a "best-effort" basis, and are sent at least once. That mea
 <tr>
 <td><code>withdrawals.status.update</code></td>
 <td>Sent when a withdrawal status is updated. Use this for tracking success / failure of withdrawal transactions.</td>
+</tr>
+<tr>
+<td><code>funds.create</code></td>
+<td>Sent when a new NFO is created.</td>
 </tr>
 </tbody></table>
 <h2 id='webhook-authentication'>Webhook authentication</h2>
@@ -4568,6 +4578,16 @@ Webhooks are sent on a "best-effort" basis, and are sent at least once. That mea
   </span><span class="nl">"account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa-vvv-www"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aa-dd-ff"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h3 id='funds-2'>Funds</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"fund"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="s2">"COMPLETE FUND OBJECT. PLEASE REFER ABOVE"</span><span class="p">},</span><span class="w">
+  </span><span class="nl">"nfo_details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"is_nfo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"nfo_start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"31/01/2023"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"nfo_end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"31/03/2023"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"nfo_restart_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10/04/2023"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><h1 id='enums'>Enums</h1><h2 id='annual-income-codes'>Annual Income Codes</h2>
