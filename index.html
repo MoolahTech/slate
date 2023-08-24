@@ -559,6 +559,9 @@
                     <a href="#create-sip" class="toc-h2 toc-link" data-title="Create sip">Create sip</a>
                   </li>
                   <li>
+                    <a href="#create-basket-of-sips" class="toc-h2 toc-link" data-title="Create basket of SIPs">Create basket of SIPs</a>
+                  </li>
+                  <li>
                     <a href="#cancel-sip" class="toc-h2 toc-link" data-title="Cancel sip">Cancel sip</a>
                   </li>
               </ul>
@@ -2921,17 +2924,20 @@ Note the <code>deposit</code>root key
 <aside class="warning">If account uuid is not specified, a new account will be created for the customer. Make sure this is the behavior you want. However, for first time customers, not passing the account id is the expected behavior.</aside>
 <h2 id='create-basket-of-deposits'>Create basket of deposits</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"deposit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-  </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"payment_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/payment_redirect"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"deposit_parts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="w">
+      </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xyz"</span><span class="w">
+      </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xyz"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -4171,6 +4177,121 @@ Note the <code>sip</code>root key
 <td><code>URL String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure.</td>
 </tr>
 </tbody></table>
+<h2 id='create-basket-of-sips'>Create basket of SIPs</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w"> </span><span class="nl">"sip"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"mandate_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"mandate_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/redirect"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/01/2022"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/12/2022"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"frequency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monthly"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"authentication_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debit_card"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"mandate_max_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sip_parts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xyz"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/sips/create_basket"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+
+</code></pre></div>
+<blockquote>
+<p>The above command returns the deposit JSON object</p>
+</blockquote>
+<h3 id='http-request-44'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/deposits/create_basket</code></p>
+<h3 id='parameters-10'>Parameters</h3>
+<aside class="notice">
+Note the <code>deposit</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>onboarding_uuid</td>
+<td>false</td>
+<td><code>String</code> If the SIP has to be created in a new account.</td>
+</tr>
+<tr>
+<td>start_date</td>
+<td>true</td>
+<td><code>Date</code> Start date of the SIP.</td>
+</tr>
+<tr>
+<td>end_date</td>
+<td>true</td>
+<td><code>Date</code> End date of the SIP.</td>
+</tr>
+<tr>
+<td>frequency</td>
+<td>true</td>
+<td><code>Enum: monthly, weekly, daily, ad-hoc</code> Frequency of debits</td>
+</tr>
+<tr>
+<td>mandate_uuid</td>
+<td>false</td>
+<td><code>String</code> UUID of an existing mandate.</td>
+</tr>
+<tr>
+<td>mandate_redirect_url</td>
+<td>true</td>
+<td><code>URL String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure.</td>
+</tr>
+<tr>
+<td>authentication_method</td>
+<td>false</td>
+<td><code>Enum: net_banking, debit_card</code> Accepted if mandate_uuid is not present.</td>
+</tr>
+<tr>
+<td>mandate_max_amount</td>
+<td>false</td>
+<td><code>Integer</code> By default this will be the amount of the basket.</td>
+</tr>
+<tr>
+<td>sip_parts</td>
+<td>true</td>
+<td><code>Array</code> [amount, fund_code, amc_code, account_uuid] to specify how much to invest in which funds</td>
+</tr>
+</tbody></table>
+<h3 id='json-response-14'>JSON response</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sips</td>
+<td>true</td>
+<td><code>Objects</code> Deposit object list</td>
+</tr>
+<tr>
+<td>url</td>
+<td>false</td>
+<td><code>String</code> URL to redirect the customer to for signing the mandate. However, if mandate uuid is specified and valid, then a URL will not be returned.</td>
+</tr>
+</tbody></table>
+
+<aside class="warning">If account uuid is not specified, a new account will be created for the customer. Make sure this is the behavior you want. However, for first time customers, not passing the account id is the expected behavior.</aside>
 <h2 id='cancel-sip'>Cancel sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;/cancel"</span> <span class="se">\</span>
@@ -4182,7 +4303,7 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns the sip JSON object</p>
 </blockquote>
-<h3 id='http-request-44'>HTTP Request</h3>
+<h3 id='http-request-45'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;/cancel</code></p>
 
 <p>This API cancels an existing SIP. Note that cancellation is not instant. The AMC will communicate the cancellation within 24 hours of the request being registered. However, the API will stop accepting new requests on the cancelled SIP instantly.</p>
@@ -4269,11 +4390,11 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns the goal JSON object</p>
 </blockquote>
-<h3 id='http-request-45'>HTTP Request</h3>
+<h3 id='http-request-46'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/snbl/saving_goals</code></p>
 
 <p>Please note that the SIP must be created before the saving goal is created.</p>
-<h3 id='parameters-10'>Parameters</h3>
+<h3 id='parameters-11'>Parameters</h3>
 <aside class="notice">
 Note the <code>sip</code>root key
 </aside>
@@ -4445,7 +4566,7 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns a JSON object.</p>
 </blockquote>
-<h3 id='http-request-46'>HTTP Request</h3>
+<h3 id='http-request-47'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/amcs/&lt;AMC_CODE&gt;/name_and_liquid_fund</code></p>
 <h3 id='response-parameters-2'>Response parameters</h3>
 <table><thead>
