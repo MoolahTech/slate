@@ -3212,6 +3212,7 @@ Note the <code>withdrawal</code>root key
 </tbody></table>
 <h2 id='create-basket-withdrawal'>Create basket withdrawal</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"withdrawal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"withdrawal_parts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000"</span><span class="p">,</span><span class="w">
@@ -3247,6 +3248,11 @@ Note the <code>withdrawal</code>root key
 <th>Description</th>
 </tr>
 </thead><tbody>
+<tr>
+<td>onboarding_uuid</td>
+<td>true</td>
+<td><code>String</code> UUID of the onboarding</td>
+</tr>
 <tr>
 <td>withdrawal_parts</td>
 <td>true</td>
