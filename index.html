@@ -2850,6 +2850,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
     </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"payment_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"upi"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"payment_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/payment_redirect"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2902,6 +2903,11 @@ Note the <code>deposit</code>root key
 <td><code>String</code> Mandatory if account uuid is not specified.</td>
 </tr>
 <tr>
+<td>payment_mode</td>
+<td>false</td>
+<td><code>Enum: upi, internet_banking</code> By default, it is upi</td>
+</tr>
+<tr>
 <td>partner_transaction_id</td>
 <td>false</td>
 <td><code>String</code> Your custom ID to identify this transaction.</td>
@@ -2932,6 +2938,7 @@ Note the <code>deposit</code>root key
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"deposit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
   </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"payment_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/payment_redirect"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"payment_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"upi"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"deposit_parts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000"</span><span class="p">,</span><span class="w">
@@ -2976,19 +2983,14 @@ Note the <code>deposit</code>root key
 <td><code>String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure.</td>
 </tr>
 <tr>
-<td>account_uuid</td>
+<td>payment_mode</td>
 <td>false</td>
-<td><code>String</code> If the deposit has to be created in an existing account.</td>
+<td><code>Enum: upi, internet_banking</code> By default, it is upi</td>
 </tr>
 <tr>
 <td>onboarding_uuid</td>
 <td>false</td>
 <td><code>String</code> Mandatory if account uuid is not specified.</td>
-</tr>
-<tr>
-<td>partner_transaction_id</td>
-<td>false</td>
-<td><code>String</code> Your custom ID to identify this transaction.</td>
 </tr>
 <tr>
 <td>deposit_parts</td>
