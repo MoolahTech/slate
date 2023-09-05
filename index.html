@@ -459,6 +459,17 @@
               </ul>
           </li>
           <li>
+            <a href="#bank-configurations" class="toc-h1 toc-link" data-title="Bank configurations">Bank configurations</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#bank-configuration-object" class="toc-h2 toc-link" data-title="Bank configuration object">Bank configuration object</a>
+                  </li>
+                  <li>
+                    <a href="#show-bank-configuration" class="toc-h2 toc-link" data-title="Show bank configuration">Show bank configuration</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#deposits" class="toc-h1 toc-link" data-title="Deposits">Deposits</a>
               <ul class="toc-list-h2">
                   <li>
@@ -2728,6 +2739,71 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 </blockquote>
 <h3 id='http-request-29'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/accounts/&lt;UUID&gt;</code></p>
+<h1 id='bank-configurations'>Bank configurations</h1>
+<p>Before making lumpsum, SIP or mandate transactions, you may want to check whether which banks are available for which payment modes.</p>
+<h2 id='bank-configuration-object'>Bank configuration object</h2>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ifsc_first_4</td>
+<td><code>String</code> First 4 digits of the IFSC code</td>
+</tr>
+<tr>
+<td>debit_card_mandate_allowed</td>
+<td><code>Boolean</code></td>
+</tr>
+<tr>
+<td>debit_card_mandate_maximum</td>
+<td><code>Integer</code></td>
+</tr>
+<tr>
+<td>net_banking_mandate_allowed</td>
+<td><code>Boolean</code></td>
+</tr>
+<tr>
+<td>net_banking_mandate_maximum</td>
+<td><code>Integer</code></td>
+</tr>
+<tr>
+<td>upi_mandate_allowed</td>
+<td><code>Boolean</code></td>
+</tr>
+<tr>
+<td>upi_mandate_maximum</td>
+<td><code>Integer</code></td>
+</tr>
+<tr>
+<td>upi_lumpsum_allowed</td>
+<td><code>Boolean</code></td>
+</tr>
+<tr>
+<td>upi_lumpsum_maximum</td>
+<td><code>Integer</code></td>
+</tr>
+<tr>
+<td>net_banking_lumpsum_allowed</td>
+<td><code>Boolean</code></td>
+</tr>
+<tr>
+<td>net_banking_lumpsum_maximum</td>
+<td><code>Integer</code></td>
+</tr>
+</tbody></table>
+<h2 id='show-bank-configuration'>Show bank configuration</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/bank_configurations/&lt;IFSC CODE&gt;"</span> <span class="se">\</span>
+  <span class="nt">-X</span> GET <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
+</code></pre></div>
+<blockquote>
+<p>The above command returns a single bank configuration object.</p>
+</blockquote>
+<h3 id='http-request-30'>HTTP Request</h3>
+<p><code>GET http://surface.thesavvyapp.in/secure/bank_configurations/&lt;IFSC CODE&gt;</code></p>
+<h3 id='url-parameters-4'>URL Parameters</h3>
+<p>The IFSC code must be appended on to the end of the URL.</p>
 <h1 id='deposits'>Deposits</h1>
 <p>The deposits API describes how to create a mutual fund purchase transaction. This API can only be accessed post the onboarding flow. The workflow for creating and completing a purchase is:</p>
 
@@ -2813,9 +2889,9 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns an array of deposit JSON objects.</p>
 </blockquote>
-<h3 id='http-request-30'>HTTP Request</h3>
+<h3 id='http-request-31'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/deposits?account_uuid=&lt;UUID&gt;</code></p>
-<h3 id='url-parameters-4'>URL Parameters</h3>
+<h3 id='url-parameters-5'>URL Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -2841,7 +2917,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns a deposit JSON object.</p>
 </blockquote>
-<h3 id='http-request-31'>HTTP Request</h3>
+<h3 id='http-request-32'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/deposits/&lt;UUID&gt;</code></p>
 <h2 id='create-deposit'>Create deposit</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"deposit"</span><span class="p">:</span><span class="w"> 
@@ -2863,7 +2939,7 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <blockquote>
 <p>The above command returns the deposit JSON object along with the payment URL</p>
 </blockquote>
-<h3 id='http-request-32'>HTTP Request</h3>
+<h3 id='http-request-33'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/deposits</code></p>
 <h3 id='parameters-2'>Parameters</h3>
 <aside class="notice">
@@ -2963,7 +3039,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the deposit JSON object</p>
 </blockquote>
-<h3 id='http-request-33'>HTTP Request</h3>
+<h3 id='http-request-34'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/deposits/create_basket</code></p>
 <h3 id='parameters-3'>Parameters</h3>
 <aside class="notice">
@@ -3095,9 +3171,9 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns an array of withdrawal JSON objects.</p>
 </blockquote>
-<h3 id='http-request-34'>HTTP Request</h3>
+<h3 id='http-request-35'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/withdrawals?account_uuid=&lt;UUID&gt;</code></p>
-<h3 id='url-parameters-5'>URL Parameters</h3>
+<h3 id='url-parameters-6'>URL Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -3118,7 +3194,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns a withdrawal JSON object.</p>
 </blockquote>
-<h3 id='http-request-35'>HTTP Request</h3>
+<h3 id='http-request-36'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/withdrawals/&lt;UUID&gt;</code></p>
 <h2 id='create-withdrawal'>Create withdrawal</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"withdrawal"</span><span class="p">:</span><span class="w"> 
@@ -3138,7 +3214,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-36'>HTTP Request</h3>
+<h3 id='http-request-37'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals</code></p>
 
 <p>On success, an OTP is sent on both the users&#39; registered email and phone number. This OTP has to be verified by the user and sent to us on API.</p>
@@ -3190,7 +3266,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-37'>HTTP Request</h3>
+<h3 id='http-request-38'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals/&lt;UUID&gt;/verify_otp</code></p>
 
 <p>On success, the status of the withdrawal will change to <code>otp_complete</code>. The OTP verification will expire in 5 minutes, and the OTP can be resent in case of delivery failures after 30 seconds of first attempt. </p>
@@ -3234,7 +3310,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-38'>HTTP Request</h3>
+<h3 id='http-request-39'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals/create_basket</code></p>
 
 <p>On success, an OTP is sent on both the users&#39; registered email and phone number. This OTP has to be verified by the user and sent to us on API.</p>
@@ -3307,7 +3383,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-39'>HTTP Request</h3>
+<h3 id='http-request-40'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals/&lt;BASKET_TRANSACTION_ID&gt;/verify_basket_otp</code></p>
 
 <p>On success, the status of the withdrawal will change to <code>otp_complete</code>. The OTP verification will expire in 5 minutes, and the OTP can be resent in case of delivery failures after 30 seconds of first attempt. </p>
@@ -3439,7 +3515,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns a OCC JSON object.</p>
 </blockquote>
-<h3 id='http-request-40'>HTTP Request</h3>
+<h3 id='http-request-41'>HTTP Request</h3>
 <p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts</code></p>
 <h3 id='parameters-8'>Parameters</h3>
 <aside class="notice">
@@ -3626,7 +3702,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns a OCC JSON object.</p>
 </blockquote>
-<h3 id='http-request-41'>HTTP Request</h3>
+<h3 id='http-request-42'>HTTP Request</h3>
 <p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts/create_sip</code></p>
 <h3 id='parameters-9'>Parameters</h3>
 <aside class="notice">
@@ -4025,7 +4101,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns the mandate JSON object</p>
 </blockquote>
-<h3 id='http-request-42'>HTTP Request</h3>
+<h3 id='http-request-43'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/mandates</code></p>
 
 <p>On success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate.</p>
@@ -4178,9 +4254,9 @@ Note the <code>mandate</code>root key
 <blockquote>
 <p>The above command returns an array of sip JSON objects.</p>
 </blockquote>
-<h3 id='http-request-43'>HTTP Request</h3>
+<h3 id='http-request-44'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/sips?account_uuid=&lt;UUID&gt;</code></p>
-<h3 id='url-parameters-6'>URL Parameters</h3>
+<h3 id='url-parameters-7'>URL Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -4201,7 +4277,7 @@ Note the <code>mandate</code>root key
 <blockquote>
 <p>The above command returns a sip JSON object.</p>
 </blockquote>
-<h3 id='http-request-44'>HTTP Request</h3>
+<h3 id='http-request-45'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;</code></p>
 <h2 id='create-sip'>Create sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"sip"</span><span class="p">:</span><span class="w"> 
@@ -4227,7 +4303,7 @@ Note the <code>mandate</code>root key
 <blockquote>
 <p>The above command returns the sip JSON object</p>
 </blockquote>
-<h3 id='http-request-45'>HTTP Request</h3>
+<h3 id='http-request-46'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/sips</code></p>
 
 <p>If <code>mandate_uuid</code> is specified, then the mandate will be used for the SIP. If no <code>mandate_uuid</code> is specified, then on success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate required for periodic auto-debits.</p>
@@ -4340,7 +4416,7 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns the deposit JSON object</p>
 </blockquote>
-<h3 id='http-request-46'>HTTP Request</h3>
+<h3 id='http-request-47'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/sips/create_basket</code></p>
 <h3 id='parameters-12'>Parameters</h3>
 <aside class="notice">
@@ -4432,7 +4508,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the sip JSON object</p>
 </blockquote>
-<h3 id='http-request-47'>HTTP Request</h3>
+<h3 id='http-request-48'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;/cancel</code></p>
 
 <p>This API cancels an existing SIP. Note that cancellation is not instant. The AMC will communicate the cancellation within 24 hours of the request being registered. However, the API will stop accepting new requests on the cancelled SIP instantly.</p>
@@ -4519,7 +4595,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the goal JSON object</p>
 </blockquote>
-<h3 id='http-request-48'>HTTP Request</h3>
+<h3 id='http-request-49'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/snbl/saving_goals</code></p>
 
 <p>Please note that the SIP must be created before the saving goal is created.</p>
@@ -4695,7 +4771,7 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns a JSON object.</p>
 </blockquote>
-<h3 id='http-request-49'>HTTP Request</h3>
+<h3 id='http-request-50'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/amcs/&lt;AMC_CODE&gt;/name_and_liquid_fund</code></p>
 <h3 id='response-parameters-2'>Response parameters</h3>
 <table><thead>
