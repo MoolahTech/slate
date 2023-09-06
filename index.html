@@ -3299,7 +3299,8 @@ Note the <code>withdrawal</code>root key
       </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"partner_transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xyv-abc"</span><span class="w">
     </span><span class="p">}]</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"allow_invalid_parts"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/withdrawals/create_basket"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
@@ -3316,8 +3317,29 @@ Note the <code>withdrawal</code>root key
 <p>On success, an OTP is sent on both the users&#39; registered email and phone number. This OTP has to be verified by the user and sent to us on API.</p>
 <h3 id='parameters-6'>Parameters</h3>
 <aside class="notice">
-Note the <code>withdrawal</code>root key
+Note the <code>withdrawal</code> and <code> allow_invalid_parts</code> root keys
 </aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>withdrawal</td>
+<td>true</td>
+<td><code>Object</code> Withdrawal object</td>
+</tr>
+<tr>
+<td>allow_invalid_parts</td>
+<td>false</td>
+<td><code>Boolean (default: false)</code> If true, then invalid withdrawals will be ignored and only valid ones will get considered. If false, all withdrawal parts will get rejected if even one part is invalid.</td>
+</tr>
+</tbody></table>
+
+<p>Withdrawal:</p>
 
 <table><thead>
 <tr>
