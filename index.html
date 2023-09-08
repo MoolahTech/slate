@@ -505,6 +505,9 @@
                     <a href="#create-withdrawal" class="toc-h2 toc-link" data-title="Create withdrawal">Create withdrawal</a>
                   </li>
                   <li>
+                    <a href="#resend-withdrawal-otp" class="toc-h2 toc-link" data-title="Resend withdrawal OTP">Resend withdrawal OTP</a>
+                  </li>
+                  <li>
                     <a href="#verify-withdrawal-otp" class="toc-h2 toc-link" data-title="Verify withdrawal OTP">Verify withdrawal OTP</a>
                   </li>
                   <li>
@@ -3251,10 +3254,28 @@ Note the <code>withdrawal</code>root key
 <td><code>String</code> Your custom ID to identify this transaction.</td>
 </tr>
 </tbody></table>
+<h2 id='resend-withdrawal-otp'>Resend withdrawal OTP</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/withdrawals/&lt;UUID&gt;/resend_otp"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+
+</code></pre></div>
+<blockquote>
+<p>The above command returns the withdrawal JSON object</p>
+</blockquote>
+<h3 id='http-request-38'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/withdrawals/&lt;UUID&gt;/resend_otp</code></p>
+
+<p>The OTP can be resent in case of delivery failures after 30 seconds of first attempt. </p>
 <h2 id='verify-withdrawal-otp'>Verify withdrawal OTP</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"withdrawal"</span><span class="p">:</span><span class="w"> 
   </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"otp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="w">
+    </span><span class="nl">"otp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="p">,</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="err">For</span><span class="w"> </span><span class="err">alternate</span><span class="w"> </span><span class="err">mode:</span><span class="w">
+    </span><span class="nl">"pincode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"160019"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"bank_account_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"50028774999273"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/withdrawals/&lt;UUID&gt;/verify_otp"</span> <span class="se">\</span>
@@ -3266,10 +3287,12 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-38'>HTTP Request</h3>
+<h3 id='http-request-39'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals/&lt;UUID&gt;/verify_otp</code></p>
 
 <p>On success, the status of the withdrawal will change to <code>otp_complete</code>. The OTP verification will expire in 5 minutes, and the OTP can be resent in case of delivery failures after 30 seconds of first attempt. </p>
+
+<p>In case of OTP delivery failure (network / lost access to phone etc), there is a fallback mechanism where investors can verify by entering their pincode and bank account number. <strong>This should only be used a last resort</strong>. Do not verify OTPs continuously with this method, you <em>will</em> get banned.</p>
 <h3 id='parameters-5'>Parameters</h3>
 <aside class="notice">
 Note the <code>withdrawal</code>root key
@@ -3284,8 +3307,18 @@ Note the <code>withdrawal</code>root key
 </thead><tbody>
 <tr>
 <td>otp</td>
-<td>true</td>
+<td>false</td>
 <td><code>String</code> The user inputted OTP</td>
+</tr>
+<tr>
+<td>pincode</td>
+<td>false</td>
+<td><code>String</code> For alternate verification process. Investors&#39; address pincode</td>
+</tr>
+<tr>
+<td>bank_account_number</td>
+<td>false</td>
+<td><code>String</code> For alternate verification process. Investors&#39; bank account number</td>
 </tr>
 </tbody></table>
 <h2 id='create-basket-withdrawal'>Create basket withdrawal</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
@@ -3311,7 +3344,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-39'>HTTP Request</h3>
+<h3 id='http-request-40'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals/create_basket</code></p>
 
 <p>On success, an OTP is sent on both the users&#39; registered email and phone number. This OTP has to be verified by the user and sent to us on API.</p>
@@ -3405,7 +3438,7 @@ Note the <code>withdrawal</code> and <code> allow_invalid_parts</code> root keys
 <blockquote>
 <p>The above command returns the withdrawal JSON object</p>
 </blockquote>
-<h3 id='http-request-40'>HTTP Request</h3>
+<h3 id='http-request-41'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/withdrawals/&lt;BASKET_TRANSACTION_ID&gt;/verify_basket_otp</code></p>
 
 <p>On success, the status of the withdrawal will change to <code>otp_complete</code>. The OTP verification will expire in 5 minutes, and the OTP can be resent in case of delivery failures after 30 seconds of first attempt. </p>
@@ -3537,7 +3570,7 @@ Note the <code>withdrawal</code>root key
 <blockquote>
 <p>The above command returns a OCC JSON object.</p>
 </blockquote>
-<h3 id='http-request-41'>HTTP Request</h3>
+<h3 id='http-request-42'>HTTP Request</h3>
 <p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts</code></p>
 <h3 id='parameters-8'>Parameters</h3>
 <aside class="notice">
@@ -3724,7 +3757,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns a OCC JSON object.</p>
 </blockquote>
-<h3 id='http-request-42'>HTTP Request</h3>
+<h3 id='http-request-43'>HTTP Request</h3>
 <p><code>POST https://surface.thesavvyapp.in/secure/one_click_checkouts/create_sip</code></p>
 <h3 id='parameters-9'>Parameters</h3>
 <aside class="notice">
@@ -4123,7 +4156,7 @@ Note the <code>one_click_checkout</code>root key
 <blockquote>
 <p>The above command returns the mandate JSON object</p>
 </blockquote>
-<h3 id='http-request-43'>HTTP Request</h3>
+<h3 id='http-request-44'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/mandates</code></p>
 
 <p>On success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate.</p>
@@ -4276,7 +4309,7 @@ Note the <code>mandate</code>root key
 <blockquote>
 <p>The above command returns an array of sip JSON objects.</p>
 </blockquote>
-<h3 id='http-request-44'>HTTP Request</h3>
+<h3 id='http-request-45'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/sips?account_uuid=&lt;UUID&gt;</code></p>
 <h3 id='url-parameters-7'>URL Parameters</h3>
 <table><thead>
@@ -4299,7 +4332,7 @@ Note the <code>mandate</code>root key
 <blockquote>
 <p>The above command returns a sip JSON object.</p>
 </blockquote>
-<h3 id='http-request-45'>HTTP Request</h3>
+<h3 id='http-request-46'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;</code></p>
 <h2 id='create-sip'>Create sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"sip"</span><span class="p">:</span><span class="w"> 
@@ -4325,7 +4358,7 @@ Note the <code>mandate</code>root key
 <blockquote>
 <p>The above command returns the sip JSON object</p>
 </blockquote>
-<h3 id='http-request-46'>HTTP Request</h3>
+<h3 id='http-request-47'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/sips</code></p>
 
 <p>If <code>mandate_uuid</code> is specified, then the mandate will be used for the SIP. If no <code>mandate_uuid</code> is specified, then on success, a payment url is sent. The user must be redirected to this url to sign the e-nach mandate required for periodic auto-debits.</p>
@@ -4438,7 +4471,7 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns the deposit JSON object</p>
 </blockquote>
-<h3 id='http-request-47'>HTTP Request</h3>
+<h3 id='http-request-48'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/sips/create_basket</code></p>
 <h3 id='parameters-12'>Parameters</h3>
 <aside class="notice">
@@ -4530,7 +4563,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the sip JSON object</p>
 </blockquote>
-<h3 id='http-request-48'>HTTP Request</h3>
+<h3 id='http-request-49'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;/cancel</code></p>
 
 <p>This API cancels an existing SIP. Note that cancellation is not instant. The AMC will communicate the cancellation within 24 hours of the request being registered. However, the API will stop accepting new requests on the cancelled SIP instantly.</p>
@@ -4617,7 +4650,7 @@ Note the <code>deposit</code>root key
 <blockquote>
 <p>The above command returns the goal JSON object</p>
 </blockquote>
-<h3 id='http-request-49'>HTTP Request</h3>
+<h3 id='http-request-50'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/snbl/saving_goals</code></p>
 
 <p>Please note that the SIP must be created before the saving goal is created.</p>
@@ -4793,7 +4826,7 @@ Note the <code>sip</code>root key
 <blockquote>
 <p>The above command returns a JSON object.</p>
 </blockquote>
-<h3 id='http-request-50'>HTTP Request</h3>
+<h3 id='http-request-51'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/amcs/&lt;AMC_CODE&gt;/name_and_liquid_fund</code></p>
 <h3 id='response-parameters-2'>Response parameters</h3>
 <table><thead>
