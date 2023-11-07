@@ -2930,7 +2930,8 @@ In case there is a failure, you can use the API to update the same onboarding. Y
     </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"payment_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"upi"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"payment_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/payment_redirect"</span><span class="w">
+    </span><span class="nl">"payment_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/payment_redirect"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"partner_transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/deposits"</span> <span class="se">\</span>
@@ -3024,12 +3025,14 @@ Note the <code>deposit</code>root key
       </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"partner_transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xyz"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"partner_transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -4453,12 +4456,14 @@ Note the <code>sip</code>root key
       </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"partner_transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xyz"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"partner_transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]}</span><span class="w">
 </span><span class="p">}</span><span class="w">
