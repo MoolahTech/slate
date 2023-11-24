@@ -649,6 +649,9 @@
                   <li>
                     <a href="#sip-returns-for-historical-custom-time-ranges" class="toc-h2 toc-link" data-title="SIP returns for historical custom time ranges">SIP returns for historical custom time ranges</a>
                   </li>
+                  <li>
+                    <a href="#sip-returns-for-future-time-ranges" class="toc-h2 toc-link" data-title="SIP returns for future time ranges">SIP returns for future time ranges</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -4873,18 +4876,14 @@ Note the <code>sip</code>root key
 <h1 id='calculators'>Calculators</h1>
 <p>We offer a stand-alone API for advanced calculations. The various types of calculations are listed below:</p>
 <h2 id='authentication-3'>Authentication</h2>
-<p>The auth mechanism for the calculators is a bit simpler than the rest of the API.</p>
-
-<blockquote>
-<p>To authorize, you must pass your API access key as a header</p>
-</blockquote>
+<p>The auth mechanism for the calculators is a bit simpler than the rest of the API. To authorize, you must pass your API access key as a header as shown on the right. The relevant header is <code>X-PARTNER-ACCESS-KEY</code></p>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-XGET</span> <span class="s2">"https://surface.thesavvyapp.in/calculators/..."</span> <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"X-PARTNER-ACCESS-KEY: &lt;key&gt;"</span>
 </code></pre></div><h2 id='sip-returns-for-historical-custom-time-ranges'>SIP returns for historical custom time ranges</h2>
 <p>This API will help you calculate XIRR returns for custom time ranges for all schemes available on the Savvy API. Note this API has a rate limit of 10 per minute for each partner. Please message for a rate limit increase.</p>
 <h3 id='http-request-52'>HTTP Request</h3>
 <p><code>GET https://surface.thesavvyapp.in/calculators/sip_returns</code></p>
-<h3 id='parameters-14'>Parameters</h3>
+<h3 id='url-parameters-8'>URL parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -4916,6 +4915,46 @@ Note the <code>sip</code>root key
 <td>monthly_amount</td>
 <td>true</td>
 <td><code>Decimal</code> Amount of money to put in every month</td>
+</tr>
+</tbody></table>
+<h2 id='sip-returns-for-future-time-ranges'>SIP returns for future time ranges</h2>
+<p>This API will help you calculate future expected IRR returns for custom time ranges. This is applicable for all schemes available on the Savvy API. Note this API has a rate limit of 10 per minute for each partner. Please message for a rate limit increase.</p>
+
+<p>Potential gotcha: There is no start date available. We assume in this API that the start date is always Today&#39;s date.</p>
+<h3 id='http-request-53'>HTTP Request</h3>
+<p><code>GET https://surface.thesavvyapp.in/calculators/future_sip_returns</code></p>
+<h3 id='url-parameters-9'>URL parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>amc_code</td>
+<td>false</td>
+<td><code>String</code> Code of the AMC</td>
+</tr>
+<tr>
+<td>fund_code</td>
+<td>false</td>
+<td><code>String</code> Code of the scheme</td>
+</tr>
+<tr>
+<td>end_date</td>
+<td>true</td>
+<td><code>Date (DD/MM/YYYY)</code> End date of the SIP (note this cannot be after today&#39;s date)</td>
+</tr>
+<tr>
+<td>monthly_amount</td>
+<td>true</td>
+<td><code>Decimal</code> Amount of money to put in every month</td>
+</tr>
+<tr>
+<td>irr</td>
+<td>false</td>
+<td><code>Decimal</code> If a scheme is not specified, a custom irr can also be specified.</td>
 </tr>
 </tbody></table>
 <h1 id='reports'>Reports</h1>
