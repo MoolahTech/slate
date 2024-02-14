@@ -2566,6 +2566,10 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <td>is_regular_scheme</td>
 <td><code>Boolean</code> Whether fund is regular or direct</td>
 </tr>
+<tr>
+<td>sip_returns</td>
+<td><code>Object</code> SIP returns of the fund; full object below.</td>
+</tr>
 </tbody></table>
 <h3 id='fund-info'>Fund info</h3>
 <table><thead>
@@ -2589,6 +2593,38 @@ In case there is a failure, you can use the API to update the same onboarding. Y
 <tr>
 <td>return_year_5</td>
 <td><code>Decimal</code> CAGR since last 5 year</td>
+</tr>
+</tbody></table>
+<h3 id='sip-returns'>SIP returns</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>week_1</td>
+<td><code>Decimal</code> SIP returns since last week</td>
+</tr>
+<tr>
+<td>year_1</td>
+<td><code>Decimal</code> SIP returns since 1 year ago</td>
+</tr>
+<tr>
+<td>year_3</td>
+<td><code>Decimal</code> SIP returns since 3 years ago</td>
+</tr>
+<tr>
+<td>year_5</td>
+<td><code>Decimal</code> SIP returns since 5 years ago</td>
+</tr>
+<tr>
+<td>inception</td>
+<td><code>Decimal</code> SIP returns since inception of the fund</td>
+</tr>
+<tr>
+<td>date</td>
+<td><code>Decimal</code> Date of last calculation of returns</td>
 </tr>
 </tbody></table>
 <h2 id='get-all-funds'>Get all funds</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://surface.thesavvyapp.in/secure/funds?amc_code=code"</span> <span class="se">\</span>
@@ -4291,6 +4327,10 @@ Note the <code>mandate</code>root key
 <td><code>Date</code> End date of the SIP.</td>
 </tr>
 <tr>
+<td>sip_day</td>
+<td><code>Integer</code> Day of the month / week when the SIP will be triggered.</td>
+</tr>
+<tr>
 <td>frequency</td>
 <td><code>Enum: monthly, weekly, daily, ad-hoc</code> Frequency of debits</td>
 </tr>
@@ -4361,6 +4401,7 @@ Note the <code>mandate</code>root key
     </span><span class="nl">"partner_transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xyv-abc"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/01/2022"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/12/2022"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"sip_day"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
     </span><span class="nl">"frequency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monthly"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"mandate_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"mandate_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/redirect"</span><span class="w">
@@ -4439,6 +4480,11 @@ Note the <code>sip</code>root key
 <td><code>Date</code> End date of the SIP.</td>
 </tr>
 <tr>
+<td>sip_day</td>
+<td>false</td>
+<td><code>Integer</code> Day of the month / week when the SIP will be triggered.</td>
+</tr>
+<tr>
 <td>frequency</td>
 <td>true</td>
 <td><code>Enum: monthly, weekly, daily, ad-hoc</code> Frequency of debits</td>
@@ -4461,6 +4507,7 @@ Note the <code>sip</code>root key
   </span><span class="nl">"mandate_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/redirect"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/01/2022"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/12/2022"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sip_day"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
   </span><span class="nl">"frequency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monthly"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"authentication_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debit_card"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"mandate_max_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000"</span><span class="p">,</span><span class="w">
