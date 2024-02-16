@@ -4193,6 +4193,7 @@ Note the <code>one_click_checkout</code>root key
     </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@smith.com"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9888810000"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"authentication_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debit_card"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"mandate_gateway"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cashfree"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"bank_account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"account_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456789"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"ifsc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HDFC0000873"</span><span class="p">,</span><span class="w">
@@ -4258,9 +4259,19 @@ Note the <code>mandate</code>root key
 <td><code>URL String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure. <em>Do not</em> put query params in the redirect url.</td>
 </tr>
 <tr>
+<td>mandate_gateway</td>
+<td>false</td>
+<td><code>Enum: billdesk (default), cashfree</code> Specify the gateway to use.</td>
+</tr>
+<tr>
 <td>authentication_method</td>
 <td>false</td>
-<td><code>Enum: net_banking (default), debit_card</code> The auth method to use. Net banking will require a login to the internet banking page of the bank. Debit card will be authenticated directly with NPCI.</td>
+<td><code>Enum: net_banking (default), debit_card, upi_intent, upi_collect, upi_qr</code> The auth method to use. Net banking will require a login to the internet banking page of the bank. Debit card will be authenticated directly with NPCI. UPI intent will give a list of URLs for various UPI apps. UPI QR will give a QR code for a user to scan with their app. UPI collect will send a push notification via the UPI app.</td>
+</tr>
+<tr>
+<td>upi_vpa</td>
+<td>false</td>
+<td><code>String</code> Required only in case authentication_method is <code>upi_collect</code>.</td>
 </tr>
 <tr>
 <td>name</td>
@@ -4281,6 +4292,40 @@ Note the <code>mandate</code>root key
 <td>bank_account</td>
 <td>true</td>
 <td><code>Object</code> Must contain <code>account_number</code>, <code>ifsc_code</code> and <code>bank_name</code></td>
+</tr>
+</tbody></table>
+<h3 id='json-response-14'>JSON response</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>mandate</td>
+<td>true</td>
+<td><code>Objects</code> Mandate object</td>
+</tr>
+<tr>
+<td>url</td>
+<td>false</td>
+<td><code>String</code> URL to redirect the customer to for signing the mandate in case of <code>debit_card</code> or <code>net_banking</code>. However, if mandate uuid is specified and valid, then a URL will not be returned.</td>
+</tr>
+<tr>
+<td>message</td>
+<td>false</td>
+<td><code>String</code> Sample message to show the user in case of <code>upi_collect</code></td>
+</tr>
+<tr>
+<td>urls</td>
+<td>false</td>
+<td><code>Object</code> Only in case of <code>upi_intent</code>. This contains 2 fields: <code>ios</code> and <code>android</code>, each of which contain URLs for different UPI apps. Choose the appropriate one.</td>
+</tr>
+<tr>
+<td>qr</td>
+<td>false</td>
+<td><code>String</code> QR to display to the user in case of <code>upi_qr</code></td>
 </tr>
 </tbody></table>
 <h1 id='systematic-investment-plans'>Systematic Investment Plans</h1>
@@ -4402,6 +4447,8 @@ Note the <code>mandate</code>root key
     </span><span class="nl">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/01/2022"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/12/2022"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"sip_day"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"mandate_gateway"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cashfree"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"authentication_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debit_card"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"frequency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monthly"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"mandate_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"mandate_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/redirect"</span><span class="w">
@@ -4495,6 +4542,21 @@ Note the <code>sip</code>root key
 <td><code>String</code> UUID of an existing mandate.</td>
 </tr>
 <tr>
+<td>mandate_gateway</td>
+<td>false</td>
+<td><code>Enum: billdesk (default), cashfree</code> Specify the gateway to use.</td>
+</tr>
+<tr>
+<td>authentication_method</td>
+<td>false</td>
+<td><code>Enum: net_banking (default), debit_card, upi_intent, upi_collect, upi_qr</code> The auth method to use. Net banking will require a login to the internet banking page of the bank. Debit card will be authenticated directly with NPCI. UPI intent will give a list of URLs for various UPI apps. UPI QR will give a QR code for a user to scan with their app. UPI collect will send a push notification via the UPI app.</td>
+</tr>
+<tr>
+<td>upi_vpa</td>
+<td>false</td>
+<td><code>String</code> Required only in case authentication_method is <code>upi_collect</code>.</td>
+</tr>
+<tr>
 <td>mandate_redirect_url</td>
 <td>true</td>
 <td><code>URL String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure.</td>
@@ -4509,6 +4571,7 @@ Note the <code>sip</code>root key
   </span><span class="nl">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30/12/2022"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"sip_day"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
   </span><span class="nl">"frequency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monthly"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"mandate_gateway"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cashfree"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"authentication_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debit_card"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"mandate_max_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"sip_parts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -4582,9 +4645,19 @@ Note the <code>deposit</code>root key
 <td><code>URL String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure.</td>
 </tr>
 <tr>
+<td>mandate_gateway</td>
+<td>false</td>
+<td><code>Enum: billdesk (default), cashfree</code> Specify the gateway to use.</td>
+</tr>
+<tr>
 <td>authentication_method</td>
 <td>false</td>
-<td><code>Enum: net_banking, debit_card</code> Accepted if mandate_uuid is not present.</td>
+<td><code>Enum: net_banking (default), debit_card, upi_intent, upi_collect, upi_qr</code> The auth method to use. Net banking will require a login to the internet banking page of the bank. Debit card will be authenticated directly with NPCI. UPI intent will give a list of URLs for various UPI apps. UPI QR will give a QR code for a user to scan with their app. UPI collect will send a push notification via the UPI app.</td>
+</tr>
+<tr>
+<td>upi_vpa</td>
+<td>false</td>
+<td><code>String</code> Required only in case authentication_method is <code>upi_collect</code>.</td>
 </tr>
 <tr>
 <td>mandate_max_amount</td>
@@ -4597,7 +4670,7 @@ Note the <code>deposit</code>root key
 <td><code>Array</code> [amount, fund_code, amc_code, account_uuid] to specify how much to invest in which funds</td>
 </tr>
 </tbody></table>
-<h3 id='json-response-14'>JSON response</h3>
+<h3 id='json-response-15'>JSON response</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -4613,7 +4686,22 @@ Note the <code>deposit</code>root key
 <tr>
 <td>url</td>
 <td>false</td>
-<td><code>String</code> URL to redirect the customer to for signing the mandate. However, if mandate uuid is specified and valid, then a URL will not be returned.</td>
+<td><code>String</code> URL to redirect the customer to for signing the mandate in case of <code>debit_card</code> or <code>net_banking</code>. However, if mandate uuid is specified and valid, then a URL will not be returned.</td>
+</tr>
+<tr>
+<td>message</td>
+<td>false</td>
+<td><code>String</code> Sample message to show the user in case of <code>upi_collect</code></td>
+</tr>
+<tr>
+<td>urls</td>
+<td>false</td>
+<td><code>Object</code> Only in case of <code>upi_intent</code>. This contains 2 fields: <code>ios</code> and <code>android</code>, each of which contain URLs for different UPI apps. Choose the appropriate one.</td>
+</tr>
+<tr>
+<td>qr</td>
+<td>false</td>
+<td><code>String</code> QR to display to the user in case of <code>upi_qr</code></td>
 </tr>
 </tbody></table>
 
