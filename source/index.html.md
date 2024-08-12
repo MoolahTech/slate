@@ -827,6 +827,9 @@ category | `String` Category of the fund
 risk_rating | `Integer` 1-6 rating on the riskometer
 expense_ratio | `Decimal` Expense ratio as a percentage
 fund_managers | `Array[String]` List of fund managers
+volatility | `Decimal` Volatility rating of this fund
+is_regular_scheme | `Boolean` Whether fund is regular or direct
+sip_returns | `Object` SIP returns of the fund; full object below.
 
 ### Fund info
 
@@ -836,6 +839,17 @@ nav | `Decimal` Current net asset value of the fund. This is updated at cutoff t
 return_year_1 | `Decimal` CAGR since last 1 year
 return_year_3 | `Decimal` CAGR since last 3 year
 return_year_5 | `Decimal` CAGR since last 5 year
+
+### SIP returns
+
+Parameter | Description
+--------- | -----------
+week_1 | `Decimal` SIP returns since last week
+year_1 | `Decimal` SIP returns since 1 year ago
+year_3 | `Decimal` SIP returns since 3 years ago
+year_5 | `Decimal` SIP returns since 5 years ago
+inception| `Decimal` SIP returns since inception of the fund
+date | `Decimal` Date of last calculation of returns
 
 ## Get all funds
 
@@ -856,6 +870,57 @@ curl "http://surface.thesavvyapp.in/secure/funds?amc_code=code" \
 Parameter | Required | Description
 --------- | -------- | -----------
 amc_code | true | `String` Code the AMC from the AMC list API.
+
+## Fund performance
+
+```shell
+curl "https://surface.thesavvyapp.in/secure/funds/<fund_code>/performance?amc_code=code" \
+  -X GET \
+  -H "Authorization: Bearer <token>"
+```
+
+> The above command returns a map of date mapped to average NAV value.
+
+### HTTP Request
+
+`GET https://surface.thesavvyapp.in/secure/funds/<fund_code>/performance`
+
+### URL Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+amc_code | true | `String` Code of the AMC from the AMC list API.
+
+### JSON Response
+
+Parameter | Required | Description
+--------- | -------- | -----------
+Map | true | A map of (month, year) -> Average NAV value in that month
+
+## Fund holdings
+
+```shell
+curl "https://surface.thesavvyapp.in/secure/funds/<fund_code>/holdings?amc_code=code" \
+  -X GET \
+  -H "Authorization: Bearer <token>"
+```
+
+### HTTP Request
+
+`GET https://surface.thesavvyapp.in/secure/funds/<fund_code>/holdings`
+
+### URL Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+amc_code | true | String Code of the AMC from the AMC list API.
+
+### JSON Response
+
+Parameter | Required | Description
+--------- | -------- | -----------
+holding | true | Company/Asset name
+exposure | true | Number in percentage terms of the exposure of the fund to the asset.
 
 # Accounts
 
@@ -886,6 +951,44 @@ curl "http://surface.thesavvyapp.in/secure/accounts/<UUID>" \
 ### HTTP Request
 
 `GET http://surface.thesavvyapp.in/secure/accounts/<UUID>`
+
+# Bank configurations
+
+Before making lumpsum, SIP or mandate transactions, you may want to check whether which banks are available for which payment modes.
+
+## Bank configuration object
+
+Parameter | Description
+--------- | ----------- 
+ifsc_first_4 | `String` First 4 digits of the IFSC code
+debit_card_mandate_allowed | `Boolean`
+debit_card_mandate_maximum | `Integer`
+net_banking_mandate_allowed | `Boolean`
+net_banking_mandate_maximum | `Integer`
+upi_mandate_allowed | `Boolean`
+upi_mandate_maximum | `Integer`
+upi_lumpsum_allowed | `Boolean`
+upi_lumpsum_maximum | `Integer`
+net_banking_lumpsum_allowed | `Boolean`
+net_banking_lumpsum_maximum | `Integer`
+
+## Show bank configuration
+
+```shell
+curl "https://surface.thesavvyapp.in/secure/bank_configurations/<IFSC CODE>" \
+  -X GET \
+  -H "Authorization: Bearer <token>"
+```
+
+> The above command returns a single bank configuration object.
+
+### HTTP Request
+
+`GET https://surface.thesavvyapp.in/secure/bank_configurations/<IFSC CODE>`
+
+### URL Parameters
+
+The IFSC code must be appended on to the end of the URL.
 
 # Deposits
 
@@ -961,7 +1064,9 @@ curl "http://surface.thesavvyapp.in/secure/deposits/<UUID>" \
     "fund_code": "1234",
     "account_uuid": "aaaaa-bbbb-cccc-dddd",
     "onboarding_uuid": "aaaaa-bbbb-cccc-dddd",
-    "payment_redirect_url": "https://example.com/payment_redirect"
+    "payment_redirect_url": "https://example.com/payment_redirect",
+    "payment_mode": "upi",
+    "partner_transaction_id": "xxx-yyy"
   }
 }
 ```
@@ -993,6 +1098,7 @@ payment_redirect_url | true | `String` Where to direct the customer after paymen
 account_uuid | false | `String` If the deposit has to be created in an existing account.
 onboarding_uuid | false | `String` Mandatory if account uuid is not specified.
 partner_transaction_id | false | `String` Your custom ID to identify this transaction.
+payment_mode | false | `Enum: upi, internet_banking` By default, it is upi.
 
 ### JSON response
 
@@ -1011,14 +1117,21 @@ url | true | `String` URL to redirect the customer to for payment
   "account_uuid": "aaaaa-bbbb-cccc-dddd",
   "onboarding_uuid": "aaaaa-bbbb-cccc-dddd",
   "payment_redirect_url": "https://example.com/payment_redirect",
+  "payment_mode": "upi",
   "deposit_parts": [
     {
       "amount": "1000",
-      "fund_code": "1234"
+      "fund_code": "1234",
+      "amc_code": "IPRU",
+      "account_uuid": "aaaaa-bbbb-cccc-dddd",
+      "partner_transaction_id": "id",
     },
     {
       "amount": "100",
-      "fund_code": "xyz"
+      "fund_code": "xyz",
+      "amc_code": "IPRU",
+      "account_uuid": "aaaaa-bbbb-cccc-dddd",
+      "partner_transaction_id": "id",
     }
   ]}
 }
@@ -1048,8 +1161,8 @@ Parameter | Required | Description
 payment_redirect_url | true | `String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
 account_uuid | false | `String` If the deposit has to be created in an existing account.
 onboarding_uuid | false | `String` Mandatory if account uuid is not specified.
-partner_transaction_id | false | `String` Your custom ID to identify this transaction.
-deposit_parts | true | `Array` [amount, fund_code] to specify how much to invest in which funds
+payment_mode | false | `Enum: upi, internet_banking` By default, it is upi
+deposit_parts | true | `Array` [amount, fund_code, amc_code, account_uuid] to specify how much to invest in which funds
 
 ### JSON response
 
@@ -1246,11 +1359,13 @@ short_link | `URL string` This URL can be shared with the user to go to for tran
     },
     "deposits": [{
       "amount": 1000,
-      "mutual_fund_id": 10
+      "fund_code": "10",
+      "amc_code": "IPRU"
     },
     {
       "amount": 2000,
-      "mutual_fund_id": 20
+      "fund_code": "20",
+      "amc_code": "IPRU"
     }]
   }
 }
@@ -1279,7 +1394,7 @@ Parameter | Required | Description
 onboarding | false | `Object` Investor details
 account | false | `Object` Account details
 bank_account | false | `Object` Bank account details
-deposit | true | `Object` Transaction details
+deposits | true | `Object` Transaction details
 
 
 Onboarding
@@ -1315,7 +1430,8 @@ Deposits (Array)
 Parameter | Required | Description
 --------- | ------- | -----------
 amount | true | `Integer` Amount of the investment
-mutual_fund_id | true | `String` Fund ID
+fund_code | true | `String` Fund ID
+amc_code | true | `String` AMC code
 
 ## Create OCC (SIP)
 
@@ -1341,14 +1457,17 @@ mutual_fund_id | true | `String` Fund ID
     },
     "sips": [{
       "amount": 1000,
-      "mutual_fund_id": 10
+      "fund_code": "10",
+      "amc_code": "IPRU"
     },
     {
       "amount": 1000,
-      "mutual_fund_id": 10
+      "fund_code": "20",
+      "amc_code": "IPRU"
     }],
     "sip_day": 1,
-    "number_of_installments": 12
+    "frequency": "monthly",
+    "start_date": "25/12/2024"
   }
 }
 ```
@@ -1414,54 +1533,52 @@ SIPs (Array)
 Parameter | Required | Description
 --------- | ------- | -----------
 amount | true | `Integer` 
-mutual_fund_id | true | `String` Fund ID
-
-## Importing the SDK
-
-Get the SDK from our CDN: `https://cdn.savvyapp.in/lib/savvy.min.js`
-
-```html
-<script
-  defer="defer"
-  src="https://cdn.savvyapp.in/lib/savvy.min.js" />
-```
+fund_code | true | `String` Fund ID
+amc_code | true | `String` AMC code
 
 ## Using the SDK
 
 The SDK accepts a number of parameters, depending on what information is available to the merchant:
 
+Staging library: `https://cdn.savvyapp.in/lib/savvyJsStagingSDK.min.js`
+
+Production library: `https://cdn.savvyapp.in/lib/savvyJsSDK.min.js`
+
 ```html
+<script src="https://cdn.savvyapp.in/lib/savvyJsStagingSDK.min.js"></script>
 <script>
   function doPayment() {
-      let objectData = {
-        type: 'one-click-checkout',
-        token: 'id', // SDK key
-        one_click_checkout_id: 'uuid', // UUID from API response
-        onComplete: () => {
-          console.log("ON_COMPLETE_OCCURED");
-        },
-        onError: () => {
-          console.log("ON_ERROR_OCCURED");
-        },
-        onUserExit: () => {
-          console.log("ON_USER_EXITED");
-        },
-      };
-
-      SavvyInit.start({
-        user: {
-          firstName: "Ravin", // optional
-          lastName: "Pandu", // optional
-          phoneNumber: "+919600012345", // optional
-          email: "ravindran@balo.app", // optional
-        }
-      });
-    }
+    var config = {
+      isProduction: false, // If hitting UAT or production
+      uuid: "uuid", // UUID from generated link on dashboard OR from API
+      partnerAccessKey: "key", // Partner access key provided to you
+      type: "one_click_checkout",
+      amcCode: "",
+      partnerTransactionId: "", // Unique ID generated by partner
+      phoneNumber: "",
+      panNumber: "",
+      paymentSamePageRedirection: false,
+      redirectUrl: "",
+      onUserExit: (data) => {
+        console.log("ON_USER_EXITED");
+      },
+      onError: () => {
+        console.log("ON_ERROR_OCCURED");
+      },
+      onComplete: (data) => {
+        console.log("ON_COMPLETE_OCCURED");
+      },
+      onPaymentUrlReceived: (data) => {
+        console.log("ON_PAYMENT_URL_RECEIVED_OCCURED")
+      }
+    };
+    var savvySDK = new SavvySDK(config);
+    savvySDK.start();
   }
 </script>
-...
-
-<button onclick="doPayment()">Do Payment</button>
+<div>
+  <button onclick="doPayment()">Do Payment</button>
+</div>
 ```
 
 # Generic Checkout
@@ -1472,49 +1589,78 @@ While the previously mentioned one-click-checkout is for a specific user and is 
 
 Create a new generic link on the dashboard. Then, pass in the generated UUID to the SDK to start the journey.
 
-```html
-<script>
-  function startPayment() {
-      let objectData = {
-        type: 'generic_checkout',
-        token: 'id', // Partner access key provided to you
-        one_click_checkout_id: 'uuid', // UUID from generated link on dashboard
-        isProduction: false, // If hitting UAT or production
-        onComplete: () => {
-          console.log("ON_COMPLETE_OCCURED");
-        },
-        onError: () => {
-          console.log("ON_ERROR_OCCURED");
-        },
-        onUserExit: () => {
-          console.log("ON_USER_EXITED");
-        },
-      };
+Staging library: `https://cdn.savvyapp.in/lib/savvyJsStagingSDK.min.js`
 
-      Savvy.init({ ...objectData }).start({});
-    }
+Production library: `https://cdn.savvyapp.in/lib/savvyJsSDK.min.js`
+
+```html
+<script src="https://cdn.savvyapp.in/lib/savvyJsStagingSDK.min.js"></script>
+<script>
+  function doPayment() {
+    var config = {
+      isProduction: false, // If hitting UAT or production
+      uuid: "uuid", // UUID from generated link on dashboard
+      partnerAccessKey: "key", // Partner access key provided to you
+      type: "generic_checkout",
+      amcCode: "",
+      partnerTransactionId: "", // Unique ID generated by partner
+      phoneNumber: "",
+      panNumber: "",
+      paymentSamePageRedirection: "",
+      redirectUrl: "",
+      defaultMandateMax: 10000, // Default mandate maximum
+      defaultTransactionType: 'sip', // If you want to show SIP or lumpsum first
+      onUserExit: (data) => {
+        console.log("ON_USER_EXITED");
+      },
+      onError: () => {
+        console.log("ON_ERROR_OCCURED");
+      },
+      onComplete: (data) => {
+        console.log("ON_COMPLETE_OCCURED");
+      },
+      onPaymentUrlReceived: (data) => {
+        console.log("ON_PAYMENT_URL_RECEIVED_OCCURED")
+      }
+    };
+    var savvySDK = new SavvySDK(config);
+    savvySDK.start();
   }
 </script>
-<script
-  defer="defer"
-  src="https://cdn.savvyapp.in/lib/savvy.min.js"
-></script>
-...
-
-<button onclick="startPayment()">Start</button>
+<div>
+  <button onclick="doPayment()">Do Payment</button>
+</div>
 ```
 
 ## Generic Checkout SDK object
 
 Parameter | Required | Description
 --------- | -------- | ----------- 
-token | true | `String` Access key provided to the partner.
-type | true | `String` Type of checkout, in this case `generic_checkout`
-isProduction | true | `Boolean` Production request or not
-one_click_checkout_id | false | `Boolean` UUID of the generic checkout (name is confusing, this will change in a subsequent build :) ).
-onComplete(data) | true | `Function` Callback hook on completion of SIP setup.
-onUserExit | true | `Function` Callback hook if user exited before completion.
-onError | true | `Function` Callback hook in case of error with the transaction.
+partnerAccessKey | true | `String` Access key provided to the partner.
+type | true | `String` Type of checkout, in this case generic_checkout
+isProduction | true | Boolean Production request or not
+uuid | true | `String` UUID of the generic checkout.
+partnerTransactionId | false | `String` Unique ID of the partner. Gets put into the newly created onboarding.
+onComplete(data) | true | `Function()` Callback hook on completion of SIP setup.
+onUserExit | true | `Function()` Callback hook if user exited before completion.
+onError | true | `Function()` Callback hook in case of error with the transaction.
+phoneNumber | false | `String` Pass in the phone number if available
+panNumber | false | `String` Pass in the PAN number if available. IMPORTANT: Must be uppercase.
+paymentSamePageRedirection | false | Boolean In case you want to handle the payment flow. More on this below.
+redirectUrl | false | `String` If using paymentSamePageRedirection, then specify which URL the user should land on post success / failure of the payment.
+onPaymentUrlReceived | false | `Function(data)` Callback hook in case you would like to conduct the payment flow yourself. More on this below.
+defaultMandateMax | false | `Integer` Default maximum for the mandate. If not specified, the default is zero.
+defaultTransactionType
+
+## Payment flow
+
+You can choose to let the SDK handle the payment flow. However, in certain cases this becomes a problem. For example, a lot of iOS users may have pop-ups turned off. Since the SDK utilizes a pop-up new window to do the payment flow, this can cause issues. Therefore, you can choose to conduct the payment flow yourself. The process is as follow:
+
+1. Pass paymentSamePageRedirection as true, and specify a URL in redirectUrl.
+2. Listen for onPaymentUrlReceived. The data object will contain a param called url where you will have to redirect.
+3. Redirect the user to the url received in the above callback.
+4. The user will land on the redirect URL you specify. A few params will be included in the URL: status and reason. The status can either be success or failure. If it's a failure, then the reason will also be specified.
+5. You can handle showing the status of the payment to use user as you see fit.
 
 # Systematic Investment Plans
 
@@ -1661,6 +1807,409 @@ This API describes how to create a STP transaction, for periodic transfers from 
 ## STP Object
 
 Coming soon!
+
+# Transaction only APIs
+
+In certain cases, you may be using your own payment and onboarding infrastructure, and want to use the Savvy APIs only for as a backoffice. This is possible using the below APIs.
+
+## Deposit basket transaction
+
+<div class="mermaid">
+  graph TD;
+  create_deposit_basket(Create deposit basket txn)-->read_api_response(Check for validation failures)
+  read_api_response-- Failure -->create_deposit_basket;
+  read_api_response-- Success-->payment_otp(Perform payment / OTP at your end);
+  payment_otp-- Success-->callback(Call confirmation API);
+  callback-- New onboarding-->listen_account(Listen for new account/folio creation webhook);
+  callback-- Existing accounts-->listen_deposit(Listen for deposits status update webhook);
+  listen_account-->listen_deposit
+</div>
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/secure/transactions/deposit_basket`
+
+### Parameters
+
+```json
+  {
+    "onboarding": {
+      "existing_investor": true,
+      "date_of_birth": "01/01/2000",
+      "pan_number": "ABCDE1234C",
+      "name": "John Smith",
+      "phone_number": "9999988888",
+      "email": "v@gmail.com",
+      "address": "123",
+      "city": "Chand",
+      "pincode": "160019",
+      "occupation": "student",
+      "fatca": {
+        "fatca_occupation": "07",
+        "fatca_address_type": "02",
+        "fatca_birth_country_code": "IN",
+        "fatca_tax_country_code": "IN",
+        "fatca_source_wealth": "01",
+        "fatca_gross_income": "32"
+      }
+    },
+    "nominees": [
+      {
+        "name": "Johnny",
+        "dob": "12/1/1999",
+        "percentage": "50"
+      },
+      {
+        "name": "Depp",
+        "dob": "12/1/1999",
+        "percentage": "50"
+      }
+    ],
+    "bank_account": {
+      "account_number": "123456789",
+      "ifsc_code": "HDFC0000873",
+      "bank_name": "HDFC"
+    },
+    "deposit": {
+      "amount": 5000,
+      "payment_mode": "bank_transfer",
+      "deposit_parts": [
+        {
+          "amount": 5000,
+          "isin": "INF846K018C3",
+          "amc_code": "AXIS",
+          "partner_transaction_id": "12345"
+        }
+      ]
+    }
+  }
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/transactions/deposit_basket" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body '{"onboarding": {"existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "Vidur Malik", "phone_number": "9779136464", "email": "v.malik1991@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student"}, "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "deposit": {"amount": 5000, "payment_mode": "bank_transfer", "deposit_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'
+```
+
+<aside class="notice">
+Either an onboarding object is required, or the `account_uuid` is required in <b>all</b> the deposit parts.
+</aside>
+
+Parameter | Required | Description
+--------- | ------- | -----------
+onboarding | false | `Object` Onboarding information of the investor. Required only when the account is not present.
+deposit | true | `Object` Information about the purchase being made by the investor
+bank_account | false | `Object` Bank account information of the investor. Required only when the account is not present.
+nominees | false | `Array` List of max 3 nominees for the onboarding. Required only when the account is not present.
+
+Onboarding:
+
+Parameter | Required | Description
+--------- | ------- | -----------
+pan_number | true | `String` Pan number of the investor.
+existing_investor | true | `Boolean` This must always be `true` since the onboarding is done at investors' end.
+name | true | `String` Full name of customer as extracted from the KRA.
+phone_number | true | `String` Phone number of the customer.
+email | true | `String` Email of the customer.
+city | true | `String` Residential city of the customer.
+address | true | `String` Street address of the customer.
+pincode | true | `String` Address pincode of the customer.
+occupation | true | `Enum` Refer to valid occupation in the Enum section below.
+date_of_birth | true | `Date string` DOB of customer in DD/MM/YYYY format.
+fatca | false | `Object` The FATCA object must be submitted in case it's a new customer.
+
+FATCA:
+
+Parameter | Required | Description
+--------- | ------- | -----------
+fatca_occupation | true | `Enum string` FATCA -- occupation code.
+fatca_address_type | true | `Enum string` FATCA -- address type code.
+fatca_birth_country_code | true | `Enum string` FATCA -- Country code where investor was born.
+fatca_tax_country_code | true | `Enum string` FATCA -- Primary country code where investor is taxed.
+fatca_source_wealth | true | `Enum string` FATCA -- Source of wealth code.
+fatca_gross_income | true | `Enum string` FATCA -- Gross income code.
+
+Bank Account (All payments must come from this bank account):
+
+Parameter | Required | Description
+--------- | ------- | -----------
+account_number | true | `String` Payment bank account number of the investor.
+ifsc_code | true | `Boolean` IFSC code of this bank account.
+bank_name | true | `String` Bank name of the investor.
+
+Nominees (Array, max length 3):
+
+Parameter | Required | Description
+--------- | ------- | -----------
+name | true | `String` Name of nominee.
+email | false | `String` Email of nominee.
+phone_number | false | `String` Phone number of nominee.
+pan | false | `String` PAN of nominee.
+address | false | `String` Address of nominee.
+city | false | `String` City of nominee
+relationship | false | `String` Nominee's relationship with the investor.
+dob | true | `Date string` DOB of nominee in DD/MM/YYYY format.
+percentage | true | `String` The percentage of proceeds per nominee.
+guardian_name | false | `String` In case nominee is below 18, the Gaurdian's name (required).
+guardian_address | false | `String` In case nominee is below 18, the Gaurdian's address (required).
+guardian_pan | false | `String` In case nominee is below 18, the Gaurdian's PAN (required).
+guardian_phone_number | false | `String` In case nominee is below 18, the Gaurdian's phone number (not strictly required).
+guardian_relationship | false | `String` In case nominee is below 18, the Gaurdian's relationship (not strictly required).
+
+Deposit:
+
+Parameter | Required | Description
+--------- | ------- | -----------
+amount | true | `Integer` Total purchase amount.
+payment_mode | true | `String` Pass `bank_transfer`.
+deposit_parts | true | `Array` Details of the basket.
+
+Deposit parts:
+
+Parameter | Required | Description
+--------- | ------- | -----------
+amount | true | Amount of the individual part.
+fund_code | false | Fund code as fetched from the Funds API. Required if ISIN is not present.
+isin | false | ISIN of the fund. Required if fund code is not present.
+amc_code | true | Code of the AMC
+account_uuid | false | UUID of an existing folio if present.
+partner_transaction_id | true | Tracking ID at customers' end.
+
+## SIP basket transaction
+
+<div class="mermaid">
+  graph TD;
+  create_sip_basket(Create sip basket txn)-->read_api_response(Check for validation failures)
+  read_api_response-- Failure -->create_sip_basket;
+  read_api_response-- Success-->payment_otp(Perform OTP & mandate at your end);
+  payment_otp-- Success-->callback(Call confirmation API);
+  callback-->listen_sip_deposit(Listen for new deposit creation for SIP trigger);
+  listen_sip_deposit-- New onboarding-->listen_account(Listen for new account/folio creation webhook);
+  listen_sip_deposit-- Existing accounts-->listen_deposit(Listen for deposits status update webhook);
+  listen_account-->listen_deposit
+</div>
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/secure/transactions/sip_basket`
+
+### Parameters
+
+```json
+  {
+    "onboarding": {
+      "existing_investor": true,
+      "date_of_birth": "01/01/2000",
+      "pan_number": "ABCDE1234C",
+      "name": "John Smith",
+      "phone_number": "9999988888",
+      "email": "v@gmail.com",
+      "address": "123",
+      "city": "Chand",
+      "pincode": "160019",
+      "occupation": "student",
+      "fatca": {
+        "fatca_occupation": "07",
+        "fatca_address_type": "02",
+        "fatca_birth_country_code": "IN",
+        "fatca_tax_country_code": "IN",
+        "fatca_source_wealth": "01",
+        "fatca_gross_income": "32"
+      }
+    },
+    "nominees": [
+      {
+        "name": "Johnny",
+        "dob": "12/1/1999",
+        "percentage": "50"
+      },
+      {
+        "name": "Depp",
+        "dob": "12/1/1999",
+        "percentage": "50"
+      }
+    ],
+    "bank_account": {
+      "account_number": "123456789",
+      "ifsc_code": "HDFC0000873",
+      "bank_name": "HDFC"
+    },
+    "sip": {
+      "amount": 5000,
+      "start_date": "12/12/2024",
+      "end_date": "12/12/2026",
+      "frequency": "monthly",
+      "sip_day": 10,
+      "sip_parts": [
+        {
+          "amount": 5000,
+          "isin": "INF846K018C3",
+          "amc_code": "AXIS",
+          "partner_transaction_id": "12345"
+        }
+      ]
+    }
+  }
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/transactions/sip_basket" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body '{"onboarding": {"existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "Vidur Malik", "phone_number": "9779136464", "email": "v.malik1991@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student"}, "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "deposit": {"amount": 5000, "payment_mode": "bank_transfer", "deposit_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'
+```
+
+<aside class="notice">
+Either an onboarding object is required, or the `account_uuid` is required in <b>all</b> the sip parts.
+</aside>
+
+Parameter | Required | Description
+--------- | ------- | -----------
+onboarding | false | `Object` Onboarding information of the investor. Required only when the account is not present.
+sip | true | `Object` Information about the purchase being made by the investor
+bank_account | false | `Object` Bank account information of the investor. Required only when the account is not present.
+nominees | false | `Array` List of max 3 nominees for the onboarding. Required only when the account is not present.
+
+Onboarding (same as deposit basket above)
+
+FATCA (same as deposit basket above)
+
+Bank Account (same as deposit basket above)
+
+Nominees (same as deposit basket above)
+
+SIP:
+
+Parameter | Required | Description
+--------- | ------- | -----------
+amount | true | `Integer` Total SIP amount.
+start_date | true | `Date string` Start date of the SIP in DD/MM/YYYY format. Must be at least 2 business days from today
+end_date | false | `Date string` If provided, the SIP will end on this date. If not provided, the SIP will continue indefinitely
+frequency | true | `Enum (monthly, weekly, daily)` Frequency of the SIP.
+sip_day | false | `Integer` Required in cases of monthly and weekly SIPs. For monthly, 1-30; for weekly 0-6.
+sip_parts | true | `Array` Details of the basket.
+
+SIP parts:
+
+Parameter | Required | Description
+--------- | ------- | -----------
+amount | true | Amount of the individual part.
+fund_code | false | Fund code as fetched from the Funds API. Required if ISIN is not present.
+isin | false | ISIN of the fund. Required if fund code is not present.
+amc_code | true | Code of the AMC
+account_uuid | false | UUID of an existing folio if present.
+partner_transaction_id | true | Tracking ID at customers' end.
+
+## Withdrawal basket transaction
+
+<div class="mermaid">
+  graph TD;
+  create_withdrawal_basket(Create withdrawal basket txn)-->read_api_response(Check for validation failures)
+  read_api_response-- Failure -->create_withdrawal_basket;
+  read_api_response-- Success-->payment_otp(Perform OTP at your end);
+  payment_otp-- Success-->callback(Call confirmation API);
+  callback-->listen_withdrawal(Listen for withdrawal status update webhook);
+</div>
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/secure/transactions/withdrawal_basket`
+
+### Parameters
+
+```json
+  {
+    "withdrawal": {
+      "withdrawal_parts": [
+        {
+          "amount": 5000,
+          "isin": "INF846K018C3",
+          "amc_code": "AXIS",
+          "account_uuid": "xxx-yyy",
+          "partner_transaction_id": "12345"
+        }
+      ]
+    }
+  }
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/transactions/sip_basket" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body '{"onboarding": {"existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "Vidur Malik", "phone_number": "9779136464", "email": "v.malik1991@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student"}, "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "deposit": {"amount": 5000, "payment_mode": "bank_transfer", "deposit_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'
+```
+
+<aside class="notice">
+The `account_uuid` is required in <b>all</b> the withdrawal parts.
+</aside>
+
+Parameter | Required | Description
+--------- | ------- | -----------
+withdrawal -> withdrawal_parts | true | `Array` Information about the purchase being made by the investor
+
+Withdrawal parts:
+
+Parameter | Required | Description
+--------- | ------- | -----------
+amount | true | Amount of the individual part.
+fund_code | false | Fund code as fetched from the Funds API. Required if ISIN is not present.
+isin | false | ISIN of the fund. Required if fund code is not present.
+amc_code | true | Code of the AMC
+account_uuid | true | UUID of the account being withdrawn from.
+partner_transaction_id | true | Tracking ID at customers' end.
+
+## Confirmation
+
+Post submitting the above transactions, we need to record settlement IDs and timestamps to make sure units are allocated to investors. This API should only be called once OTPs are recorded and payment is made.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/secure/transactions/<BASKET_ID>/confirmed`
+
+The basket ID is returned in the response from each of the transaction basket APIs
+
+### Parameters
+
+```json
+  {
+    "transaction_type": "deposit",
+    "settlement_id": "XYZ-123",
+    "user_completed_payment_at": "12/12/2024 16:00:00",
+    "transferred_to_amc_at": "12/12/2024 23:00:00"
+  }
+```
+
+```json
+  {
+    "transaction_type": "sip",
+    "user_completed_mandate_at": "12/12/2024 16:00:00"
+  }
+```
+
+```json
+  {
+    "transaction_type": "withdrawal",
+    "user_completed_withdrawal_otp_at": "12/12/2024 16:00:00"
+  }
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/transactions/sip_basket" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body '{"onboarding": {"existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "Vidur Malik", "phone_number": "9779136464", "email": "v.malik1991@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student"}, "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "deposit": {"amount": 5000, "payment_mode": "bank_transfer", "deposit_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'
+```
+
+Parameter | Required | Description
+--------- | ------- | -----------
+transaction_type | true | `Enum (deposit, sip, withdrawal)` Transaction type
+settlement_id | false | `String` Required for lumpsums. The ID obtained post settling into the AMC account.
+user_completed_payment_at | false | `Date string` Required for lumpsums. This timestamp is when the investor confirmed the payment,
+transferred_to_amc_at | false | `Date string` Required for lumpsums. This timestamp is when the funds were settled into the AMC account.
+user_completed_mandate_at | false | `Date string` Required for SIPs. This records the timestamp when the investor completed the auto pay setup,
+user_completed_withdrawal_otp_at | false | `Date string` Required for withdrawals. This records the timestamp when the investor confirmed the withdrawal request.
 
 # Save Now, Buy Later (SNBL)
 
@@ -1820,10 +2369,75 @@ signature | `String` SHA265 signature of the JSON payload.
 
 Event | Description
 --------- | ----------- 
-`deposit.created` | Sent when a deposit is created
+`onboardings.create` | Sent when a new onboarding is created.
+`onboardings.update` | Sent when an onboarding is updated (when KYC status changes).
+`accounts.create` | Sent when an account (folio) is created.
+`deposits.create` | Sent when a deposit is created.
 `deposit.status.updated` | Sent when a deposit status is updated. Use this for tracking success / failure of deposit transactions.
-`withdrawal.created` | Sent when a withdrawal is created
-`withdrawal.status.updated` | Sent when a withdrawal status is updated. Use this for tracking success / failure of withdrawal transactions.
+`withdrawals.create` | Sent when a withdrawal is created.
+`withdrawals.updated` | Sent when a withdrawal status is updated. Use this for tracking success / failure of withdrawal transactions.
+`mandates.create` | Sent when a mandate is created.
+`mandates.updated` | Sent when a mandate is updated. Use this for tracking success / failure of mandates.
+
+## Webhook structures
+
+### Onboardings
+
+Parameter | Description
+--------- | ----------- 
+partner_transaction_id | `String` Customer provided ID
+uuid | `String` UUID of the onboarding
+amc_code | `String` Code of the AMC
+existing_investor | `Boolean` Whether existing investor or not
+full_kyc_status | `String` KYC status once submitted
+signzy_kyc_status_description | `String` Failure reason in case KYC was rejected
+esign_success | `Boolean` Esign was success or not
+esign_error | `String` Error during e-signing
+
+### Accounts
+
+Parameter | Description
+--------- | ----------- 
+onboarding_uuid | `String` UUID of associated onboarding
+uuid | `String` UUID of the account
+amc_code | `String` AMC this account is tagged to
+folio_number | `String` Folio number issued by the AMC
+
+### Deposits
+
+Parameter | Description
+--------- | ----------- 
+onboarding_uuid | `String` UUID of associated onboarding.
+account_uuid | `String` UUID of associated account.
+uuid | `String` UUID of deposit.
+amount | `Integer` Amount of the deposit
+units | `Decimal` Units allocated
+stamp_duty | `Decimal` Stamp duty / TDS deducted from the amount originally invested 
+fund | `Object` Refer to funds section for the whole fund object 
+status | `Enum (created, submitted_to_sip_pg, payment_made, submitted_to_rta, completed, error)` The status of the deposit
+status_description | `String` In case of failure, the reason for the same
+sip_uuid | `String` In case the deposit is tagged to an SIP, the UUID of the SIP.
+
+### Withdrawals
+
+Parameter | Description
+--------- | ----------- 
+uuid | `String` UUID of withdrawal
+account_uuid | `String` UUID of the associated account
+fund | `Object` Refer to funds section for the whole fund object
+amount | `Integer` Amount of the withdrawal
+units | `Decimal` Units withdrawn
+status | `Enum (created, otp_complete, submitted_to_rta, completed, error)` Status of the withdrawal
+status_description | `String` Description in case the withdrawal failed
+
+### Mandates
+
+Parameter | Description
+--------- | ----------- 
+uuid | `String` UUID of mandate
+bank_account_number | `String` Bank account number linked to mandate
+amount | `Integer` Amount of the mandate
+status | `Enum(pending, completed, error, cancelled, expired)` Status of the mandate
 
 ## Webhook authentication
 
@@ -1844,7 +2458,7 @@ Code | Description
 33 | 5-10 Lacs
 34 | 10-25 Lacs
 35 | 25 Lacs-1 crore
-36 | 1 crore
+36 | Above 1 crore
 
 ## Gender Codes
 
@@ -1877,6 +2491,324 @@ Code | Description
 MARRIED | Married
 UNMARRIED | Unmarried
 OTHERS | Others
+
+## FATCA + Full KYC Address Types
+
+Code | Description
+--------- | -----------
+01 |  Residential or Business
+02 | Residential
+03 |  Business
+04 |  Registered Office
+
+## Application status codes and description
+
+Code | Description
+--------- | -----------
+R | Resident Indian
+N | Non-Resident Indian
+P | Foreign National
+I | Person of Indian Origin
+
+## FATCA Gross Income codes
+
+Code | Description
+--------- | -----------
+31 | Below 1 Lakh
+32 | > 1 <=5 Lacs
+33 | >5 <=10 Lacs
+34 | >10 <= 25 Lacs
+35 | > 25 Lacs < = 1 Crore
+36 | Above 1 Crore
+
+## FATCA Occupations
+
+Description | Code
+--------- | -----------
+Business | 01
+Service | 02
+Professional | 03
+Agriculturist | 04
+Retired | 05
+Housewife | 06
+Student | 07
+Others | 08
+Doctor | 09
+Private Sector Service | 41
+Public Sector Service | 42
+Forex Dealer | 43
+Government Service | 44
+Unknown / Not Applicable | 99
+
+## FATCA Sources of Wealth
+
+Code | Description
+--------- | -----------
+01 |  Salary
+02 |  Business
+03 |  Gift
+04 |  Ancestral Property
+05 |  Rental Income
+06 |  Prize Money
+07 |  Royalty
+08 |  Others
+
+## FATCA country codes
+
+Code | Description
+--------- | -----------
+AF |  Afghanistan
+AX |  Aland Islands
+AL |  Albania
+DZ |  Algeria
+AS |  American Samoa
+AD |  Andorra
+AO |  Angola
+AI |  Anguilla
+AQ |  Antarctica
+AG |  Antigua And Barbuda
+AR |  Argentina
+AM |  Armenia
+AW |  Aruba
+AU |  Australia
+AT |  Austria
+AZ |  Azerbaijan
+BS |  Bahamas
+BH |  Bahrain
+BD |  Bangladesh
+BB |  Barbados
+BY |  Belarus
+BE |  Belgium
+BZ |  Belize
+BJ |  Benin
+BM |  Bermuda
+BT |  Bhutan
+BO |  Bolivia
+BQ |  Bonaire, Sint Eustatius And Saba
+BA |  Bosnia And Herzegovina
+BW |  Botswana
+BV |  Bouvet Island
+BR |  Brazil
+IO |  British Indian Ocean Territory
+BN |  Brunei Darussalam
+BG |  Bulgaria
+BF |  Burkina Faso
+BI |  Burundi
+KH |  Cambodia
+CM |  Cameroon
+CA |  Canada
+CV |  Cape Verde
+KY |  Cayman Islands
+CF |  Central African Republic
+TD |  Chad
+CL |  Chile
+CN |  China
+CX |  Christmas Island
+CC |  Cocos (Keeling) Islands
+CO |  Colombia
+KM |  Comoros
+CG |  Congo
+CD |  Congo, The Democratic Republic Of The
+CK |  Cook Islands
+CR |  Costa Rica
+CI |  Cote D'Ivoire
+HR |  Croatia
+CU |  Cuba
+CW |  Curacao
+CY |  Cyprus
+CZ |  Czech Republic
+DK |  Denmark
+DJ |  Djibouti
+DM |  Dominica
+DO |  Dominican Republic
+EC |  Ecuador
+EG |  Egypt
+SV |  El Salvador
+GQ |  Equatorial Guinea
+ER |  Eritrea
+EE |  Estonia
+ET |  Ethiopia
+FK |  Falkland Islands (Malvinas)
+FO |  Faroe Islands
+FJ |  Fiji
+FI |  Finland
+FR |  France
+GF |  French Guiana
+PF |  French Polynesia
+TF |  French Southern Territories
+GA |  Gabon
+GM |  Gambia
+GE |  Georgia
+DE |  Germany
+GH |  Ghana
+GI |  Gibraltar
+GR |  Greece
+GL |  Greenland
+GD |  Grenada
+GP |  Guadeloupe
+GU |  Guam
+GT |  Guatemala
+GG |  Guernsey
+GN |  Guinea
+GW |  Guinea-Bissau
+GY |  Guyana
+HT |  Haiti
+HM |  Heard Island And Mcdonald Islands
+HN |  Honduras
+HK |  Hong Kong
+HU |  Hungary
+IS |  Iceland
+IN |  India
+ID |  Indonesia
+IR |  Iran, Islamic Republic Of
+IQ |  Iraq
+IE |  Ireland
+IM |  Isle Of Man
+IL |  Israel
+IT |  Italy
+JM |  Jamaica
+JP |  Japan
+JE |  Jersey
+JO |  Jordan
+KZ |  Kazakhstan
+KE |  Kenya
+KI |  Kiribati
+KP |  Korea, Democratic People's Republic Of
+KR |  Korea, Republic Of
+KW |  Kuwait
+KG |  Kyrgyzstan
+LA |  Lao People's Democratic Republic
+LV |  Latvia
+LB |  Lebanon
+LS |  Lesotho
+LR |  Liberia
+LY |  Libyan Arab Jamahiriya
+LI |  Liechtenstein
+LT |  Lithuania
+LU |  Luxembourg
+MO |  Macao
+MK |  Macedonia, The Former Yugoslav Republic Of
+MG |  Madagascar
+MW |  Malawi
+MY |  Malaysia
+MV |  Maldives
+ML |  Mali
+MT |  Malta
+MH |  Marshall Islands
+MQ |  Martinique
+MR |  Mauritania
+MU |  Mauritius
+YT |  Mayotte
+MX |  Mexico
+FM |  Micronesia, Federated States Of
+MD |  Moldova, Republic Of
+MC |  Monaco
+MN |  Mongolia
+ME |  Montenegro
+MS |  Montserrat
+MA |  Morocco
+MZ |  Mozambique
+MM |  Myanmar
+NA |  Namibia
+NR |  Nauru
+NP |  Nepal
+NL |  Netherlands
+AN |  Netherlands Antilles
+NC |  New Caledonia
+NZ |  New Zealand
+NI |  Nicaragua
+NE |  Niger
+NG |  Nigeria
+NU |  Niue
+NF |  Norfolk Island
+MP |  Northern Mariana Islands
+NO |  Norway
+XX |  Not categorised
+OM |  Oman
+ZZ |  Others
+PK |  Pakistan
+PW |  Palau
+PS |  Palestinian Territory, Occupied
+PA |  Panama
+PG |  Papua New Guinea
+PY |  Paraguay
+PE |  Peru
+PH |  Philippines
+PN |  Pitcairn
+PL |  Poland
+PT |  Portugal
+PR |  Puerto Rico
+QA |  Qatar
+RE |  Reunion Island
+RO |  Romania
+RU |  Russian Federation
+RW |  Rwanda
+BL |  Saint Barthelemy
+SH |  Saint Helena, Ascension And Tristan da Cunha
+KN |  Saint Kitts And Nevis
+LC |  Saint Lucia
+MF |  Saint Martin
+PM |  Saint Pierre And Miquelon
+VC |  Saint Vincent And The Grenadines
+WS |  Samoa
+SM |  San Marino
+ST |  Sao Tome And Principe
+SA |  Saudi Arabia
+SN |  Senegal
+RS |  Serbia
+SC |  Seychelles
+SL |  Sierra Leone
+SG |  Singapore
+SX |  Sint Maarten (Dutch Part)
+SK |  Slovakia
+SI |  Slovenia
+SB |  Solomon Islands
+SO |  Somalia
+ZA |  South Africa
+GS |  South Georgia And The South Sandwich Islands
+SS |  South Sudan
+ES |  Spain
+LK |  Sri Lanka
+SD |  Sudan
+SR |  Suriname
+SJ |  Svalbard And Jan Mayen Islands
+SZ |  Swaziland
+SE |  Sweden
+CH |  Switzerland
+SY |  Syrian Arab Republic
+TW |  Taiwan, Province Of China
+TJ |  Tajikistan
+TZ |  Tanzania, United Republic Of
+TH |  Thailand
+TL |  Timor-Leste
+TG |  Togo
+TK |  Tokelau
+TO |  Tonga
+TT |  Trinidad And Tobago
+TN |  Tunisia
+TR |  Turkey
+TM |  Turkmenistan
+TC |  Turks And Caicos Islands
+TV |  Tuvalu
+UG |  Uganda
+UA |  Ukraine
+AE |  United Arab Emirates
+GB |  United Kingdom
+US |  United States
+UM |  United States Minor Outlying Islands
+UY |  Uruguay
+UZ |  Uzbekistan
+VU |  Vanuatu
+VA |  Vatican City State
+VE |  Venezuela, Bolivarian Republic Of
+VN |  Viet Nam
+VG |  Virgin Islands, British
+VI |  Virgin Islands, U.S.
+WF |  Wallis And Futuna
+EH |  Western Sahara
+YE |  Yemen
+ZM |  Zambia
+ZW |  Zimbabwe
 
 ## Country Codes
 
