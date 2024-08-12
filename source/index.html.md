@@ -1007,6 +1007,7 @@ The deposits API describes how to create a mutual fund purchase transaction. Thi
 Parameter | Description
 --------- | ----------- 
 uuid | `String` Unique identifier of the deposit.
+request_id | `String` Unique system generated ID.
 fund_code | `String` Code of the fund invested in.
 fund_name | `String` Name of the fund invested in.
 amount | `Integer` Original amount of the investment.
@@ -1015,12 +1016,14 @@ units | `Decimal` Units allocated for the investment.
 status | `Enum: created, payment_made, submitted_to_rta, completed, error` Status of the investment.
 status_description | `String` Reason in case of failure / rejections.
 reinvest_mode | `Enum: payout: 'N', reinvestment: 'Y', growth: 'Z', bonus: 'B'` What should happen with any dividend that is paid out.
+payment_link | `URL String` Link to payment gateway.
+payment_gateway | `String` The gateway being used for this transaction.
 partner_transaction_id | `String` Your ID associated with the transaction.
 user_completed_payment_at | `Datetime` Time at which payment was completed by the user.
 transferred_to_amc_at | `Datetime` Time at which the payment was transferred to the AMC.
-created_at | `Datetime` Time at which the deposit was created.  
-sip_uuid | `String` Identifier of the SIP that the deposit is part of.
-stp_uuid | `String` Identifier of the STP that the deposit is part of
+created_at | `Datetime` Time at which the deposit was created.
+basket_transaction_id | `String` Identifier of the basket that the deposit is part of.
+rta_unique_transaction_id | `String` Identifier as reported to the RTA.
 
 ## Get deposits
 
@@ -1189,7 +1192,6 @@ The withdrawals API describes how to create a mutual fund redemption transaction
 Parameter | Description
 --------- | ----------- 
 uuid | `String` Unique identifier of the withdrawal.
-account_uuid | `String` Account which the withdrawal is part of. 
 fund_code | `String` Code of the fund invested in.
 fund_name | `String` Name of the fund invested in.
 amount | `Integer` Amount to be withdrawn.
@@ -1197,9 +1199,8 @@ units | `Decimal` Units withdrawn for the transaction.
 status | `Enum: created, otp_complete, submitted_to_rta, completed, error` Status of the withdrawal.
 status_description | `String` Reason in case of failure / rejections.
 partner_transaction_id | `String` Your ID associated with the transaction.
-created_at | `Datetime` Time at which the withdrawal was created.  
-swp_uuid | `String` Identifier of the SIP that the withdrawal is part of.
-stp_uuid | `String` Identifier of the STP that the withdrawal is part of
+created_at | `Datetime` Time at which the withdrawal was created.
+basket_transaction_id | `String` Basket to which this withdrawal belongs.
 
 ## Get withdrawals
 
@@ -1681,17 +1682,18 @@ This API describes how to create a SIP transaction. This API can only be accesse
 Parameter | Description
 --------- | ----------- 
 uuid | `String` Unique identifier of the withdrawal.
-account_uuid | `String` Account which the SIP is part of.
-fund_code | `String` Code of the fund invested in.
-fund_name | `String` Name of the fund invested in.
+fund | `Object<Fund>` Fund that the SIP is investing in.
 start_date | `Date` Start date of the SIP.
 end_date | `Date` End date of the SIP.
 frequency | `Enum: monthly, weekly, daily, ad-hoc` Frequency of debits
 amount | `Integer` Amount to be deposited at each installment.
+mandate_status | `String` Status of the associated mandate.
+mandate_gateway | `String` Mandate gateway to be used for the SIP.
 payment_link | `String` **Only applicable for create API** URL to which to take the user for mandate checkout.
-mandate_redirect_url | `String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
+deposits | `Array<Deposit>` Array of deposits associated with the SIP.
 active | `Boolean` Whether the SIP is actively debiting.
 partner_transaction_id | `String` Your ID associated with the transaction.
+basket_transaction_id | `String` Identifier of the basket that the SIP is part of.
 created_at | `Datetime` Time at which the SIP was created.
 
 ## Get sips
@@ -1976,6 +1978,14 @@ amc_code | true | Code of the AMC
 account_uuid | false | UUID of an existing folio if present.
 partner_transaction_id | true | Tracking ID at customers' end.
 
+### JSON Response
+
+Parameter | Description
+--------- | -----------
+deposits | `Array<Deposit>` Refer to [Deposit object](#deposit-object) above for all parameters.
+
+Extract the `basket_transaction_id` to use with the confirmation API
+
 ## SIP basket transaction
 
 <div class="mermaid">
@@ -2057,7 +2067,7 @@ partner_transaction_id | true | Tracking ID at customers' end.
 curl "http://surface.thesavvyapp.in/transactions/sip_basket" \
   -X POST \
   -H "Authorization: Bearer <token>" \
-  -d body '{"onboarding": {"existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "Vidur Malik", "phone_number": "9779136464", "email": "v.malik1991@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student"}, "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "deposit": {"amount": 5000, "payment_mode": "bank_transfer", "deposit_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'
+  -d body '{"onboarding": { "existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "John Smith", "phone_number": "9999988888", "email": "v@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student", "fatca": { "fatca_occupation": "07", "fatca_address_type": "02", "fatca_birth_country_code": "IN", "fatca_tax_country_code": "IN", "fatca_source_wealth": "01", "fatca_gross_income": "32"}}, "nominees": [{"name": "Johnny", "dob": "12/1/1999", "percentage": "50"}, {"name": "Depp", "dob": "12/1/1999", "percentage": "50"}], "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "sip": {"amount": 5000, "start_date": "12/12/2024", "end_date": "12/12/2026", "frequency": "monthly", "sip_day": 10, "sip_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'
 ```
 
 <aside class="notice">
@@ -2101,6 +2111,14 @@ amc_code | true | Code of the AMC
 account_uuid | false | UUID of an existing folio if present.
 partner_transaction_id | true | Tracking ID at customers' end.
 
+### JSON Response
+
+Parameter | Description
+--------- | -----------
+sips | `Array<SIP>` Refer to [SIP object](#sip-object) above for all parameters.
+
+Extract the `basket_transaction_id` to use with the confirmation API
+
 ## Withdrawal basket transaction
 
 <div class="mermaid">
@@ -2135,10 +2153,10 @@ partner_transaction_id | true | Tracking ID at customers' end.
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/transactions/sip_basket" \
+curl "http://surface.thesavvyapp.in/transactions/withdrawal_basket" \
   -X POST \
   -H "Authorization: Bearer <token>" \
-  -d body '{"onboarding": {"existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "Vidur Malik", "phone_number": "9779136464", "email": "v.malik1991@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student"}, "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "deposit": {"amount": 5000, "payment_mode": "bank_transfer", "deposit_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'
+  -d body '{"withdrawal": {"withdrawal_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "account_uuid": "xxx-yyy", "partner_transaction_id": "12345"}]}}'
 ```
 
 <aside class="notice">
@@ -2159,6 +2177,14 @@ isin | false | ISIN of the fund. Required if fund code is not present.
 amc_code | true | Code of the AMC
 account_uuid | true | UUID of the account being withdrawn from.
 partner_transaction_id | true | Tracking ID at customers' end.
+
+### JSON Response
+
+Parameter | Description
+--------- | -----------
+withdrawals | `Array<Withdrawal>` Refer to [Withdrawal object](#withdrawal-object) above for all parameters.
+
+Extract the `basket_transaction_id` to use with the confirmation API
 
 ## Confirmation
 
