@@ -2368,6 +2368,207 @@ To improve the user experience in terms of fund selection, we offer a risk profi
 
 We offer aggregated reports accross multiple categories for easy reconciliation and customer viewing.
 
+## CAS (Common Account Statement)
+
+This report allows you to fetch a consolidated report across AMCs. Fetching is a multi-step process, as detailed below. Note that ONLY folios with the phone number / email the OTP is sent to will be returned. The request is email / phone number based, not PAN based.
+
+<div class="mermaid">
+  graph TD;
+  create_cas_request(Call CAS request API to initiate)-- Success-->otp_sent(OTP is sent to the investor on email/mobile)
+  otp_sent-->verify_otp(Call CAS verify OTP with investor entered OTP);
+  verify_otp-- Success-->call_cas(Call CAS API to fetch the report. RTAs take time, so poll this API);
+  call_cas-->call_cas
+</div>
+
+## Initiate CAS
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/secure/reports/cas_request`
+
+### Parameters
+
+```json
+  {
+    "pan_number": "XXXXXXXX",
+    "email": "v@gmail.com",
+    "phone_number": "99999999999"
+  }
+```
+
+```shell
+curl -XPOST "http://surface.thesavvyapp.in/secure/reports/cas_request" -H "Content-Type: application/json" -d '{"pan_number": "XXXXXXXXXX", "phone_number": "9876543210"}'
+```
+
+Parameter | Required | Description
+--------- | ------- | -----------
+pan_number | true | `String` PAN of the investor.
+email | false | `String` Email of the investor. Either email is required or the phone number, not both.
+phone_number | false | `String` Phone number of the investor. Either email is required or the phone number, not both.
+
+### JSON Response
+
+Parameter | Description
+--------- | -----------
+request_id | `String` Unique request ID for the fetch.
+otp_reference_id | `String` Uniquely identifies the OTP sent.
+
+## CAS OTP Verification
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/secure/reports/<REQUEST_ID>/validate_cas_otp`
+
+### Parameters
+
+```json
+  {
+    "otp": "123456"
+  }
+```
+
+```shell
+curl -XPOST "http://surface.thesavvyapp.in/secure/reports/2b4900e24fcf2071041b82c16c85e678/validate_cas_otp" -H "Content-Type: application/json" -d '{"otp": "123456"}'
+```
+
+Parameter | Required | Description
+--------- | ------- | -----------
+request_id | true | `String` Returned from initiate CAS request.
+OTP | false | `String` Email of the investor. Either email is required or the phone number, not both.
+
+### JSON Response
+
+Parameter | Description
+--------- | -----------
+success | `Boolean` If validation was successful.
+
+## CAS Fetch
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/secure/reports/<REQUEST_ID>/cas`
+
+### Parameters
+
+Parameter | Required | Description
+--------- | ------- | -----------
+request_id | true | `String` Returned from initiate CAS request.
+
+### JSON Response Sample --->
+
+```shell
+curl -XPOST "http://surface.thesavvyapp.in/secure/reports/2b4900e24fcf2071041b82c16c85e678/cas" -H "Content-Type: application/json" -d '{}'
+```
+
+```json
+// CAS Response sample
+  {
+    "reqId": "2469811",
+    "pan": "",
+    "pekrn": "",
+    "mobile": "",
+    "email": "",
+    "data": [{
+      "summary":[{
+        "amc": "",
+        "amcName": "",
+        "isDemat": "",
+        "currentMktValue": "",
+        "costValue": "",
+        "gainLoss": "",
+        "gainLossPercentage": ""
+      }],
+      "schemes": [{
+        "amc": "",
+        "amcName": "",
+        "folio": "",
+        "investorName": "",
+        "age": <integer>,
+        "mobile": "",
+        "email": "",
+        "taxStatus": "",
+        "modeOfHolding": "",
+        "transactionSource": "",
+        "schemeCode": "",
+        "schemeName": "",
+        "idcwChangeAllowed": "",
+        "schemeOption": "",
+        "assetType": "",
+        "schemeType": " ",
+        "nav": "",
+        "navDate": "",
+        "closingBalance": "",
+        "availableUnits": "",
+        "availableAmount": "",
+        "currentMktValue": "",
+        "costValue": "",
+        "gainLoss": "",
+        "gainLossPercentage": "",
+        "isDemat": "",
+        "lienUnitsFlag": "",
+        "decimalUnits": <integer>,
+        "decimalAmount": <integer>,
+        "decimalNav": <integer>,
+        "brokerCode": "",
+        "brokerName": "",
+        "isin": "",
+        "purAllow": "",
+        "redAllow": "",
+        "swtAllow": "",
+        "sipAllow": "",
+        "stpAllow": "",
+        "swpAllow": "",
+        "planMode": "",
+        "dpId": "",
+        "mobileRelationship": "",
+        "emailRelationship": "",
+        "newFolio": "",
+        "nomineeStatus": "",
+        "bank": {
+          "accountNo": "",
+          "accountType": "",
+          "name": "",
+          "branch": "",
+          "city": "",
+          "pincode": "",
+          "micr": "",
+          "ifsc": "",
+          "neftifsc": ""
+        },
+        "rtaName": "CAMS"
+      }],
+      "portfolio": [{
+        "currentMktValue": "",
+        "costValue": "",
+        "gainLoss": "",
+        "gainLossPercentage": "",
+        "isDemat": ""
+      },{
+        "currentMktValue": "",
+        "costValue": "",
+        "gainLoss": "",
+        "gainLossPercentage": "",
+        "isDemat": ""
+      }],
+      "investorDetails": {
+        "address": {
+          "line1": "",
+          "line2": "",
+          "line3": "",
+          "state": "",
+          "pincode": <integer>,
+          "country": "",
+          "city": ""
+        },
+        "email": "",
+        "mobile": "",
+        "investorName": ""
+      },
+    }]
+    "statementHoldingFilter": "NON-ZERO"
+  }
+```
+
 # Frontend SDKs
 
 For non-distributors, we offer the ability to use readymade SDKs for offering mutual fund onboarding and transactions. This exposes no private data of the customer. Marketing and non-fintech usecases should use this.
