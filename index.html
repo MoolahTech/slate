@@ -591,6 +591,20 @@
           </li>
           <li>
             <a href="#reports" class="toc-h1 toc-link" data-title="Reports">Reports</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#cas-common-account-statement" class="toc-h2 toc-link" data-title="CAS (Common Account Statement)">CAS (Common Account Statement)</a>
+                  </li>
+                  <li>
+                    <a href="#initiate-cas" class="toc-h2 toc-link" data-title="Initiate CAS">Initiate CAS</a>
+                  </li>
+                  <li>
+                    <a href="#cas-otp-verification" class="toc-h2 toc-link" data-title="CAS OTP Verification">CAS OTP Verification</a>
+                  </li>
+                  <li>
+                    <a href="#cas-fetch" class="toc-h2 toc-link" data-title="CAS Fetch">CAS Fetch</a>
+                  </li>
+              </ul>
           </li>
           <li>
             <a href="#frontend-sdks" class="toc-h1 toc-link" data-title="Frontend SDKs">Frontend SDKs</a>
@@ -4392,7 +4406,225 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
 <p>To improve the user experience in terms of fund selection, we offer a risk profiling API that takes customer profile information + a couple of risk related questions as inputs to output a maximum of 4 funds. While designed by our in-house MF experts, this API is provided &quot;as-is&quot;, without any guarantees of correctness.</p>
 <h1 id='reports'>Reports</h1>
 <p>We offer aggregated reports accross multiple categories for easy reconciliation and customer viewing.</p>
-<h1 id='frontend-sdks'>Frontend SDKs</h1>
+<h2 id='cas-common-account-statement'>CAS (Common Account Statement)</h2>
+<p>This report allows you to fetch a consolidated report across AMCs. Fetching is a multi-step process, as detailed below. Note that ONLY folios with the phone number / email the OTP is sent to will be returned. The request is email / phone number based, not PAN based.</p>
+
+<div class="mermaid">
+  graph TD;
+  create_cas_request(Call CAS request API to initiate)-- Success-->otp_sent(OTP is sent to the investor on email/mobile)
+  otp_sent-->verify_otp(Call CAS verify OTP with investor entered OTP);
+  verify_otp-- Success-->call_cas(Call CAS API to fetch the report. RTAs take time, so poll this API);
+  call_cas-->call_cas
+</div>
+<h2 id='initiate-cas'>Initiate CAS</h2><h3 id='http-request-41'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/reports/cas_request</code></p>
+<h3 id='parameters-13'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"XXXXXXXX"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v@gmail.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"99999999999"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-XPOST</span> <span class="s2">"http://surface.thesavvyapp.in/secure/reports/cas_request"</span> <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="nt">-d</span> <span class="s1">'{"pan_number": "XXXXXXXXXX", "phone_number": "9876543210"}'</span>
+</code></pre></div>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>pan_number</td>
+<td>true</td>
+<td><code>String</code> PAN of the investor.</td>
+</tr>
+<tr>
+<td>email</td>
+<td>false</td>
+<td><code>String</code> Email of the investor. Either email is required or the phone number, not both.</td>
+</tr>
+<tr>
+<td>phone_number</td>
+<td>false</td>
+<td><code>String</code> Phone number of the investor. Either email is required or the phone number, not both.</td>
+</tr>
+</tbody></table>
+<h3 id='json-response-14'>JSON Response</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>request_id</td>
+<td><code>String</code> Unique request ID for the fetch.</td>
+</tr>
+<tr>
+<td>otp_reference_id</td>
+<td><code>String</code> Uniquely identifies the OTP sent.</td>
+</tr>
+</tbody></table>
+<h2 id='cas-otp-verification'>CAS OTP Verification</h2><h3 id='http-request-42'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/reports/&lt;REQUEST_ID&gt;/validate_cas_otp</code></p>
+<h3 id='parameters-14'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"otp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-XPOST</span> <span class="s2">"http://surface.thesavvyapp.in/secure/reports/2b4900e24fcf2071041b82c16c85e678/validate_cas_otp"</span> <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="nt">-d</span> <span class="s1">'{"otp": "123456"}'</span>
+</code></pre></div>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>request_id</td>
+<td>true</td>
+<td><code>String</code> Returned from initiate CAS request.</td>
+</tr>
+<tr>
+<td>OTP</td>
+<td>false</td>
+<td><code>String</code> Email of the investor. Either email is required or the phone number, not both.</td>
+</tr>
+</tbody></table>
+<h3 id='json-response-15'>JSON Response</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>success</td>
+<td><code>Boolean</code> If validation was successful.</td>
+</tr>
+</tbody></table>
+<h2 id='cas-fetch'>CAS Fetch</h2><h3 id='http-request-43'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/reports/&lt;REQUEST_ID&gt;/cas</code></p>
+<h3 id='parameters-15'>Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>request_id</td>
+<td>true</td>
+<td><code>String</code> Returned from initiate CAS request.</td>
+</tr>
+</tbody></table>
+<h3 id='json-response-sample-gt'>JSON Response Sample ---&gt;</h3><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-XPOST</span> <span class="s2">"http://surface.thesavvyapp.in/secure/reports/2b4900e24fcf2071041b82c16c85e678/cas"</span> <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="nt">-d</span> <span class="s1">'{}'</span>
+</code></pre></div><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">CAS</span><span class="w"> </span><span class="err">Response</span><span class="w"> </span><span class="err">sample</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"reqId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2469811"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"pan"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"pekrn"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="nl">"summary"</span><span class="p">:[{</span><span class="w">
+        </span><span class="nl">"amc"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"amcName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"isDemat"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"currentMktValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"costValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"gainLoss"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"gainLossPercentage"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+      </span><span class="p">}],</span><span class="w">
+      </span><span class="nl">"schemes"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+        </span><span class="nl">"amc"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"amcName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"folio"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"investorName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"age"</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;integer&gt;</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"taxStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"modeOfHolding"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"transactionSource"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"schemeCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"schemeName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"idcwChangeAllowed"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"schemeOption"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"assetType"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"schemeType"</span><span class="p">:</span><span class="w"> </span><span class="s2">" "</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"nav"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"navDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"closingBalance"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"availableUnits"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"availableAmount"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"currentMktValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"costValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"gainLoss"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"gainLossPercentage"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"isDemat"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lienUnitsFlag"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"decimalUnits"</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;integer&gt;</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"decimalAmount"</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;integer&gt;</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"decimalNav"</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;integer&gt;</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"brokerCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"brokerName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"isin"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"purAllow"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"redAllow"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"swtAllow"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"sipAllow"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"stpAllow"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"swpAllow"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"planMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"dpId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"mobileRelationship"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"emailRelationship"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"newFolio"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"nomineeStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"bank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"accountNo"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"accountType"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"pincode"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"micr"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"ifsc"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"neftifsc"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"rtaName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CAMS"</span><span class="w">
+      </span><span class="p">}],</span><span class="w">
+      </span><span class="nl">"portfolio"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+        </span><span class="nl">"currentMktValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"costValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"gainLoss"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"gainLossPercentage"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"isDemat"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+      </span><span class="p">},{</span><span class="w">
+        </span><span class="nl">"currentMktValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"costValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"gainLoss"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"gainLossPercentage"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"isDemat"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+      </span><span class="p">}],</span><span class="w">
+      </span><span class="nl">"investorDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"line1"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"line2"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"line3"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"pincode"</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;integer&gt;</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"investorName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+    </span><span class="p">}]</span><span class="w">
+    </span><span class="nl">"statementHoldingFilter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NON-ZERO"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div><h1 id='frontend-sdks'>Frontend SDKs</h1>
 <p>For non-distributors, we offer the ability to use readymade SDKs for offering mutual fund onboarding and transactions. This exposes no private data of the customer. Marketing and non-fintech usecases should use this.</p>
 
 <p>We also offer SDKs for simplified purchase transactions. Instead of redirecting the user to another page for payments, the SDK will allow you to complete the transaction on your assets itself.</p>
