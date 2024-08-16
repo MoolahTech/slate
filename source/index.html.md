@@ -132,7 +132,7 @@ marital_status | `String` Marital status code (refer to enum list)
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings" \
+curl "http://surface.thesavvyapp.in/secure/onboardings" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -142,7 +142,7 @@ curl "http://surface.thesavvyapp.in/onboardings" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings`
+`POST http://surface.thesavvyapp.in/secure/onboardings`
 
 ### Parameters
 
@@ -168,7 +168,7 @@ amc_code | true | `String` AMC code for which this onboarding is being done
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/bank_account" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/bank_account" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -178,7 +178,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>/bank_account" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/bank_account`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/bank_account`
 
 ### JSON Parameters
 
@@ -207,7 +207,7 @@ ifsc_code | true | `String` A valid IFSC code
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>" \
   -X PUT \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -217,7 +217,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>" \
 
 ### HTTP Request
 
-`PUT http://surface.thesavvyapp.in/onboardings/<UUID>`
+`PUT http://surface.thesavvyapp.in/secure/onboardings/<UUID>`
 
 ### JSON Parameters
 
@@ -248,7 +248,7 @@ occupation_code | true | `Enum String` Occupation of the investor
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/full_kyc" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/full_kyc" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -260,7 +260,7 @@ This endpoint prepares the onboarding object for a full KYC
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/full_kyc`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/full_kyc`
 
 ### JSON Parameters
 
@@ -285,7 +285,7 @@ full_kyc_redirect_url | true | `URL` Where to redirect the user once the KYC is 
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/upload_file" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/upload_file" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -297,7 +297,7 @@ This endpoint uploads files to our server for further processing and analysis.
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/upload_file`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/upload_file`
 
 ### JSON Parameters
 
@@ -327,7 +327,7 @@ file | true | `String` URL of the uploaded file
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/read_pan_card" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/read_pan_card" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -337,7 +337,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>/read_pan_card" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/read_pan_card`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/read_pan_card`
 
 ### JSON Parameters
 
@@ -376,7 +376,7 @@ pan_number | true | `String` Pan number on the pan card
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/pan_card" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/pan_card" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -386,7 +386,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>/pan_card" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/pan_card`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/pan_card`
 
 ### JSON Parameters
 
@@ -416,7 +416,7 @@ pan_number | true | `String` Pan number on the pan card
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/read_address_proof" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/read_address_proof" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -426,7 +426,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>/read_address_proof" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/read_address_proof`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/read_address_proof`
 
 ### JSON Parameters
 
@@ -487,7 +487,7 @@ fathers_name | false | `String` Only present in license, passport and voter id.
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/address_proof" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/address_proof" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -497,7 +497,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>/address_proof" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/address_proof`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/address_proof`
 
 ### JSON Parameters
 
@@ -544,7 +544,7 @@ voter_id_number | maybe (refer above) | `String` Voter ID number in case of vote
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/form" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/form" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -554,7 +554,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>/form" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/form`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/form`
 
 ### JSON Parameters
 
@@ -586,7 +586,7 @@ annual_income | true | `Enum` Refer to Enum tables at the bottom
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/signature" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/signature" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -596,7 +596,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>/signature" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/signature`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/signature`
 
 ### JSON Parameters
 
@@ -622,7 +622,7 @@ image_urls | true | `Array` List of images to process. In the case of signature,
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/selfie" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/selfie" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -632,7 +632,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>/selfie" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/selfie`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/selfie`
 
 ### JSON Parameters
 
@@ -652,7 +652,7 @@ image_urls | true | `Array` List of images to process. In the case of selfie, we
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/start_video_verification" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/start_video_verification" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -662,7 +662,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>/start_video_verification"
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/start_video_verification`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/start_video_verification`
 
 ### **Important Info about this API**
 
@@ -693,7 +693,7 @@ random_number | true | Random number to say on video
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/video_verification" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/video_verification" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -703,7 +703,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>/video_verification" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/video_verification`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/video_verification`
 
 ### JSON Parameters
 
@@ -724,7 +724,7 @@ transaction_id | true | `String` ID returned by the start video verification API
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/generate_contract" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/generate_contract" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -734,7 +734,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>/generate_contract" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/generate_contract`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/generate_contract`
 
 ### **Important Info about this API**
 
@@ -756,7 +756,7 @@ random_number | true | Random number to say on video
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/onboardings/<UUID>/execute_verification" \
+curl "http://surface.thesavvyapp.in/secure/onboardings/<UUID>/execute_verification" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body
@@ -766,7 +766,7 @@ curl "http://surface.thesavvyapp.in/onboardings/<UUID>/execute_verification" \
 
 ### HTTP Request
 
-`POST http://surface.thesavvyapp.in/onboardings/<UUID>/execute_verification`
+`POST http://surface.thesavvyapp.in/secure/onboardings/<UUID>/execute_verification`
 
 ### **Important Info about this API**
 
@@ -1888,7 +1888,7 @@ In certain cases, you may be using your own payment and onboarding infrastructur
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/transactions/deposit_basket" \
+curl "http://surface.thesavvyapp.in/secure/transactions/deposit_basket" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body '{"onboarding": {"existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "Vidur Malik", "phone_number": "9779136464", "email": "v.malik1991@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student"}, "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "deposit": {"amount": 5000, "payment_mode": "bank_transfer", "deposit_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'
@@ -2064,7 +2064,7 @@ Extract the `basket_transaction_id` to use with the confirmation API
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/transactions/sip_basket" \
+curl "http://surface.thesavvyapp.in/secure/transactions/sip_basket" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body '{"onboarding": { "existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "John Smith", "phone_number": "9999988888", "email": "v@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student", "fatca": { "fatca_occupation": "07", "fatca_address_type": "02", "fatca_birth_country_code": "IN", "fatca_tax_country_code": "IN", "fatca_source_wealth": "01", "fatca_gross_income": "32"}}, "nominees": [{"name": "Johnny", "dob": "12/1/1999", "percentage": "50"}, {"name": "Depp", "dob": "12/1/1999", "percentage": "50"}], "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "sip": {"amount": 5000, "start_date": "12/12/2024", "end_date": "12/12/2026", "frequency": "monthly", "sip_day": 10, "sip_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'
@@ -2153,7 +2153,7 @@ Extract the `basket_transaction_id` to use with the confirmation API
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/transactions/withdrawal_basket" \
+curl "http://surface.thesavvyapp.in/secure/transactions/withdrawal_basket" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body '{"withdrawal": {"withdrawal_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "account_uuid": "xxx-yyy", "partner_transaction_id": "12345"}]}}'
@@ -2222,7 +2222,7 @@ The basket ID is returned in the response from each of the transaction basket AP
 ```
 
 ```shell
-curl "http://surface.thesavvyapp.in/transactions/sip_basket" \
+curl "http://surface.thesavvyapp.in/secure/transactions/sip_basket" \
   -X POST \
   -H "Authorization: Bearer <token>" \
   -d body '{"onboarding": {"existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "Vidur Malik", "phone_number": "9779136464", "email": "v.malik1991@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student"}, "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "deposit": {"amount": 5000, "payment_mode": "bank_transfer", "deposit_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'
