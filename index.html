@@ -842,7 +842,7 @@ If doing Full KYC, you should wait for verification confirmation via webhook bef
     </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MOF"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -852,7 +852,7 @@ If doing Full KYC, you should wait for verification confirmation via webhook bef
 <p>The above command returns the onboarding JSON object with the name filled in if the customer is an existing investor.</p>
 </blockquote>
 <h3 id='http-request'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings</code></p>
 <h3 id='parameters'>Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
@@ -883,7 +883,7 @@ Note the <code>onboarding</code>root key
     </span><span class="nl">"ifsc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HDFC0000873"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/bank_account"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/bank_account"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -893,7 +893,7 @@ Note the <code>onboarding</code>root key
 <p>The above command returns the onboarding JSON object</p>
 </blockquote>
 <h3 id='http-request-2'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/bank_account</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/bank_account</code></p>
 <h3 id='json-parameters'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
@@ -927,7 +927,7 @@ Note the <code>onboarding</code>root key
     </span><span class="nl">"occupation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"05"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;"</span> <span class="se">\</span>
   <span class="nt">-X</span> PUT <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -937,7 +937,7 @@ Note the <code>onboarding</code>root key
 <p>The above command returns the onboarding JSON object</p>
 </blockquote>
 <h3 id='http-request-3'>HTTP Request</h3>
-<p><code>PUT http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;</code></p>
+<p><code>PUT http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;</code></p>
 <h3 id='json-parameters-2'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
@@ -985,7 +985,7 @@ Note the <code>onboarding</code>root key
     </span><span class="nl">"full_kyc_redirect_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/redirect"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/full_kyc"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/full_kyc"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -996,7 +996,7 @@ Note the <code>onboarding</code>root key
 
 <p>This endpoint prepares the onboarding object for a full KYC</p>
 <h3 id='http-request-4'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/full_kyc</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/full_kyc</code></p>
 <h3 id='json-parameters-3'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
@@ -1034,7 +1034,7 @@ Note the <code>onboarding</code>root key
 </span><span class="p">{</span><span class="w">
   </span><span class="nl">"upload"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;file to upload&gt;"</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/upload_file"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/upload_file"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -1045,7 +1045,7 @@ Note the <code>onboarding</code>root key
 
 <p>This endpoint uploads files to our server for further processing and analysis.</p>
 <h3 id='http-request-5'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/upload_file</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/upload_file</code></p>
 <h3 id='json-parameters-4'>JSON Parameters</h3>
 <aside class="notice">
 Note the absence of <code>onboarding</code>root key!
@@ -1084,7 +1084,7 @@ Note the absence of <code>onboarding</code>root key!
     </span><span class="nl">"image_urls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://s3.images.com/123"</span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/read_pan_card"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/read_pan_card"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -1093,7 +1093,7 @@ Note the absence of <code>onboarding</code>root key!
 <p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
 <h3 id='http-request-6'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/read_pan_card</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/read_pan_card</code></p>
 <h3 id='json-parameters-5'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
@@ -1157,7 +1157,7 @@ Note the <code>onboarding</code>root key
     </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCD1234C"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/pan_card"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/pan_card"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -1166,7 +1166,7 @@ Note the <code>onboarding</code>root key
 <p>This API returns the onboarding object.</p>
 </blockquote>
 <h3 id='http-request-7'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/pan_card</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/pan_card</code></p>
 <h3 id='json-parameters-6'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
@@ -1209,7 +1209,7 @@ Note the <code>onboarding</code>root key
     </span><span class="nl">"image_urls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://s3.images.com/123"</span><span class="p">,</span><span class="w"> </span><span class="s2">"https://s3.images.com/456"</span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/read_address_proof"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/read_address_proof"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -1218,7 +1218,7 @@ Note the <code>onboarding</code>root key
 <p>This API returns extra params along with the onboarding object, depending on the type of address proof. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
 <h3 id='http-request-8'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/read_address_proof</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/read_address_proof</code></p>
 <h3 id='json-parameters-7'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
@@ -1347,7 +1347,7 @@ Note the <code>onboarding</code>root key
      </span><span class="nl">"voter_id_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/address_proof"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/address_proof"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -1356,7 +1356,7 @@ Note the <code>onboarding</code>root key
 <p>This API returns the onboarding object.</p>
 </blockquote>
 <h3 id='http-request-9'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/address_proof</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/address_proof</code></p>
 <h3 id='json-parameters-8'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
@@ -1456,7 +1456,7 @@ Note the <code>onboarding</code>root key
     </span><span class="nl">"annual_income"</span><span class="p">:</span><span class="w"> </span><span class="s2">"31"</span><span class="w">
    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/form"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/form"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -1465,7 +1465,7 @@ Note the <code>onboarding</code>root key
 <p>This API returns the onboarding object.</p>
 </blockquote>
 <h3 id='http-request-10'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/form</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/form</code></p>
 <h3 id='json-parameters-9'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
@@ -1530,7 +1530,7 @@ Note the <code>onboarding</code>root key
     </span><span class="nl">"image_urls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://s3.images.com/123"</span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/signature"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/signature"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -1539,7 +1539,7 @@ Note the <code>onboarding</code>root key
 <p>This API returns the onboarding object.</p>
 </blockquote>
 <h3 id='http-request-11'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/signature</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/signature</code></p>
 <h3 id='json-parameters-10'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
@@ -1566,7 +1566,7 @@ Note the <code>onboarding</code>root key
     </span><span class="nl">"image_urls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://s3.images.com/123"</span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/selfie"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/selfie"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -1575,7 +1575,7 @@ Note the <code>onboarding</code>root key
 <p>This API returns the onboarding object.</p>
 </blockquote>
 <h3 id='http-request-12'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/selfie</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/selfie</code></p>
 <h3 id='json-parameters-11'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
@@ -1596,7 +1596,7 @@ Note the <code>onboarding</code>root key
 </tbody></table>
 <h2 id='start-video-verification'>Start Video Verification</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/start_video_verification"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/start_video_verification"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -1605,7 +1605,7 @@ Note the <code>onboarding</code>root key
 <p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
 <h3 id='http-request-13'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/start_video_verification</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/start_video_verification</code></p>
 <h3 id='important-info-about-this-api'><strong>Important Info about this API</strong></h3>
 <p>The API will return a random 6 digit number. The user must say this number on video. This allows to do a &quot;liveness check&quot; (make sure it&#39;s not a pre-recorded video).</p>
 <h3 id='json-response-4'>JSON Response</h3>
@@ -1643,7 +1643,7 @@ Note the <code>onboarding</code>root key
     </span><span class="nl">"transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345"</span><span class="w">
    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/video_verification"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/video_verification"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -1652,7 +1652,7 @@ Note the <code>onboarding</code>root key
 <p>This API returns the onboarding object.</p>
 </blockquote>
 <h3 id='http-request-14'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/video_verification</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/video_verification</code></p>
 <h3 id='json-parameters-12'>JSON Parameters</h3>
 <aside class="notice">
 Note the <code>onboarding</code>root key
@@ -1678,7 +1678,7 @@ Note the <code>onboarding</code>root key
 </tbody></table>
 <h2 id='generate-kyc-contract'>Generate KYC Contract</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/generate_contract"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/generate_contract"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -1687,7 +1687,7 @@ Note the <code>onboarding</code>root key
 <p>This API returns extra params along with the onboarding object. Please make sure you&#39;re reading the response correctly.</p>
 </blockquote>
 <h3 id='http-request-15'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/generate_contract</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/generate_contract</code></p>
 <h3 id='important-info-about-this-api-2'><strong>Important Info about this API</strong></h3>
 <p>The API will return a url which you must redirect the user to. The webpage will show all the information submitted so far, and the user must sign the contract displayed with their aadhaar e-signature. The page has been known to not play well with app-embedded browsers. So it&#39;s recommended that your redirect the user to the actual browser on the phone.</p>
 <h3 id='json-response-5'>JSON Response</h3>
@@ -1716,7 +1716,7 @@ Note the <code>onboarding</code>root key
 </tbody></table>
 <h2 id='execute-verification'>Execute Verification</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/execute_verification"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/execute_verification"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body
@@ -1725,7 +1725,7 @@ Note the <code>onboarding</code>root key
 <p>This API returns the onboarding object.</p>
 </blockquote>
 <h3 id='http-request-16'>HTTP Request</h3>
-<p><code>POST http://surface.thesavvyapp.in/onboardings/&lt;UUID&gt;/execute_verification</code></p>
+<p><code>POST http://surface.thesavvyapp.in/secure/onboardings/&lt;UUID&gt;/execute_verification</code></p>
 <h3 id='important-info-about-this-api-3'><strong>Important Info about this API</strong></h3>
 <p>On success response of this API, the investors&#39; details are pushed to the KRA/AMC for verification. Wait for the webhook to be informed of success/failure and the reasons for failure, if any.
 In case there is a failure, you can use the API to update the same onboarding. You will, however, have to generate a new contract, get a new aadhaar e-sign and execute verification again.</p>
@@ -3520,7 +3520,7 @@ Note the <code>sip</code>root key
       </span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/transactions/deposit_basket"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/transactions/deposit_basket"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body <span class="s1">'{"onboarding": {"existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "Vidur Malik", "phone_number": "9779136464", "email": "v.malik1991@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student"}, "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "deposit": {"amount": 5000, "payment_mode": "bank_transfer", "deposit_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'</span>
@@ -3920,7 +3920,7 @@ Either an onboarding object is required, or the `account_uuid` is required in <b
       </span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/transactions/sip_basket"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/transactions/sip_basket"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body <span class="s1">'{"onboarding": { "existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "John Smith", "phone_number": "9999988888", "email": "v@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student", "fatca": { "fatca_occupation": "07", "fatca_address_type": "02", "fatca_birth_country_code": "IN", "fatca_tax_country_code": "IN", "fatca_source_wealth": "01", "fatca_gross_income": "32"}}, "nominees": [{"name": "Johnny", "dob": "12/1/1999", "percentage": "50"}, {"name": "Depp", "dob": "12/1/1999", "percentage": "50"}], "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "sip": {"amount": 5000, "start_date": "12/12/2024", "end_date": "12/12/2026", "frequency": "monthly", "sip_day": 10, "sip_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'</span>
@@ -4085,7 +4085,7 @@ Either an onboarding object is required, or the `account_uuid` is required in <b
       </span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/transactions/withdrawal_basket"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/transactions/withdrawal_basket"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body <span class="s1">'{"withdrawal": {"withdrawal_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "account_uuid": "xxx-yyy", "partner_transaction_id": "12345"}]}}'</span>
@@ -4182,7 +4182,7 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
     </span><span class="nl">"transaction_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"withdrawal"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"user_completed_withdrawal_otp_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12/12/2024 16:00:00"</span><span class="w">
   </span><span class="p">}</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/transactions/sip_basket"</span> <span class="se">\</span>
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/transactions/sip_basket"</span> <span class="se">\</span>
   <span class="nt">-X</span> POST <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
   <span class="nt">-d</span> body <span class="s1">'{"onboarding": {"existing_investor": true, "date_of_birth": "01/01/2000", "pan_number": "ABCDE1234C", "name": "Vidur Malik", "phone_number": "9779136464", "email": "v.malik1991@gmail.com", "address": "123", "city": "Chand", "pincode": "160019", "occupation": "student"}, "bank_account": {"account_number": "123456789", "ifsc_code": "HDFC0000873", "bank_name": "HDFC"}, "deposit": {"amount": 5000, "payment_mode": "bank_transfer", "deposit_parts": [{"amount": 5000, "isin": "INF846K018C3", "amc_code": "AXIS", "partner_transaction_id": "12345"}]}}'</span>
