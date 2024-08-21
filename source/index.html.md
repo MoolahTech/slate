@@ -2693,6 +2693,32 @@ Make sure to verify this signature before using the payload.
 
 Remember that deposits can also be created in an `error` or `completed` state, and do not necessarily have to be in the `created` state to start with.
 
+## Withdrawals
+
+<div class="mermaid">
+  graph TD;
+  created(Default when an withdrawal is created: 'created')-- OTP successful-->otp_complete('otp_complete');
+  otp_complete-- On AMC submission-->submitted_to_rta('submitted_to_rta');
+  submitted_to_rta-- Units redeemed-->completed('completed');
+  submitted_to_rta-- Unit failure-->error('error');
+  created-- OTP failure-->error('error');
+</div>
+
+## SIPs
+
+<div class="mermaid">
+  graph TD;
+  created(Default when an SIP is created: 'created')-- Mandate successful-->active('active');
+  active-- Pause requested-->paused('paused');
+  paused-- Request cancel-->cancellation_requested('cancellation_requested');
+  cancellation_requested-- Recon successful-->cancelled('cancelled');
+  active-- Installments finished-->completed('completed');
+  created-- Mandate failure-->inactive('inactive');
+  paused-- Pause expired-->active;
+  inactive-- Mandate successful-->active;
+  active-- Request cancel (also pauses)-->cancellation_requested
+</div>
+
 # Enums
 
 ## Annual Income Codes
