@@ -632,6 +632,12 @@
                   <li>
                     <a href="#deposits-3" class="toc-h2 toc-link" data-title="Deposits">Deposits</a>
                   </li>
+                  <li>
+                    <a href="#withdrawals-3" class="toc-h2 toc-link" data-title="Withdrawals">Withdrawals</a>
+                  </li>
+                  <li>
+                    <a href="#sips" class="toc-h2 toc-link" data-title="SIPs">SIPs</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -4903,6 +4909,28 @@ Webhooks are sent on a "best-effort" basis, and are sent at least once. That mea
 </div>
 
 <p>Remember that deposits can also be created in an <code>error</code> or <code>completed</code> state, and do not necessarily have to be in the <code>created</code> state to start with.</p>
+<h2 id='withdrawals-3'>Withdrawals</h2>
+<div class="mermaid">
+  graph TD;
+  created(Default when an withdrawal is created: 'created')-- OTP successful-->otp_complete('otp_complete');
+  otp_complete-- On AMC submission-->submitted_to_rta('submitted_to_rta');
+  submitted_to_rta-- Units redeemed-->completed('completed');
+  submitted_to_rta-- Unit failure-->error('error');
+  created-- OTP failure-->error('error');
+</div>
+<h2 id='sips'>SIPs</h2>
+<div class="mermaid">
+  graph TD;
+  created(Default when an SIP is created: 'created')-- Mandate successful-->active('active');
+  active-- Pause requested-->paused('paused');
+  paused-- Request cancel-->cancellation_requested('cancellation_requested');
+  cancellation_requested-- Recon successful-->cancelled('cancelled');
+  active-- Installments finished-->completed('completed');
+  created-- Mandate failure-->inactive('inactive');
+  paused-- Pause expired-->active;
+  inactive-- Mandate successful-->active;
+  active-- Request cancel (also pauses)-->cancellation_requested
+</div>
 <h1 id='enums'>Enums</h1><h2 id='annual-income-codes'>Annual Income Codes</h2>
 <table><thead>
 <tr>
