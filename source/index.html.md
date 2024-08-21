@@ -2674,6 +2674,25 @@ To make sure that the webhook is coming from Savvy, we append a signature to all
 
 Make sure to verify this signature before using the payload.
 
+# State machines
+
+## Deposits
+
+<div class="mermaid">
+  graph TD;
+  created(Default when a deposit is created: 'created')-- Payment successful-->payment_made('payment_made');
+  created-- SIP payment successful-->submitted_to_sip_pg('submitted_to_sip_pg');
+  payment_made-- On AMC submission-->submitted_to_rta('submitted_to_rta');
+  submitted_to_sip_pg-- On AMC submission-->submitted_to_rta('submitted_to_rta');
+  submitted_to_rta-- Units allocated-->completed('completed');
+  submitted_to_rta-- Unit failure-->error('error');
+  payment_made-- Recon failure-->error;
+  submitted_to_sip_pg-- Recon failure-->error;
+  created-- Payment failure-->error;
+</div>
+
+Remember that deposits can also be created in an `error` or `completed` state, and do not necessarily have to be in the `created` state to start with.
+
 # Enums
 
 ## Annual Income Codes
