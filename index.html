@@ -627,6 +627,14 @@
               </ul>
           </li>
           <li>
+            <a href="#state-machines" class="toc-h1 toc-link" data-title="State machines">State machines</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#deposits-3" class="toc-h2 toc-link" data-title="Deposits">Deposits</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#enums" class="toc-h1 toc-link" data-title="Enums">Enums</a>
               <ul class="toc-list-h2">
                   <li>
@@ -4880,6 +4888,21 @@ Webhooks are sent on a "best-effort" basis, and are sent at least once. That mea
 <p><code>HMAC(&#39;sha256&#39;, secret_key, payload)</code></p>
 
 <p>Make sure to verify this signature before using the payload.</p>
+<h1 id='state-machines'>State machines</h1><h2 id='deposits-3'>Deposits</h2>
+<div class="mermaid">
+  graph TD;
+  created(Default when a deposit is created: 'created')-- Payment successful-->payment_made('payment_made');
+  created-- SIP payment successful-->submitted_to_sip_pg('submitted_to_sip_pg');
+  payment_made-- On AMC submission-->submitted_to_rta('submitted_to_rta');
+  submitted_to_sip_pg-- On AMC submission-->submitted_to_rta('submitted_to_rta');
+  submitted_to_rta-- Units allocated-->completed('completed');
+  submitted_to_rta-- Unit failure-->error('error');
+  payment_made-- Recon failure-->error;
+  submitted_to_sip_pg-- Recon failure-->error;
+  created-- Payment failure-->error;
+</div>
+
+<p>Remember that deposits can also be created in an <code>error</code> or <code>completed</code> state, and do not necessarily have to be in the <code>created</code> state to start with.</p>
 <h1 id='enums'>Enums</h1><h2 id='annual-income-codes'>Annual Income Codes</h2>
 <table><thead>
 <tr>
