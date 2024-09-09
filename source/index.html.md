@@ -1780,6 +1780,98 @@ end_date | true | `Date` End date of the SIP.
 frequency | true | `Enum: monthly, weekly, daily, ad-hoc` Frequency of debits 
 mandate_redirect_url | true | `URL String` Where to direct the customer after payment. A field called `status` (as a query param) in the redirect URL will be available to indicate success or failure.
 
+## Cancel sip
+
+```json
+// body
+{ "sip": 
+  {
+    "cancellation_reason_code": "1",
+  }
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/secure/sips/<UUID>/cancel" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+
+```
+> The above command returns the cancelled sip JSON object
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/secure/sips/<UUID>/cancel`
+
+### Parameters
+
+<aside class="notice">
+Note the <code>sip</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ------- | -----------
+cancellation_reason_code | true | `Enum` Reason for cancellation. Please refer to index at the bottom.
+
+## Pause sip
+
+```json
+// body
+{}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/secure/sips/<UUID>/pause" \
+  -X POST \
+  -H "Authorization: Bearer <token>" \
+  -d body
+
+```
+> The above command returns the paused sip JSON object
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/secure/sips/<UUID>/pause`
+
+### Parameters
+
+NONE
+
+## Update sip
+
+```json
+// body
+{ "sip": 
+  {
+    "amount": 1000,
+  }
+}
+```
+
+```shell
+curl "http://surface.thesavvyapp.in/secure/sips/<UUID>" \
+  -X PUT \
+  -H "Authorization: Bearer <token>" \
+  -d body
+
+```
+> The above command returns the updated sip JSON object
+
+### HTTP Request
+
+`PUT http://surface.thesavvyapp.in/secure/sips/<UUID>`
+
+### Parameters
+
+<aside class="notice">
+Note the <code>sip</code>root key
+</aside>
+
+Parameter | Required | Description
+--------- | ------- | -----------
+amount | true | `Integer` Amount to update the SIP to.
+
 # Systematic Withdrawal Plans
 
 This API describes how to create a SWP transaction. This API can only be accessed post the onboarding flow. The workflow for creating and registering an SWP is:
