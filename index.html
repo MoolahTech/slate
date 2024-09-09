@@ -531,6 +531,15 @@
                   <li>
                     <a href="#create-sip" class="toc-h2 toc-link" data-title="Create sip">Create sip</a>
                   </li>
+                  <li>
+                    <a href="#cancel-sip" class="toc-h2 toc-link" data-title="Cancel sip">Cancel sip</a>
+                  </li>
+                  <li>
+                    <a href="#pause-sip" class="toc-h2 toc-link" data-title="Pause sip">Pause sip</a>
+                  </li>
+                  <li>
+                    <a href="#update-sip" class="toc-h2 toc-link" data-title="Update sip">Update sip</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -3446,6 +3455,91 @@ Note the <code>sip</code>root key
 <td><code>URL String</code> Where to direct the customer after payment. A field called <code>status</code> (as a query param) in the redirect URL will be available to indicate success or failure.</td>
 </tr>
 </tbody></table>
+<h2 id='cancel-sip'>Cancel sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w"> </span><span class="nl">"sip"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"cancellation_reason_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;/cancel"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+
+</code></pre></div>
+<blockquote>
+<p>The above command returns the cancelled sip JSON object</p>
+</blockquote>
+<h3 id='http-request-36'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;/cancel</code></p>
+<h3 id='parameters-9'>Parameters</h3>
+<aside class="notice">
+Note the <code>sip</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>cancellation_reason_code</td>
+<td>true</td>
+<td><code>Enum</code> Reason for cancellation. Please refer to index at the bottom.</td>
+</tr>
+</tbody></table>
+<h2 id='pause-sip'>Pause sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;/pause"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+
+</code></pre></div>
+<blockquote>
+<p>The above command returns the paused sip JSON object</p>
+</blockquote>
+<h3 id='http-request-37'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;/pause</code></p>
+<h3 id='parameters-10'>Parameters</h3>
+<p>NONE</p>
+<h2 id='update-sip'>Update sip</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
+</span><span class="p">{</span><span class="w"> </span><span class="nl">"sip"</span><span class="p">:</span><span class="w"> 
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;"</span> <span class="se">\</span>
+  <span class="nt">-X</span> PUT <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;token&gt;"</span> <span class="se">\</span>
+  <span class="nt">-d</span> body
+
+</code></pre></div>
+<blockquote>
+<p>The above command returns the updated sip JSON object</p>
+</blockquote>
+<h3 id='http-request-38'>HTTP Request</h3>
+<p><code>PUT http://surface.thesavvyapp.in/secure/sips/&lt;UUID&gt;</code></p>
+<h3 id='parameters-11'>Parameters</h3>
+<aside class="notice">
+Note the <code>sip</code>root key
+</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>amount</td>
+<td>true</td>
+<td><code>Integer</code> Amount to update the SIP to.</td>
+</tr>
+</tbody></table>
 <h1 id='systematic-withdrawal-plans'>Systematic Withdrawal Plans</h1>
 <p>This API describes how to create a SWP transaction. This API can only be accessed post the onboarding flow. The workflow for creating and registering an SWP is:</p>
 
@@ -3481,9 +3575,9 @@ Note the <code>sip</code>root key
   callback-- Existing accounts-->listen_deposit(Listen for deposits status update webhook);
   listen_account-->listen_deposit
 </div>
-<h3 id='http-request-36'>HTTP Request</h3>
+<h3 id='http-request-39'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/transactions/deposit_basket</code></p>
-<h3 id='parameters-9'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+<h3 id='parameters-12'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
     </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"existing_investor"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
       </span><span class="nl">"date_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/2000"</span><span class="p">,</span><span class="w">
@@ -3878,9 +3972,9 @@ Either an onboarding object is required, or the `account_uuid` is required in <b
   listen_sip_deposit-- Existing accounts-->listen_deposit(Listen for deposits status update webhook);
   listen_account-->listen_deposit
 </div>
-<h3 id='http-request-37'>HTTP Request</h3>
+<h3 id='http-request-40'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/transactions/sip_basket</code></p>
-<h3 id='parameters-10'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+<h3 id='parameters-13'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
     </span><span class="nl">"onboarding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"existing_investor"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
       </span><span class="nl">"date_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/01/2000"</span><span class="p">,</span><span class="w">
@@ -4084,9 +4178,9 @@ Either an onboarding object is required, or the `account_uuid` is required in <b
   payment_otp-- Success-->callback(Call confirmation API);
   callback-->listen_withdrawal(Listen for withdrawal status update webhook);
 </div>
-<h3 id='http-request-38'>HTTP Request</h3>
+<h3 id='http-request-41'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/transactions/withdrawal_basket</code></p>
-<h3 id='parameters-11'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+<h3 id='parameters-14'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
     </span><span class="nl">"withdrawal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"withdrawal_parts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
@@ -4178,11 +4272,11 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
 <p>Extract the <code>basket_transaction_id</code> to use with the confirmation API</p>
 <h2 id='confirmation'>Confirmation</h2>
 <p>Post submitting the above transactions, we need to record settlement IDs and timestamps to make sure units are allocated to investors. This API should only be called once OTPs are recorded and payment is made.</p>
-<h3 id='http-request-39'>HTTP Request</h3>
+<h3 id='http-request-42'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/transactions/&lt;BASKET_ID&gt;/confirmed</code></p>
 
 <p>The basket ID is returned in the response from each of the transaction basket APIs</p>
-<h3 id='parameters-12'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+<h3 id='parameters-15'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
     </span><span class="nl">"transaction_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"deposit"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"settlement_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"XYZ-123"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"user_completed_payment_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12/12/2024 16:00:00"</span><span class="p">,</span><span class="w">
@@ -4390,7 +4484,7 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
 <blockquote>
 <p>The above command returns a JSON object.</p>
 </blockquote>
-<h3 id='http-request-40'>HTTP Request</h3>
+<h3 id='http-request-43'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/amcs/&lt;AMC_CODE&gt;/name_and_liquid_fund</code></p>
 <h3 id='response-parameters'>Response parameters</h3>
 <table><thead>
@@ -4430,9 +4524,9 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
   verify_otp-- Success-->call_cas(Call CAS API to fetch the report. RTAs take time, so poll this API);
   call_cas-->call_cas
 </div>
-<h2 id='initiate-cas'>Initiate CAS</h2><h3 id='http-request-41'>HTTP Request</h3>
+<h2 id='initiate-cas'>Initiate CAS</h2><h3 id='http-request-44'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/reports/cas_request</code></p>
-<h3 id='parameters-13'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+<h3 id='parameters-16'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
     </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"XXXXXXXX"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v@gmail.com"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"99999999999"</span><span class="w">
@@ -4478,9 +4572,9 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
 <td><code>String</code> Uniquely identifies the OTP sent.</td>
 </tr>
 </tbody></table>
-<h2 id='cas-otp-verification'>CAS OTP Verification</h2><h3 id='http-request-42'>HTTP Request</h3>
+<h2 id='cas-otp-verification'>CAS OTP Verification</h2><h3 id='http-request-45'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/reports/&lt;REQUEST_ID&gt;/validate_cas_otp</code></p>
-<h3 id='parameters-14'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+<h3 id='parameters-17'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
     </span><span class="nl">"otp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-XPOST</span> <span class="s2">"http://surface.thesavvyapp.in/secure/reports/2b4900e24fcf2071041b82c16c85e678/validate_cas_otp"</span> <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="nt">-d</span> <span class="s1">'{"otp": "123456"}'</span>
@@ -4515,9 +4609,9 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
 <td><code>Boolean</code> If validation was successful.</td>
 </tr>
 </tbody></table>
-<h2 id='cas-fetch'>CAS Fetch</h2><h3 id='http-request-43'>HTTP Request</h3>
+<h2 id='cas-fetch'>CAS Fetch</h2><h3 id='http-request-46'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/reports/&lt;REQUEST_ID&gt;/cas</code></p>
-<h3 id='parameters-15'>Parameters</h3>
+<h3 id='parameters-18'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
