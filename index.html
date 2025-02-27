@@ -581,6 +581,9 @@
                   <li>
                     <a href="#sending-a-whatsapp-message" class="toc-h2 toc-link" data-title="Sending a WhatsApp message">Sending a WhatsApp message</a>
                   </li>
+                  <li>
+                    <a href="#receiving-a-whatsapp-message" class="toc-h2 toc-link" data-title="Receiving a WhatsApp message">Receiving a WhatsApp message</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -4513,6 +4516,54 @@ For receiving WhatsApp messages sent by users, you must register a webhook URL w
 <aside class="notice">
 Note that you need to send exact requirements for sending messages. Extra or missing fields for each type of message will cause the message to fail to get delivered even though you might get a success message from the API. For example, do not include `buttons` in a message type `image`.
 </aside>
+<h2 id='receiving-a-whatsapp-message'>Receiving a WhatsApp message</h2>
+<p>Receiving messages is a webhook based functionality. We will scrub PII data from user messages and forward on. The following are the parameters that get sent.</p>
+<h3 id='parameters-17'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"whatsapp_message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"user_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"message_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"interactive_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"button_reply"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"button_reply"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id-1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Learn more"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>user_uuid</td>
+<td>true</td>
+<td><code>String</code> UUID of the user.</td>
+</tr>
+<tr>
+<td>text</td>
+<td>true</td>
+<td><code>String</code> Message body.</td>
+</tr>
+<tr>
+<td>message_type</td>
+<td>true</td>
+<td><code>Enum(text, image, video, document, interactive)</code> Type of message</td>
+</tr>
+<tr>
+<td>interactive_type</td>
+<td>false</td>
+<td><code>Enum(button_reply)</code> Required user has tapped on a button.</td>
+</tr>
+<tr>
+<td>button_reply</td>
+<td>false</td>
+<td><code>Object(id, title)</code> While button was tapped</td>
+</tr>
+</tbody></table>
 <h1 id='save-now-buy-later-snbl'>Save Now, Buy Later (SNBL)</h1>
 <p>SNBL is a unique proposition, where customers can save up (via SIP) to purchase products from merchants. This service is provided as an SDK to merchants so they can embed SNBL inside their purchase journeys.</p>
 <h2 id='importing-the-sdk'>Importing the SDK</h2>
@@ -4698,7 +4749,7 @@ Note that you need to send exact requirements for sending messages. Extra or mis
 <p>This report integrates into the CAS (below) to give a consolidated view of holdings across AMCs along with transactions done on Savvy.</p>
 <h3 id='http-request-45'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/reports/portfolio</code></p>
-<h3 id='parameters-17'>Parameters</h3>
+<h3 id='parameters-18'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -4740,7 +4791,7 @@ Note that you need to send exact requirements for sending messages. Extra or mis
 </div>
 <h2 id='initiate-cas'>Initiate CAS</h2><h3 id='http-request-46'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/reports/cas_request</code></p>
-<h3 id='parameters-18'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+<h3 id='parameters-19'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
     </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"XXXXXXXX"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v@gmail.com"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"99999999999"</span><span class="w">
@@ -4788,7 +4839,7 @@ Note that you need to send exact requirements for sending messages. Extra or mis
 </tbody></table>
 <h2 id='cas-otp-verification'>CAS OTP Verification</h2><h3 id='http-request-47'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/reports/&lt;REQUEST_ID&gt;/validate_cas_otp</code></p>
-<h3 id='parameters-19'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+<h3 id='parameters-20'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
     </span><span class="nl">"otp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-XPOST</span> <span class="s2">"http://surface.thesavvyapp.in/secure/reports/2b4900e24fcf2071041b82c16c85e678/validate_cas_otp"</span> <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="nt">-d</span> <span class="s1">'{"otp": "123456"}'</span>
@@ -4825,7 +4876,7 @@ Note that you need to send exact requirements for sending messages. Extra or mis
 </tbody></table>
 <h2 id='cas-fetch'>CAS Fetch</h2><h3 id='http-request-48'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/reports/&lt;REQUEST_ID&gt;/cas</code></p>
-<h3 id='parameters-20'>Parameters</h3>
+<h3 id='parameters-21'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
