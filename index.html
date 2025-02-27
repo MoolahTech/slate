@@ -576,6 +576,14 @@
               </ul>
           </li>
           <li>
+            <a href="#whatsapp" class="toc-h1 toc-link" data-title="WhatsApp">WhatsApp</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#sending-a-whatsapp-message" class="toc-h2 toc-link" data-title="Sending a WhatsApp message">Sending a WhatsApp message</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#save-now-buy-later-snbl" class="toc-h1 toc-link" data-title="Save Now, Buy Later (SNBL)">Save Now, Buy Later (SNBL)</a>
               <ul class="toc-list-h2">
                   <li>
@@ -601,6 +609,9 @@
           <li>
             <a href="#reports" class="toc-h1 toc-link" data-title="Reports">Reports</a>
               <ul class="toc-list-h2">
+                  <li>
+                    <a href="#portfolio" class="toc-h2 toc-link" data-title="Portfolio">Portfolio</a>
+                  </li>
                   <li>
                     <a href="#cas-common-account-statement" class="toc-h2 toc-link" data-title="CAS (Common Account Statement)">CAS (Common Account Statement)</a>
                   </li>
@@ -680,6 +691,9 @@
                     <a href="#fatca-sources-of-wealth" class="toc-h2 toc-link" data-title="FATCA Sources of Wealth">FATCA Sources of Wealth</a>
                   </li>
                   <li>
+                    <a href="#sip-cancellation-reason-codes" class="toc-h2 toc-link" data-title="SIP Cancellation reason codes">SIP Cancellation reason codes</a>
+                  </li>
+                  <li>
                     <a href="#fatca-country-codes" class="toc-h2 toc-link" data-title="FATCA country codes">FATCA country codes</a>
                   </li>
                   <li>
@@ -711,7 +725,7 @@
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
 <span class="c"># encoded_key = Base64.encode("ACCESS_KEY:PASSWORD")</span>
-curl <span class="s2">"https://surface.thesavvyapp.in/secure/tokens"</span> <span class="se">\</span>
+curl <span class="nt">-XPOST</span> <span class="s2">"https://surface.thesavvyapp.in/secure/tokens"</span> <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Basic &lt;encoded_key&gt;"</span>
 </code></pre></div><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">Response:</span><span class="w">
 </span><span class="p">{</span><span class="w">
@@ -4333,6 +4347,172 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
 <td><code>Date string</code> Required for withdrawals. This records the timestamp when the investor confirmed the withdrawal request.</td>
 </tr>
 </tbody></table>
+<h1 id='whatsapp'>WhatsApp</h1>
+<p>Savvy has middleware capabilities for sending &amp; receiving WhatsApp messages, creating &amp; editing &quot;Flows&quot; and so on. We scrub PII before passing messages on to ensure regulatory compliance.</p>
+
+<aside class="notice">
+For receiving WhatsApp messages sent by users, you must register a webhook URL where we can forward on the messages. Contact us to register your webhook.
+</aside>
+<h2 id='sending-a-whatsapp-message'>Sending a WhatsApp message</h2>
+<p>There are several kinds of WhatsApp messages that can be sent, including text, media, interactive and flows. The parameters for each are given below.</p>
+
+<p>Currently, we are not supporting template messages (push messages). Please message anything on the business number first to start the conversation before sending a message.</p>
+<h3 id='http-request-43'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/whatsapp_messages</code></p>
+<h3 id='parameters-16'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"whatsapp_message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"user_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"message_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"media_link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://image.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"footer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This is a test"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"header"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Header"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://image.com"</span><span class="w"> </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"interactive_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"button"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"buttons"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reply"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"reply"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Button 1"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"flow_parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mf_purchase_lumpsum"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"cta_text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invest now!"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>user_uuid</td>
+<td>true</td>
+<td><code>String</code> UUID obtained when receiving first message from user.</td>
+</tr>
+<tr>
+<td>text</td>
+<td>true</td>
+<td><code>String</code> Message body.</td>
+</tr>
+<tr>
+<td>message_type</td>
+<td>true</td>
+<td><code>Enum(text, image, video, document, interactive)</code> Type of message</td>
+</tr>
+<tr>
+<td>media_link</td>
+<td>false</td>
+<td><code>String(publically accessible link)</code> Required only for &quot;image&quot;, &quot;video&quot; or &quot;document&quot; <code>message_type</code>.</td>
+</tr>
+<tr>
+<td>footer</td>
+<td>false</td>
+<td><code>String</code> Optional, but only include for <code>interactive</code> type messages.</td>
+</tr>
+<tr>
+<td>header</td>
+<td>false</td>
+<td><code>Object</code> Optional, but only include for <code>interactive</code> type messages.</td>
+</tr>
+<tr>
+<td>interactive_type</td>
+<td>false</td>
+<td><code>Enum()</code> Required when sending <code>interactive</code> type messages.</td>
+</tr>
+<tr>
+<td>buttons</td>
+<td>false</td>
+<td><code>Array(Button)</code> Required when <code>interactive_type</code> is &quot;button&quot;.</td>
+</tr>
+<tr>
+<td>flow_parameters</td>
+<td>false</td>
+<td><code>Object</code> Required when <code>interactive_type</code> is &quot;flow&quot;</td>
+</tr>
+</tbody></table>
+
+<p>Header: </p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>true</td>
+<td><code>Enum(text, image)</code> Type of header</td>
+</tr>
+<tr>
+<td>text</td>
+<td>true</td>
+<td><code>String</code> Text of the header</td>
+</tr>
+<tr>
+<td>image</td>
+<td>false</td>
+<td><code>Object</code> In case type is image, the link of the image inside the object.</td>
+</tr>
+</tbody></table>
+
+<p>Buttons (array):</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>true</td>
+<td><code>Enum(reply)</code> Type of header (Only reply is currently there, but more will be added)</td>
+</tr>
+<tr>
+<td>reply</td>
+<td>true</td>
+<td><code>Object(id, title)</code> Unique id, title of the button</td>
+</tr>
+</tbody></table>
+
+<p>Flow parameters:</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>true</td>
+<td><code>Enum(mf_purchase_lumpsum)</code> Type of flow (Only mf_purchase_lumpsum is currently there, but more will be added)</td>
+</tr>
+<tr>
+<td>reply</td>
+<td>true</td>
+<td><code>Object(id, title)</code> Unique id, title of the button</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Note that you need to send exact requirements for sending messages. Extra or missing fields for each type of message will cause the message to fail to get delivered even though you might get a success message from the API. For example, do not include `buttons` in a message type `image`.
+</aside>
 <h1 id='save-now-buy-later-snbl'>Save Now, Buy Later (SNBL)</h1>
 <p>SNBL is a unique proposition, where customers can save up (via SIP) to purchase products from merchants. This service is provided as an SDK to merchants so they can embed SNBL inside their purchase journeys.</p>
 <h2 id='importing-the-sdk'>Importing the SDK</h2>
@@ -4484,7 +4664,7 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
 <blockquote>
 <p>The above command returns a JSON object.</p>
 </blockquote>
-<h3 id='http-request-43'>HTTP Request</h3>
+<h3 id='http-request-44'>HTTP Request</h3>
 <p><code>GET http://surface.thesavvyapp.in/amcs/&lt;AMC_CODE&gt;/name_and_liquid_fund</code></p>
 <h3 id='response-parameters'>Response parameters</h3>
 <table><thead>
@@ -4514,7 +4694,41 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
 <p>To improve the user experience in terms of fund selection, we offer a risk profiling API that takes customer profile information + a couple of risk related questions as inputs to output a maximum of 4 funds. While designed by our in-house MF experts, this API is provided &quot;as-is&quot;, without any guarantees of correctness.</p>
 <h1 id='reports'>Reports</h1>
 <p>We offer aggregated reports accross multiple categories for easy reconciliation and customer viewing.</p>
-<h2 id='cas-common-account-statement'>CAS (Common Account Statement)</h2>
+<h2 id='portfolio'>Portfolio</h2>
+<p>This report integrates into the CAS (below) to give a consolidated view of holdings across AMCs along with transactions done on Savvy.</p>
+<h3 id='http-request-45'>HTTP Request</h3>
+<p><code>POST http://surface.thesavvyapp.in/secure/reports/portfolio</code></p>
+<h3 id='parameters-17'>Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>pan_number</td>
+<td>true</td>
+<td><code>String</code> Investor&#39;s PAN number</td>
+</tr>
+</tbody></table>
+<h3 id='json-response-sample-gt'>JSON Response Sample ---&gt;</h3><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-XPOST</span> <span class="s2">"http://surface.thesavvyapp.in/secure/reports/portfolio/cas"</span> <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="nt">-d</span> <span class="s1">'{"pan_number": "ABCDE1234C"}'</span>
+</code></pre></div><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">CAS</span><span class="w"> </span><span class="err">Response</span><span class="w"> </span><span class="err">sample</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"folio"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"folio_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="p">,</span><span class="w"> </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ipru"</span><span class="p">,</span><span class="w"> </span><span class="nl">"amc_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ICICI Prudential Mutual Fund"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"investor_info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w"> </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9999900000"</span><span class="p">,</span><span class="w"> </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ab@gmail.com"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"schemes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w"> 
+        </span><span class="nl">"fund"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ipru liquid fund"</span><span class="p">,</span><span class="w"> </span><span class="nl">"isin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISIN123"</span><span class="p">,</span><span class="w"> </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"341RT"</span><span class="w"> </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"cost_value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"current_value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"101"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"current_units"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"broker_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ARN-00101"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"broker_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cool broker"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='cas-common-account-statement'>CAS (Common Account Statement)</h2>
 <p>This report allows you to fetch a consolidated report across AMCs. Fetching is a multi-step process, as detailed below. Note that ONLY folios with the phone number / email the OTP is sent to will be returned. The request is email / phone number based, not PAN based.</p>
 
 <div class="mermaid">
@@ -4524,9 +4738,9 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
   verify_otp-- Success-->call_cas(Call CAS API to fetch the report. RTAs take time, so poll this API);
   call_cas-->call_cas
 </div>
-<h2 id='initiate-cas'>Initiate CAS</h2><h3 id='http-request-44'>HTTP Request</h3>
+<h2 id='initiate-cas'>Initiate CAS</h2><h3 id='http-request-46'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/reports/cas_request</code></p>
-<h3 id='parameters-16'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+<h3 id='parameters-18'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
     </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"XXXXXXXX"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v@gmail.com"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"99999999999"</span><span class="w">
@@ -4572,9 +4786,9 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
 <td><code>String</code> Uniquely identifies the OTP sent.</td>
 </tr>
 </tbody></table>
-<h2 id='cas-otp-verification'>CAS OTP Verification</h2><h3 id='http-request-45'>HTTP Request</h3>
+<h2 id='cas-otp-verification'>CAS OTP Verification</h2><h3 id='http-request-47'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/reports/&lt;REQUEST_ID&gt;/validate_cas_otp</code></p>
-<h3 id='parameters-17'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+<h3 id='parameters-19'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
     </span><span class="nl">"otp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-XPOST</span> <span class="s2">"http://surface.thesavvyapp.in/secure/reports/2b4900e24fcf2071041b82c16c85e678/validate_cas_otp"</span> <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="nt">-d</span> <span class="s1">'{"otp": "123456"}'</span>
@@ -4609,9 +4823,9 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
 <td><code>Boolean</code> If validation was successful.</td>
 </tr>
 </tbody></table>
-<h2 id='cas-fetch'>CAS Fetch</h2><h3 id='http-request-46'>HTTP Request</h3>
+<h2 id='cas-fetch'>CAS Fetch</h2><h3 id='http-request-48'>HTTP Request</h3>
 <p><code>POST http://surface.thesavvyapp.in/secure/reports/&lt;REQUEST_ID&gt;/cas</code></p>
-<h3 id='parameters-18'>Parameters</h3>
+<h3 id='parameters-20'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -4625,7 +4839,7 @@ The `account_uuid` is required in <b>all</b> the withdrawal parts.
 <td><code>String</code> Returned from initiate CAS request.</td>
 </tr>
 </tbody></table>
-<h3 id='json-response-sample-gt'>JSON Response Sample ---&gt;</h3><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-XPOST</span> <span class="s2">"http://surface.thesavvyapp.in/secure/reports/2b4900e24fcf2071041b82c16c85e678/cas"</span> <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="nt">-d</span> <span class="s1">'{}'</span>
+<h3 id='json-response-sample-gt-2'>JSON Response Sample ---&gt;</h3><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-XPOST</span> <span class="s2">"http://surface.thesavvyapp.in/secure/reports/2b4900e24fcf2071041b82c16c85e678/cas"</span> <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="nt">-d</span> <span class="s1">'{}'</span>
 </code></pre></div><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">CAS</span><span class="w"> </span><span class="err">Response</span><span class="w"> </span><span class="err">sample</span><span class="w">
   </span><span class="p">{</span><span class="w">
     </span><span class="nl">"reqId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2469811"</span><span class="p">,</span><span class="w">
@@ -5331,6 +5545,66 @@ Webhooks are sent on a "best-effort" basis, and are sent at least once. That mea
 <tr>
 <td>08</td>
 <td>Others</td>
+</tr>
+</tbody></table>
+<h2 id='sip-cancellation-reason-codes'>SIP Cancellation reason codes</h2>
+<table><thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>non_availablity_of_funds</td>
+</tr>
+<tr>
+<td>2</td>
+<td>scheme_not_performing</td>
+</tr>
+<tr>
+<td>3</td>
+<td>service_issue</td>
+</tr>
+<tr>
+<td>4</td>
+<td>load_revised</td>
+</tr>
+<tr>
+<td>5</td>
+<td>wish_to_invest_in_other_schemes</td>
+</tr>
+<tr>
+<td>6</td>
+<td>change_in_fund_manager</td>
+</tr>
+<tr>
+<td>7</td>
+<td>goal_achieve</td>
+</tr>
+<tr>
+<td>8</td>
+<td>not_comfortable_with_market_volatity</td>
+</tr>
+<tr>
+<td>9</td>
+<td>will_be_restarting_sip_after_few_months</td>
+</tr>
+<tr>
+<td>10</td>
+<td>modifications_in_bank_mandate_date</td>
+</tr>
+<tr>
+<td>11</td>
+<td>i_have_decided_to_invest_elsewhere</td>
+</tr>
+<tr>
+<td>12</td>
+<td>this_is_not_the_right_time_to_invest</td>
+</tr>
+<tr>
+<td>13</td>
+<td>other</td>
 </tr>
 </tbody></table>
 <h2 id='fatca-country-codes'>FATCA country codes</h2>
