@@ -2419,6 +2419,35 @@ reply | true | `Object(id, title)` Unique id, title of the button
 Note that you need to send exact requirements for sending messages. Extra or missing fields for each type of message will cause the message to fail to get delivered even though you might get a success message from the API. For example, do not include `buttons` in a message type `image`.
 </aside>
 
+## Receiving a WhatsApp message
+
+Receiving messages is a webhook based functionality. We will scrub PII data from user messages and forward on. The following are the parameters that get sent.
+
+### Parameters
+
+```json
+  {
+    "whatsapp_message": {
+      "user_uuid": "aaaaa-bbbb-cccc-dddd",
+      "text": "Hello",
+      "message_type": "text",
+      "interactive_type": "button_reply",
+      "button_reply": {
+        "id": "id-1",
+        "title": "Learn more"
+      }
+    }
+  }
+```
+
+Parameter | Required | Description
+--------- | ------- | -----------
+user_uuid | true | `String` UUID of the user.
+text | true | `String` Message body.
+message_type | true | `Enum(text, image, video, document, interactive)` Type of message
+interactive_type | false | `Enum(button_reply)` Required user has tapped on a button.
+button_reply | false | `Object(id, title)` While button was tapped
+
 # Save Now, Buy Later (SNBL)
 
 SNBL is a unique proposition, where customers can save up (via SIP) to purchase products from merchants. This service is provided as an SDK to merchants so they can embed SNBL inside their purchase journeys.
