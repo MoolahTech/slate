@@ -36,7 +36,7 @@ We have language bindings in Shell only for now. We don't have readymade clients
 ```shell
 # With shell, you can just pass the correct header with each request
 # encoded_key = Base64.encode("ACCESS_KEY:PASSWORD")
-curl "https://surface.thesavvyapp.in/secure/tokens" \
+curl -XPOST "https://surface.thesavvyapp.in/secure/tokens" \
   -H "Authorization: Basic <encoded_key>"
 ```
 ```json
@@ -2329,6 +2329,96 @@ transferred_to_amc_at | false | `Date string` Required for lumpsums. This timest
 user_completed_mandate_at | false | `Date string` Required for SIPs. This records the timestamp when the investor completed the auto pay setup,
 user_completed_withdrawal_otp_at | false | `Date string` Required for withdrawals. This records the timestamp when the investor confirmed the withdrawal request.
 
+# WhatsApp
+
+Savvy has middleware capabilities for sending & receiving WhatsApp messages, creating & editing "Flows" and so on. We scrub PII before passing messages on to ensure regulatory compliance.
+
+<aside class="notice">
+For receiving WhatsApp messages sent by users, you must register a webhook URL where we can forward on the messages. Contact us to register your webhook.
+</aside>
+
+## Sending a WhatsApp message
+
+There are several kinds of WhatsApp messages that can be sent, including text, media, interactive and flows. The parameters for each are given below.
+
+Currently, we are not supporting template messages (push messages). Please message anything on the business number first to start the conversation before sending a message.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/secure/whatsapp_messages`
+
+### Parameters
+
+```json
+  {
+    "whatsapp_message": {
+      "user_uuid": "aaaaa-bbbb-cccc-dddd",
+      "text": "Hello",
+      "message_type": "image",
+      "media_link": "https://image.com",
+      "footer": "This is a test",
+      "header": {
+        "type": "image",
+        "text": "Header",
+        "image": { "link": "https://image.com" }
+      },
+      "interactive_type": "button",
+      "buttons": [
+        {
+          "type": "reply",
+          "reply": {
+            "id": "1",
+            "title": "Button 1"
+          }
+        }
+      ],
+      "flow_parameters": {
+        "type": "mf_purchase_lumpsum",
+        "cta_text": "Invest now!"
+      }
+    }
+  }
+```
+
+Parameter | Required | Description
+--------- | ------- | -----------
+user_uuid | true | `String` UUID obtained when receiving first message from user.
+text | true | `String` Message body.
+message_type | true | `Enum(text, image, video, document, interactive)` Type of message
+media_link | false | `String(publically accessible link)` Required only for "image", "video" or "document" `message_type`.
+footer | false | `String` Optional, but only include for `interactive` type messages.
+header | false | `Object` Optional, but only include for `interactive` type messages.
+interactive_type | false | `Enum()` Required when sending `interactive` type messages.
+buttons | false | `Array(Button)` Required when `interactive_type` is "button".
+flow_parameters | false | `Object` Required when `interactive_type` is "flow"
+
+Header: 
+
+Parameter | Required | Description
+--------- | ------- | -----------
+type | true | `Enum(text, image)` Type of header
+text | true | `String` Text of the header
+image | false | `Object` In case type is image, the link of the image inside the object.
+
+Buttons (array):
+
+Parameter | Required | Description
+--------- | ------- | -----------
+type | true | `Enum(reply)` Type of header (Only reply is currently there, but more will be added)
+reply | true | `Object(id, title)` Unique id, title of the button
+
+Flow parameters:
+
+Parameter | Required | Description
+--------- | ------- | -----------
+type | true | `Enum(mf_purchase_lumpsum)` Type of flow (Only mf_purchase_lumpsum is currently there, but more will be added)
+reply | true | `Object(id, title)` Unique id, title of the button
+
+
+<aside class="notice">
+Note that you need to send exact requirements for sending messages. Extra or missing fields for each type of message will cause the message to fail to get delivered even though you might get a success message from the API. For example, do not include `buttons` in a message type `image`.
+</aside>
+
 # Save Now, Buy Later (SNBL)
 
 SNBL is a unique proposition, where customers can save up (via SIP) to purchase products from merchants. This service is provided as an SDK to merchants so they can embed SNBL inside their purchase journeys.
@@ -2459,6 +2549,44 @@ To improve the user experience in terms of fund selection, we offer a risk profi
 # Reports
 
 We offer aggregated reports accross multiple categories for easy reconciliation and customer viewing.
+
+## Portfolio
+
+This report integrates into the CAS (below) to give a consolidated view of holdings across AMCs along with transactions done on Savvy.
+
+### HTTP Request
+
+`POST http://surface.thesavvyapp.in/secure/reports/portfolio`
+
+### Parameters
+
+Parameter | Required | Description
+--------- | ------- | -----------
+pan_number | true | `String` Investor's PAN number
+
+### JSON Response Sample --->
+
+```shell
+curl -XPOST "http://surface.thesavvyapp.in/secure/reports/portfolio/cas" -H "Content-Type: application/json" -d '{"pan_number": "ABCDE1234C"}'
+```
+
+```json
+// CAS Response sample
+  {
+    "folio": { "folio_number": "123456", "amc_code": "Ipru", "amc_name": "ICICI Prudential Mutual Fund" },
+    "investor_info": { "name": "John Smith", "phone_number": "9999900000", "email": "ab@gmail.com" },
+    "schemes": [
+      { 
+        "fund": { "name": "Ipru liquid fund", "isin": "ISIN123", "code": "341RT" },
+        "cost_value": "100",
+        "current_value": "101",
+        "current_units": "5",
+        "broker_code": "ARN-00101",
+        "broker_name": "Cool broker"
+      }
+    ]
+  }
+```
 
 ## CAS (Common Account Statement)
 
@@ -2916,6 +3044,24 @@ Code | Description
 06 |  Prize Money
 07 |  Royalty
 08 |  Others
+
+## SIP Cancellation reason codes
+
+Code | Description
+--------- | -----------
+1 | non_availablity_of_funds
+2 | scheme_not_performing
+3 | service_issue
+4 | load_revised
+5 | wish_to_invest_in_other_schemes
+6 | change_in_fund_manager
+7 | goal_achieve
+8 | not_comfortable_with_market_volatity
+9 | will_be_restarting_sip_after_few_months
+10 | modifications_in_bank_mandate_date
+11 | i_have_decided_to_invest_elsewhere
+12 | this_is_not_the_right_time_to_invest
+13 | other
 
 ## FATCA country codes
 
