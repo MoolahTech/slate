@@ -2372,6 +2372,39 @@ Currently, we are not supporting template messages (push messages). Please messa
           }
         }
       ],
+      "list_button": "Menu items",
+      "list_sections": [
+        {
+          "title": "title1",
+          "rows": [
+            {
+              "id": "1",
+              "title": "Hello1",
+              "description": "Hello world"
+            },
+            {
+              "id": "2",
+              "title": "Hello2",
+              "description": "Hello world"
+            }
+          ]
+        },
+        {
+          "title": "title2",
+          "rows": [
+            {
+              "id": "3",
+              "title": "Hello3",
+              "description": "Hello world"
+            },
+            {
+              "id": "4",
+              "title": "Hello4",
+              "description": "Hello world"
+            }
+          ]
+        }
+      ],
       "flow_parameters": {
         "type": "mf_purchase_lumpsum",
         "cta_text": "Invest now!"
@@ -2388,8 +2421,10 @@ message_type | true | `Enum(text, image, video, document, interactive)` Type of 
 media_link | false | `String(publically accessible link)` Required only for "image", "video" or "document" `message_type`.
 footer | false | `String` Optional, but only include for `interactive` type messages.
 header | false | `Object` Optional, but only include for `interactive` type messages.
-interactive_type | false | `Enum()` Required when sending `interactive` type messages.
+interactive_type | false | `Enum(button, list)` Required when sending `interactive` type messages.
 buttons | false | `Array(Button)` Required when `interactive_type` is "button".
+list_button | false | `String` Required when `interactive_type` is "list".
+list_sections | false | `Array(Object)` Required when `interactive_type` is "list".
 flow_parameters | false | `Object` Required when `interactive_type` is "flow"
 
 Header: 
@@ -2406,6 +2441,13 @@ Parameter | Required | Description
 --------- | ------- | -----------
 type | true | `Enum(reply)` Type of header (Only reply is currently there, but more will be added)
 reply | true | `Object(id, title)` Unique id, title of the button
+
+List sections (array):
+
+Parameter | Required | Description
+--------- | ------- | -----------
+title | true | `String` Title of the list section.
+rows | true | `Array(Object(id, title, description))` Unique ID, title and description of a list row.
 
 Flow parameters:
 
@@ -2446,7 +2488,7 @@ user_uuid | true | `String` UUID of the user.
 text | true | `String` Message body.
 message_type | true | `Enum(text, image, video, document, interactive)` Type of message
 interactive_type | false | `Enum(button_reply)` Required user has tapped on a button.
-button_reply | false | `Object(id, title)` While button was tapped
+button_reply | false | `Object(id, title)` Which button was tapped
 
 # Save Now, Buy Later (SNBL)
 
