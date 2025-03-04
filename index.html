@@ -4384,6 +4384,39 @@ For receiving WhatsApp messages sent by users, you must register a webhook URL w
           </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"list_button"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Menu items"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"list_sections"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"title1"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"rows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello1"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello world"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello2"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello world"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"title2"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"rows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello3"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello world"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello4"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello world"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
       </span><span class="nl">"flow_parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mf_purchase_lumpsum"</span><span class="p">,</span><span class="w">
         </span><span class="nl">"cta_text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invest now!"</span><span class="w">
@@ -4431,12 +4464,22 @@ For receiving WhatsApp messages sent by users, you must register a webhook URL w
 <tr>
 <td>interactive_type</td>
 <td>false</td>
-<td><code>Enum()</code> Required when sending <code>interactive</code> type messages.</td>
+<td><code>Enum(button, list)</code> Required when sending <code>interactive</code> type messages.</td>
 </tr>
 <tr>
 <td>buttons</td>
 <td>false</td>
 <td><code>Array(Button)</code> Required when <code>interactive_type</code> is &quot;button&quot;.</td>
+</tr>
+<tr>
+<td>list_button</td>
+<td>false</td>
+<td><code>String</code> Required when <code>interactive_type</code> is &quot;list&quot;.</td>
+</tr>
+<tr>
+<td>list_sections</td>
+<td>false</td>
+<td><code>Array(Object)</code> Required when <code>interactive_type</code> is &quot;list&quot;.</td>
 </tr>
 <tr>
 <td>flow_parameters</td>
@@ -4489,6 +4532,27 @@ For receiving WhatsApp messages sent by users, you must register a webhook URL w
 <td>reply</td>
 <td>true</td>
 <td><code>Object(id, title)</code> Unique id, title of the button</td>
+</tr>
+</tbody></table>
+
+<p>List sections (array):</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>title</td>
+<td>true</td>
+<td><code>String</code> Title of the list section.</td>
+</tr>
+<tr>
+<td>rows</td>
+<td>true</td>
+<td><code>Array(Object(id, title, description))</code> Unique ID, title and description of a list row.</td>
 </tr>
 </tbody></table>
 
@@ -4561,7 +4625,7 @@ Note that you need to send exact requirements for sending messages. Extra or mis
 <tr>
 <td>button_reply</td>
 <td>false</td>
-<td><code>Object(id, title)</code> While button was tapped</td>
+<td><code>Object(id, title)</code> Which button was tapped</td>
 </tr>
 </tbody></table>
 <h1 id='save-now-buy-later-snbl'>Save Now, Buy Later (SNBL)</h1>
