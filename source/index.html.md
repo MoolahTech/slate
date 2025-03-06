@@ -2406,7 +2406,7 @@ Currently, we are not supporting template messages (push messages). Please messa
         }
       ],
       "flow_parameters": {
-        "type": "mf_purchase_lumpsum",
+        "type": "hello_world",
         "cta_text": "Invest now!"
       }
     }
@@ -2453,8 +2453,8 @@ Flow parameters:
 
 Parameter | Required | Description
 --------- | ------- | -----------
-type | true | `Enum(mf_purchase_lumpsum)` Type of flow (Only mf_purchase_lumpsum is currently there, but more will be added)
-reply | true | `Object(id, title)` Unique id, title of the button
+type | true | `Enum(hello_world)` Type of flow (Only hello_world is currently there, but more will be added).
+cta_text | true | `String` Text of the button that will start the flow.
 
 
 <aside class="notice">
