@@ -4418,7 +4418,7 @@ For receiving WhatsApp messages sent by users, you must register a webhook URL w
         </span><span class="p">}</span><span class="w">
       </span><span class="p">],</span><span class="w">
       </span><span class="nl">"flow_parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mf_purchase_lumpsum"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hello_world"</span><span class="p">,</span><span class="w">
         </span><span class="nl">"cta_text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invest now!"</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -4568,12 +4568,12 @@ For receiving WhatsApp messages sent by users, you must register a webhook URL w
 <tr>
 <td>type</td>
 <td>true</td>
-<td><code>Enum(mf_purchase_lumpsum)</code> Type of flow (Only mf_purchase_lumpsum is currently there, but more will be added)</td>
+<td><code>Enum(hello_world)</code> Type of flow (Only hello_world is currently there, but more will be added).</td>
 </tr>
 <tr>
-<td>reply</td>
+<td>cta_text</td>
 <td>true</td>
-<td><code>Object(id, title)</code> Unique id, title of the button</td>
+<td><code>String</code> Text of the button that will start the flow.</td>
 </tr>
 </tbody></table>
 
