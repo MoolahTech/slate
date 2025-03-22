@@ -4568,7 +4568,7 @@ For receiving WhatsApp messages sent by users, you must register a webhook URL w
 <tr>
 <td>type</td>
 <td>true</td>
-<td><code>Enum(hello_world)</code> Type of flow (Only hello_world is currently there, but more will be added).</td>
+<td><code>Enum(hello_world, pan_login)</code> Type of flow (Only hello_world is currently there, but more will be added).</td>
 </tr>
 <tr>
 <td>cta_text</td>
@@ -4583,6 +4583,8 @@ Note that you need to send exact requirements for sending messages. Extra or mis
 <h2 id='receiving-a-whatsapp-message'>Receiving a WhatsApp message</h2>
 <p>Receiving messages is a webhook based functionality. We will scrub PII data from user messages and forward on. The following are the parameters that get sent.</p>
 <h3 id='parameters-17'>Parameters</h3><div class="highlight"><pre class="highlight json tab-json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"whatsapp_message.receive"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"sent_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1742652422</span><span class="p">,</span><span class="w">
     </span><span class="nl">"whatsapp_message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"user_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello"</span><span class="p">,</span><span class="w">
@@ -4602,6 +4604,16 @@ Note that you need to send exact requirements for sending messages. Extra or mis
 <th>Description</th>
 </tr>
 </thead><tbody>
+<tr>
+<td>event</td>
+<td>true</td>
+<td><code>Enum(whatsapp_message.receive, whatsapp_flow.pan_login.result)</code></td>
+</tr>
+<tr>
+<td>sent_at</td>
+<td>true</td>
+<td><code>Integer</code> Timestamp of when the webhook was sent by Savvy.</td>
+</tr>
 <tr>
 <td>user_uuid</td>
 <td>true</td>
