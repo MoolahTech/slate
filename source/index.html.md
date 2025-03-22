@@ -2453,7 +2453,7 @@ Flow parameters:
 
 Parameter | Required | Description
 --------- | ------- | -----------
-type | true | `Enum(hello_world)` Type of flow (Only hello_world is currently there, but more will be added).
+type | true | `Enum(hello_world, pan_login)` Type of flow (Only hello_world is currently there, but more will be added).
 cta_text | true | `String` Text of the button that will start the flow.
 
 
@@ -2469,6 +2469,8 @@ Receiving messages is a webhook based functionality. We will scrub PII data from
 
 ```json
   {
+    "event": "whatsapp_message.receive",
+    "sent_at": 1742652422,
     "whatsapp_message": {
       "user_uuid": "aaaaa-bbbb-cccc-dddd",
       "text": "Hello",
@@ -2484,6 +2486,8 @@ Receiving messages is a webhook based functionality. We will scrub PII data from
 
 Parameter | Required | Description
 --------- | ------- | -----------
+event | true | `Enum(whatsapp_message.receive, whatsapp_flow.pan_login.result)`
+sent_at | true | `Integer` Timestamp of when the webhook was sent by Savvy.
 user_uuid | true | `String` UUID of the user.
 text | true | `String` Message body.
 message_type | true | `Enum(text, image, video, document, interactive)` Type of message
