@@ -4368,6 +4368,7 @@ For receiving WhatsApp messages sent by users, you must register a webhook URL w
       </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"message_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"media_link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://image.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"media_mime_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image/png"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"footer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This is a test"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"header"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image"</span><span class="p">,</span><span class="w">
@@ -4450,6 +4451,11 @@ For receiving WhatsApp messages sent by users, you must register a webhook URL w
 <td>media_link</td>
 <td>false</td>
 <td><code>String(publically accessible link)</code> Required only for &quot;image&quot;, &quot;video&quot; or &quot;document&quot; <code>message_type</code>.</td>
+</tr>
+<tr>
+<td>media_mime_type</td>
+<td>false</td>
+<td>Required only &quot;image&quot;, &quot;video&quot; and &quot;document&quot; <code>message_type</code>. This should be the media type (example, image/jpeg).</td>
 </tr>
 <tr>
 <td>footer</td>
