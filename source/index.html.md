@@ -2356,6 +2356,7 @@ Currently, we are not supporting template messages (push messages). Please messa
       "text": "Hello",
       "message_type": "image",
       "media_link": "https://image.com",
+      "media_mime_type": "image/png",
       "footer": "This is a test",
       "header": {
         "type": "image",
@@ -2419,6 +2420,7 @@ user_uuid | true | `String` UUID obtained when receiving first message from user
 text | true | `String` Message body.
 message_type | true | `Enum(text, image, video, document, interactive)` Type of message
 media_link | false | `String(publically accessible link)` Required only for "image", "video" or "document" `message_type`.
+media_mime_type | false | Required only "image", "video" and "document" `message_type`. This should be the media type (example, image/jpeg).
 footer | false | `String` Optional, but only include for `interactive` type messages.
 header | false | `Object` Optional, but only include for `interactive` type messages.
 interactive_type | false | `Enum(button, list)` Required when sending `interactive` type messages.
