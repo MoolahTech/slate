@@ -922,6 +922,30 @@ Parameter | Required | Description
 holding | true | Company/Asset name
 exposure | true | Number in percentage terms of the exposure of the fund to the asset.
 
+## Fund master (AMC only)
+
+You can use the API to get a list of all schemes of an AMC. Since this a 1:1 AMC request, this request is limited to AMCs or partners acting on behalf of AMCs.
+
+```shell
+curl "https://surface.thesavvyapp.in/secure/funds/master?amc_code=XXX" \
+  -X GET \
+  -H "Authorization: Bearer <token>"
+```
+
+### HTTP Request
+
+`GET https://surface.thesavvyapp.in/secure/funds/master?amc_code=XXX`
+
+### URL Parameters
+
+Parameter | Required | Description
+--------- | -------- | -----------
+amc_code | true | String Code of the AMC from the AMC list API.
+
+### JSON Response
+
+This will vary based on each AMC and their structure.
+
 # Accounts
 
 For most usecases, the accounts API is a pull-only API. Accounts are created asynchronously; when a purchase transaction is successful, a new account number (Folio number in the MF world) is allocated. You should be listening to webhooks to listen for account creations.
