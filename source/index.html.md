@@ -976,6 +976,48 @@ curl "http://surface.thesavvyapp.in/secure/accounts/<UUID>" \
 
 `GET http://surface.thesavvyapp.in/secure/accounts/<UUID>`
 
+## Holdings (AMC only)
+
+```shell
+curl "http://surface.thesavvyapp.in/secure/accounts/fetch" \
+  -X POST \
+  -H "Authorization: Bearer <token>"
+  -d body
+```
+
+### Parameters
+
+Parameter | Required | Description
+--------- | ------- | -----------
+onboarding_uuid | true | `String` UUID of the previously created onboarding.
+
+### Response
+
+Parameter | Required | Description
+--------- | ------- | -----------
+folios | true | `Array<Folio>` Array of folios
+
+Folio
+
+Parameter | Required | Description
+--------- | ------- | -----------
+masked_folio | true | `String` Masked folio number
+amc_code | true | `String` Code of the AMC.
+portfolio | true | `Array<Investment>` Array on investment objects.
+
+Investment
+
+Parameter | Required | Description
+--------- | ------- | -----------
+fund_code | true | `String` Code of scheme
+isin | true | `String` ISIN of scheme
+fund_name | true | `String` Name of the scheme
+nav | true | `String` Current NAV of the scheme
+units | true | `String` Units owned of the scheme
+current_value | true | `String` Current value of investment (NAV * units)
+cost_value | true | `String` Amount bought at
+dividend_earned | true | `String` Dividend earned, if any
+
 # Bank configurations
 
 Before making lumpsum, SIP or mandate transactions, you may want to check whether which banks are available for which payment modes.
