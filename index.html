@@ -2872,6 +2872,7 @@ Note the <code>withdrawal</code>root key
       </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email@example.com"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="w">
     </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"folio_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MOS"</span><span class="p">,</span><span class="w">
@@ -2919,7 +2920,12 @@ Note the <code>one_click_checkout</code>root key
 <tr>
 <td>onboarding</td>
 <td>false</td>
-<td><code>Object</code> Investor details</td>
+<td><code>Object</code> Investor details (take precedence over <code>onboarding_uuid</code>)</td>
+</tr>
+<tr>
+<td>onboarding_uuid</td>
+<td>false</td>
+<td><code>String</code> If re-using a previously created onboarding</td>
 </tr>
 <tr>
 <td>account</td>
@@ -3055,6 +3061,7 @@ Note the <code>one_click_checkout</code>root key
       </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email@example.com"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"pan_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCDE1234C"</span><span class="w">
     </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"onboarding_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"folio_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MOS"</span><span class="p">,</span><span class="w">
@@ -3105,7 +3112,12 @@ Note the <code>one_click_checkout</code>root key
 <tr>
 <td>onboarding</td>
 <td>false</td>
-<td><code>Object</code> Investor details</td>
+<td><code>Object</code> Investor details (take precedence over <code>onboarding_uuid</code>)</td>
+</tr>
+<tr>
+<td>onboarding_uuid</td>
+<td>false</td>
+<td><code>String</code> If re-using a previously created onboarding</td>
 </tr>
 <tr>
 <td>account</td>
