@@ -1414,6 +1414,7 @@ short_link | `URL string` This URL can be shared with the user to go to for tran
       "email": "email@example.com",
       "pan_number": "ABCDE1234C"
     },
+    "onboarding_uuid": "aaaaa-bbbb-cccc-dddd",
     "account": {
       "folio_number": "12345678",
       "amc_code": "MOS",
@@ -1458,7 +1459,8 @@ Note the <code>one_click_checkout</code>root key
 
 Parameter | Required | Description
 --------- | ------- | -----------
-onboarding | false | `Object` Investor details
+onboarding | false | `Object` Investor details (take precedence over `onboarding_uuid`)
+onboarding_uuid | false | `String` If re-using a previously created onboarding
 account | false | `Object` Account details
 bank_account | false | `Object` Bank account details
 deposits | true | `Object` Transaction details
@@ -1512,6 +1514,7 @@ amc_code | true | `String` AMC code
       "email": "email@example.com",
       "pan_number": "ABCDE1234C"
     },
+    "onboarding_uuid": "aaaaa-bbbb-cccc-dddd",
     "account": {
       "folio_number": "12345678",
       "amc_code": "MOS",
@@ -1559,7 +1562,8 @@ Note the <code>one_click_checkout</code>root key
 
 Parameter | Required | Description
 --------- | ------- | -----------
-onboarding | false | `Object` Investor details
+onboarding | false | `Object` Investor details (take precedence over `onboarding_uuid`)
+onboarding_uuid | false | `String` If re-using a previously created onboarding
 account | false | `Object` Account details
 bank_account | false | `Object` Bank account details
 sip | true if deposit is null | `Object` Transaction details
