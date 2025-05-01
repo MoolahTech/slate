@@ -2886,12 +2886,14 @@ Note the <code>withdrawal</code>root key
     </span><span class="nl">"deposits"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
       </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">2000</span><span class="p">,</span><span class="w">
       </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AXIS"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="w">
     </span><span class="p">}]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -3051,6 +3053,11 @@ Note the <code>one_click_checkout</code>root key
 <td>true</td>
 <td><code>String</code> AMC code</td>
 </tr>
+<tr>
+<td>account_uuid</td>
+<td>false</td>
+<td><code>String</code> UUID of an existing account. This takes precendence over the top level account.</td>
+</tr>
 </tbody></table>
 <h2 id='create-occ-sip'>Create OCC (SIP)</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">body</span><span class="w">
 </span><span class="p">{</span><span class="w"> </span><span class="nl">"one_click_checkout"</span><span class="p">:</span><span class="w"> 
@@ -3075,12 +3082,14 @@ Note the <code>one_click_checkout</code>root key
     </span><span class="nl">"sips"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
       </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
       </span><span class="nl">"fund_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IPRU"</span><span class="w">
+      </span><span class="nl">"amc_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AXIS"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"account_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaa-bbbb-cccc-dddd"</span><span class="w">
     </span><span class="p">}],</span><span class="w">
     </span><span class="nl">"sip_day"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
     </span><span class="nl">"frequency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monthly"</span><span class="p">,</span><span class="w">
@@ -3252,6 +3261,11 @@ Note the <code>one_click_checkout</code>root key
 <td>amc_code</td>
 <td>true</td>
 <td><code>String</code> AMC code</td>
+</tr>
+<tr>
+<td>account_uuid</td>
+<td>false</td>
+<td><code>String</code> UUID of an existing account. This takes precendence over the top level account.</td>
 </tr>
 </tbody></table>
 <h2 id='using-the-sdk'>Using the SDK</h2>
