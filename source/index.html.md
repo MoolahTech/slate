@@ -1428,12 +1428,14 @@ short_link | `URL string` This URL can be shared with the user to go to for tran
     "deposits": [{
       "amount": 1000,
       "fund_code": "10",
-      "amc_code": "IPRU"
+      "amc_code": "IPRU",
+      "account_uuid": "aaaaa-bbbb-cccc-dddd"
     },
     {
       "amount": 2000,
       "fund_code": "20",
-      "amc_code": "IPRU"
+      "amc_code": "AXIS",
+      "account_uuid": "aaaaa-bbbb-cccc-dddd"
     }]
   }
 }
@@ -1501,6 +1503,7 @@ Parameter | Required | Description
 amount | true | `Integer` Amount of the investment
 fund_code | true | `String` Fund ID
 amc_code | true | `String` AMC code
+account_uuid | false | `String` UUID of an existing account. This takes precendence over the top level account.
 
 ## Create OCC (SIP)
 
@@ -1528,12 +1531,14 @@ amc_code | true | `String` AMC code
     "sips": [{
       "amount": 1000,
       "fund_code": "10",
-      "amc_code": "IPRU"
+      "amc_code": "IPRU",
+      "account_uuid": "aaaaa-bbbb-cccc-dddd"
     },
     {
       "amount": 1000,
       "fund_code": "20",
-      "amc_code": "IPRU"
+      "amc_code": "AXIS",
+      "account_uuid": "aaaaa-bbbb-cccc-dddd"
     }],
     "sip_day": 1,
     "frequency": "monthly",
@@ -1606,6 +1611,7 @@ Parameter | Required | Description
 amount | true | `Integer` 
 fund_code | true | `String` Fund ID
 amc_code | true | `String` AMC code
+account_uuid | false | `String` UUID of an existing account. This takes precendence over the top level account.
 
 ## Using the SDK
 
