@@ -1418,7 +1418,7 @@ short_link | `URL string` This URL can be shared with the user to go to for tran
     "account": {
       "folio_number": "12345678",
       "amc_code": "MOS",
-      "type": "SI"
+      "holding_mode": "SI"
     },
     "bank_account": {
       "account_number": "000111199999",
@@ -1429,7 +1429,8 @@ short_link | `URL string` This URL can be shared with the user to go to for tran
       "amount": 1000,
       "fund_code": "10",
       "amc_code": "IPRU",
-      "account_uuid": "aaaaa-bbbb-cccc-dddd"
+      "account_uuid": "aaaaa-bbbb-cccc-dddd",
+      "retirement_fund_plan_type": "auto_transfer"
     },
     {
       "amount": 2000,
@@ -1504,6 +1505,7 @@ amount | true | `Integer` Amount of the investment
 fund_code | true | `String` Fund ID
 amc_code | true | `String` AMC code
 account_uuid | false | `String` UUID of an existing account. This takes precendence over the top level account.
+retirement_fund_plan_type | false | `Enum(auto_transfer, as_chosen)` The type of retirement plan to offer.
 
 ## Create OCC (SIP)
 
@@ -1521,7 +1523,7 @@ account_uuid | false | `String` UUID of an existing account. This takes precende
     "account": {
       "folio_number": "12345678",
       "amc_code": "MOS",
-      "type": "SI"
+      "holding_mode": "SI"
     },
     "bank_account": {
       "account_number": "000111199999",
@@ -1538,7 +1540,8 @@ account_uuid | false | `String` UUID of an existing account. This takes precende
       "amount": 1000,
       "fund_code": "20",
       "amc_code": "AXIS",
-      "account_uuid": "aaaaa-bbbb-cccc-dddd"
+      "account_uuid": "aaaaa-bbbb-cccc-dddd",
+      "retirement_fund_plan_type": "auto_transfer"
     }],
     "sip_day": 1,
     "frequency": "monthly",
@@ -1612,6 +1615,7 @@ amount | true | `Integer`
 fund_code | true | `String` Fund ID
 amc_code | true | `String` AMC code
 account_uuid | false | `String` UUID of an existing account. This takes precendence over the top level account.
+retirement_fund_plan_type | false | `Enum(auto_transfer, as_chosen)` The type of retirement plan to offer.
 
 ## Using the SDK
 
@@ -2484,7 +2488,9 @@ Currently, we are not supporting template messages (push messages). Please messa
       ],
       "flow_parameters": {
         "type": "hello_world",
-        "cta_text": "Invest now!"
+        "cta_text": "Invest now!",
+        "flow_token": "aaaaa-bbbb-cccc-dddd",
+        "extras": { "mode": "past" }
       }
     }
   }
@@ -2533,6 +2539,8 @@ Parameter | Required | Description
 --------- | ------- | -----------
 type | true | `Enum(hello_world, pan_login)` Type of flow (Only hello_world is currently there, but more will be added).
 cta_text | true | `String` Text of the button that will start the flow.
+flow_token | false | `String` The flow token
+extras | false | `Object` Custom parameters to pass in to the flow
 
 
 <aside class="notice">
